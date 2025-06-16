@@ -2,7 +2,13 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from app.database import engine
 from datetime import date
+from enum import Enum
 
+
+class BookingStatus(str, Enum):
+    PENDING = "pending"
+    ACTIVE = "active"
+    RETURNED = "returned"
 
 class LibUser(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True, index=True)
@@ -33,7 +39,6 @@ class LibUserRead(SQLModel):
     phone: str
     city: str
     role: str
-
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
@@ -89,11 +94,13 @@ class Booking(SQLModel, table=True):
     library_id: int = Field(foreign_key="library.id")
     date_from: date
     date_to: date
-    status: str = Field(default="pending")
+    status: BookingStatus = Field(default=BookingStatus.PENDING)
 
     user: Optional["LibUser"] = Relationship(back_populates="bookings")
     book: Optional["Book"] = Relationship(back_populates="bookings")
     library: Optional["Library"] = Relationship(back_populates="bookings")
 
+class BookingUpdate(SQLModel):
+    status: BookingStatus
 
 SQLModel.metadata.create_all(engine)

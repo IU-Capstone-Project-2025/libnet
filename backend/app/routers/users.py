@@ -59,7 +59,7 @@ def read_user_by_id(_id: int, db: Session = Depends(get_session)):
     return user
 
 # Update user
-@router.patch("/users/{_id}", response_model=models.LibUserRead)
+@router.patch("/{_id}", response_model=models.LibUserRead)
 def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
     user = session.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
     if not user:
