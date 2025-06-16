@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 from app.database import engine
 from datetime import date
 
@@ -12,6 +12,7 @@ class LibUser(SQLModel, table=True):
     phone: str = Field(default=None)
     city: str = Field(default=None)
     role: str = Field(default="user")
+    bookings: List["Booking"] = Relationship(back_populates="user")
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
@@ -53,5 +54,6 @@ class Booking(SQLModel, table=True):
     library_id: int = Field(foreign_key="library.id")
     date_from: date
     date_to: date
+    user: Optional["LibUser"] = Relationship(back_populates="bookings")
 
 SQLModel.metadata.create_all(engine)
