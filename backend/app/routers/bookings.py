@@ -11,14 +11,12 @@ def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
     db.add(booking)
     db.commit()
     db.refresh(booking)
-
     return booking
 
 # Get all Bookings
 @router.get("/", response_model=list[models.Booking])
 def get_bookings(db: Session = Depends(get_session)):
     bookings = db.exec(select(models.Booking)).all()
-
     return bookings
 
 # Get single Booking
@@ -27,7 +25,6 @@ def get_booking(_id: int, db: Session = Depends(get_session)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == _id)).first()
     if not booking:
         raise HTTPException(status_code = 404, detail="Booking not found")
-    
     return booking
 
 # Update Booking's status
@@ -38,11 +35,10 @@ def update_status(_id: int, booking_update: models.BookingUpdate, db: Session = 
         raise HTTPException(status_code=404, detail="Booking not found")
     
     booking.status = booking_update.status
-    
+
     db.add(booking)
     db.commit()
     db.refresh()
-    
     return booking
 
 # Delete a Booking
