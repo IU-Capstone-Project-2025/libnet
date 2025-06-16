@@ -10,6 +10,11 @@ class BookingStatus(str, Enum):
     ACTIVE = "active"
     RETURNED = "returned"
 
+class UserRole(str, Enum):
+    USER = "user",
+    MANAGER = "manager",
+    ADMIN = "admin"
+
 class LibUser(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True, index=True)
     first_name: str
@@ -18,7 +23,7 @@ class LibUser(SQLModel, table=True):
     hashed_password: str = Field(nullable=False)
     phone: str
     city: str
-    role: str = Field(default="user")
+    role: UserRole = Field(default=UserRole.USER)
 
     bookings: List["Booking"] = Relationship(back_populates="user")
 
@@ -29,7 +34,7 @@ class LibUserCreate(SQLModel):
     password: str
     phone: str
     city: str
-    role: str = Field(default="user")
+    role: UserRole = Field(default=UserRole.USER)
 
 class LibUserRead(SQLModel):
     id: int
@@ -38,14 +43,14 @@ class LibUserRead(SQLModel):
     email: str
     phone: str
     city: str
-    role: str
+    role: UserRole
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone: Optional[str] = None
     city: Optional[str] = None
-    role: Optional[str] = None
+    role: Optional[UserRole] = None
 
 class Library(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
