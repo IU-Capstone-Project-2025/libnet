@@ -28,8 +28,8 @@ def get_book(_id: int, db: Session = Depends(get_session)):
     return book
 
 # Update a Book
-@router.patch("/{book_id}", response_model=models.Book)
-def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session)):
+@router.patch("/{_id}", response_model=models.Book)
+def update_book(_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -44,7 +44,7 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
     return book
 
 # Delete a Book
-@router.delete("/{book_id}")
+@router.delete("/{_id}")
 def delete_book(book_id: int, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:

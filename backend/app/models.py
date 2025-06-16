@@ -70,10 +70,13 @@ class Booking(SQLModel, table=True):
     library_id: int = Field(foreign_key="library.id")
     date_from: date
     date_to: date
-    status: str = Field(default="active")
+    status: str = Field(default="pending")
 
     user: Optional["LibUser"] = Relationship(back_populates="bookings")
     book: Optional["Book"] = Relationship(back_populates="bookings")
     library: Optional["Library"] = Relationship(back_populates="bookings")
+
+class BookingUpdate(SQLModel):
+    status: str
 
 SQLModel.metadata.create_all(engine)
