@@ -9,12 +9,31 @@ class LibUser(SQLModel, table=True):
     first_name: str
     last_name: str
     email: str = Field(index=True, unique=True)
-    password_hash: str = Field(nullable=False)
+    hashed_password: str = Field(nullable=False)
     phone: str
     city: str
     role: str = Field(default="user")
 
     bookings: List["Booking"] = Relationship(back_populates="user")
+
+class LibUserCreate(SQLModel):
+    id: Optional[int] = Field(primary_key=True, index=True)
+    first_name: str
+    last_name: str
+    email: str = Field(index=True, unique=True)
+    password: str
+    phone: str
+    city: str
+    role: str = Field(default="user")
+
+class LibUserRead(SQLModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+    phone: str
+    city: str
+    role: str
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
@@ -75,8 +94,5 @@ class Booking(SQLModel, table=True):
     user: Optional["LibUser"] = Relationship(back_populates="bookings")
     book: Optional["Book"] = Relationship(back_populates="bookings")
     library: Optional["Library"] = Relationship(back_populates="bookings")
-
-class BookingUpdate(SQLModel):
-    status: str
 
 SQLModel.metadata.create_all(engine)

@@ -1,14 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.database import get_session
+from app.auth import hash_password,  verify_password, create_access_token
 from app import models
 import re
 
 router = APIRouter()
 
-# Create a User
-@router.post("/", response_model=models.LibUser)
-def create_user(user: models.LibUser, db: Session = Depends(get_session)):
+# Register a User
+@router.post("/register", response_model=models.LibUserRead)
+def register(user: models.LibUserCreate, db: Session = Depends(get_session)):
     existing_user = db.exec(select(models.LibUser).where(models.LibUser.email == user.email)).first()
     roles = ["user", "manager", "admin"]
     email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
@@ -23,28 +25,41 @@ def create_user(user: models.LibUser, db: Session = Depends(get_session)):
     if not bool(re.match(email_pattern, user.email)):
         raise HTTPException(status_code=400, detail="Email address is invalid")
 
-    db.add(user)
+    user_dict = user.model_dump()
+    user_dict["hashed_password"] = hash_password(user_dict.pop("password"))
+
+    new_user = models.LibUser(**user_dict)
+    db.add(new_user)
     db.commit()
-    db.refresh(user)
-    print(user.id)
-    return user
+    db.refresh(new_user)
+    return new_user
+
+# Login a User
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.email == form_data.username)).first()
+    if not user or not verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+
+    token = create_access_token(data={"sub": user.email})
+    return {"access_token": token, "token_type": "bearer"}
 
 # Get users
 @router.get("/", response_model=list[models.LibUser])
-def read_users(db: Session = Depends(get_session)):
+def read_all_users(db: Session = Depends(get_session)):
     users = db.exec(select(models.LibUser)).all()
     return users
 
 # Get single user
-@router.get("/{_id}", response_model=list[models.LibUser])
-def read_users(_id: int, db: Session = Depends(get_session)):
+@router.get("/{_id}", response_model=models.LibUserRead)
+def read_user_by_id(_id: int, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 # Update user
-@router.patch("/users/{_id}")
+@router.patch("/users/{_id}", response_model=models.LibUserRead)
 def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
     user = session.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
     if not user:
@@ -59,7 +74,7 @@ def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = 
     session.refresh(user)
     return user
 
-@router.delete("/{_id}")
+@router.delete("/{_id}", status_code=204)
 def delete_user(_id: int, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
     if user is None:
