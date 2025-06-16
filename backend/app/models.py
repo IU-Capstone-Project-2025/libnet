@@ -23,7 +23,6 @@ class LibUser(SQLModel, table=True):
     bookings: List["Booking"] = Relationship(back_populates="user")
 
 class LibUserCreate(SQLModel):
-    id: Optional[int] = Field(primary_key=True, index=True)
     first_name: str
     last_name: str
     email: str = Field(index=True, unique=True)
