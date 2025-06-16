@@ -50,7 +50,7 @@ def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = 
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
 
-    user_data = user_update.dict(exclude_unset=True)
+    user_data = user_update.model_dump(exclude_unset=True)
     for key, value in user_data.items():
         setattr(user, key, value)
 
