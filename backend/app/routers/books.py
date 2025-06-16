@@ -34,7 +34,7 @@ def update_book(_id: int, book_update: models.BookUpdate, db: Session = Depends(
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
 
-    update_data = book_update.dict(exclude_unset=True)
+    update_data = book_update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(book, key, value)
 
