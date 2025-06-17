@@ -21,17 +21,17 @@ def get_libraries(db: Session=Depends(get_session)):
     return libraries
 
 # Get single Library
-@router.get("/{_id}", response_model=models.Library)
-def get_library(_id: int, db: Session=Depends(get_session)):
-    library = db.exec(select(models.Library).where(models.Library.id == _id)).first()
+@router.get("/{library_id}", response_model=models.Library)
+def get_library(library_id: int, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     return library
 
 # Update a Library
-@router.patch("/{_id}", response_model=models.Library)
-def update_library(_id: int, library_update: models.Library, db: Session=Depends(get_session)):
-    library = db.exec(select(models.Library).where(models.Library.id == _id)).first()
+@router.patch("/{library_id}", response_model=models.Library)
+def update_library(library_id: int, library_update: models.Library, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     
@@ -45,9 +45,9 @@ def update_library(_id: int, library_update: models.Library, db: Session=Depends
     return library
 
 # Delete a Library
-@router.delete("/{_id}", response_model=models.Library)
-def delete_library(_id: int, db: Session=Depends(get_session)):
-    library = db.exec(select(models.Library).where(models.Library.id == _id))
+@router.delete("/{library_id}", response_model=models.Library)
+def delete_library(library_id: int, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id))
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     

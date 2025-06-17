@@ -51,17 +51,17 @@ def read_all_users(db: Session = Depends(get_session)):
     return users
 
 # Get single user
-@router.get("/{_id}", response_model=models.LibUserRead)
-def read_user_by_id(_id: int, db: Session = Depends(get_session)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+@router.get("/{user_id}", response_model=models.LibUserRead)
+def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 # Update user
-@router.patch("/{_id}", response_model=models.LibUserRead)
-def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
-    user = session.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+@router.patch("/{user_id}", response_model=models.LibUserRead)
+def update_user(user_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
+    user = session.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
 
@@ -74,9 +74,9 @@ def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = 
     session.refresh(user)
     return user
 
-@router.delete("/{_id}", status_code=204)
-def delete_user(_id: int, db: Session = Depends(get_session)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+@router.delete("/{user_id}", status_code=204)
+def delete_user(user_id: int, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")
     db.delete(user)
