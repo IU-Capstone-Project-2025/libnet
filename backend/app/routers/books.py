@@ -20,9 +20,9 @@ def read_books(db: Session = Depends(get_session)):
     return books
 
 # Get single Book
-@router.get("/{_id}", response_model=models.Book)
-def get_book(_id: int, db: Session = Depends(get_session)):
-    book = db.exec(select(models.Book).where(models.Book.id == _id)).first()
+@router.get("/{book_id}", response_model=models.Book)
+def get_book(book_id: int, db: Session = Depends(get_session)):
+    book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book
@@ -34,8 +34,8 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
 
-    update_data = book_update.dict(exclude_unset=True)
-    for key, value in update_data.items():
+    updated_data = book_update.model_dump(exclude_unset=True)
+    for key, value in updated_data.items():
         setattr(book, key, value)
 
     db.add(book)
