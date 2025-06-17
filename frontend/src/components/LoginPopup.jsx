@@ -2,26 +2,38 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPopup({ onClose }) {
-  const [username, setUsername] = useState('');
-  const { setUser } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const [error, setError] = useState(null);
 
-  const handleLogin = () => {
-    if (username.trim()) {
-      setUser({ username });
+  async function handleLogin() {
+    try {
+      await login(email, password);
       onClose();
+    } catch (err) {
+      setError(err.message);      // show “incorrect email/password”
     }
-  };
+  }
 
   return (
     <div style={styles.overlay}>
       <div style={styles.popup}>
         <input
-          type="text"
-          placeholder="Имя пользователя"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
           style={styles.input}
         />
+        <input
+          type="password"
+          placeholder="Пароль"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={styles.input}
+        />
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div style={styles.buttons}>
           <button onClick={handleLogin}>Войти</button>
           <button onClick={onClose}>Отмена</button>
