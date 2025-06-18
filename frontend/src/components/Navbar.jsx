@@ -23,7 +23,7 @@ export default function Navbar() {
       <div className="user__header-account">
         {user ? (
           <span className="user__header-username" onClick={() => navigate('/profile')}>
-            {user.username}
+            {user.email}
           </span>
         ) : (
           <span className="user__header-login-button" onClick={() => setShowLogin(true)}>Войти</span>

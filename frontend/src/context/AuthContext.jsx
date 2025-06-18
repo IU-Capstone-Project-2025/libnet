@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import * as jwt_decode from 'jwt-decode'; // Note: we’ll use jwt_decode.default()
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 const TOKEN_KEY = 'token';
@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       try {
-        const payload = jwt_decode.default(token);
+        const payload = jwtDecode(access_token);
         setUser({ email: payload.sub, token });
       } catch (err) {
         console.error('Token decode error:', err);
@@ -23,12 +23,14 @@ export function AuthProvider({ children }) {
 
   // Login function
   async function login(email, password) {
+    console.log("Ya loh!")
     const res = await fetch('/api/users/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ username: email, password }),
     });
-
+    console.log(res.body)
+    console.log("aboba")
     if (!res.ok) {
       throw new Error('Incorrect email or password');
     }
@@ -36,7 +38,7 @@ export function AuthProvider({ children }) {
     const { access_token } = await res.json();
     localStorage.setItem(TOKEN_KEY, access_token);
 
-    const payload = jwt_decode.default(access_token);
+    const payload = jwtDecode(access_token);
     setUser({ email: payload.sub, token: access_token });
   }
 
@@ -62,7 +64,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
