@@ -1,0 +1,37 @@
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background-color: #D8FF5A;
+    align-items: center;
+}
+
+#navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
+
+#navbar-right {
+    cursor: pointer
+}
+
+#navbar-logo {
+font-weight: bold;
+margin-right: 20px;
+cursor: pointer
+}
+
+#navbar-link {
+text-decoration: none;
+color: #333
+}
+
+#navbar-username {
+font-weight: 500
+}
+
+#navbar-loginbtn {
+text-decoration: underline;
+color: blue
+}

@@ -74,6 +74,7 @@ def update_user(user_id: int, user_update: models.LibUserUpdate, session: Sessio
     session.refresh(user)
     return user
 
+# Delete user
 @router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: int, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
