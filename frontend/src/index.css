@@ -3,7 +3,8 @@
     --main-user-color: #D8FF5A;
     --main-manager-color: #9FC4FF;
     --main-admin-color: #FFB76B;
-    --red-color: #F4F3EF;
+    --red-color: #FFA1A3;
+    --grey-color: #F4F3EF;
     --weight-regular: 400;
     --weight-bold: 700;
 }
@@ -17,7 +18,6 @@
 body {
   width: 100%;
   margin: 0 auto;
-  font-family: Raleway, sans-serif;
   background-color: #FFFFFF;
 }
 

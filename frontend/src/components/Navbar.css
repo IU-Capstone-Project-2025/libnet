@@ -20,6 +20,11 @@
   cursor: pointer;
 }
 
+.user__navbar-logo-container {
+  display: flex;
+  align-items: center;
+}
+
 .user__navbar-logo {
   width: 184px;
   height: 59px;
