@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.database import get_session
-from app.auth import hash_password,  verify_password, create_access_token
+from app.auth import hash_password, verify_password, create_access_token
 from app import models
 import re
 
@@ -42,7 +42,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
     token = create_access_token(data={"sub": user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "user_id": user.id}
 
 # Get users
 @router.get("/", response_model=list[models.LibUser])
@@ -51,17 +51,17 @@ def read_all_users(db: Session = Depends(get_session)):
     return users
 
 # Get single user
-@router.get("/{_id}", response_model=models.LibUserRead)
-def read_user_by_id(_id: int, db: Session = Depends(get_session)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+@router.get("/{user_id}", response_model=models.LibUserRead)
+def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 # Update user
-@router.patch("/{_id}", response_model=models.LibUserRead)
-def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
-    user = session.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+@router.patch("/{user_id}", response_model=models.LibUserRead)
+def update_user(user_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
+    user = session.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
 
@@ -74,9 +74,10 @@ def update_user(_id: int, user_update: models.LibUserUpdate, session: Session = 
     session.refresh(user)
     return user
 
-@router.delete("/{_id}", status_code=204)
-def delete_user(_id: int, db: Session = Depends(get_session)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == _id)).first()
+# Delete user
+@router.delete("/{user_id}", status_code=204)
+def delete_user(user_id: int, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")
     db.delete(user)
