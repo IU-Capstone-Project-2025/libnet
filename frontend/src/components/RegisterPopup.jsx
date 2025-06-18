@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import RegisterPopup from './RegisterPopup';
+import LoginPopup from './LoginPopup';
 
-export default function LoginPopup({ onClose }) {
+export default function RegisterPopup({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [city,   setCity]   = useState('');
+  const { register } = useAuth();
   const [error, setError] = useState(null);
-  const [showRegister, setShowRegister] = useState(false);
-  if (showRegister) {
-    return <RegisterPopup onClose={onClose} />;
+  
+  const [showLogin, setShowLogin] = useState(false);
+  if (showLogin) {
+    return <LoginPopup onClose={onClose} />;   // render LoginPopup instead
   }
 
-  async function handleLogin() {
+  async function handleRegister() {
     try {
-      await login(email, password);
+      await register({
+       first_name: firstName,
+       last_name : lastName,
+       email,
+       password,
+       phone,
+       city,
+       role: 'user',          // default; let user pick if you need
+     });
       onClose();
     } catch (err) {
       setError(err.message);      // show “incorrect email/password”
@@ -38,11 +51,16 @@ export default function LoginPopup({ onClose }) {
           onChange={e => setPassword(e.target.value)}
           style={styles.input}
         />
+        <input placeholder="Имя"       value={firstName} onChange={e=>setFirstName(e.target.value)} style={styles.input}/>
+        <input placeholder="Фамилия"   value={lastName}  onChange={e=>setLastName(e.target.value)}  style={styles.input}/>
+        <input placeholder="Телефон"   value={phone}     onChange={e=>setPhone(e.target.value)}    style={styles.input}/>
+        <input placeholder="Город"     value={city}      onChange={e=>setCity(e.target.value)}     style={styles.input}/>
+
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div style={styles.buttons}>
-          <button onClick={() => setShowRegister(true)}>Зарегистрироваться</button>
-          <button onClick={handleLogin}>Войти</button>
+          <button onClick={handleRegister}>Зарегистрироваться</button>
           <button onClick={onClose}>Отмена</button>
+          Уже есть аккаунт? <button onClick={() => setShowLogin(true)}>Войти</button>
         </div>
       </div>
     </div>

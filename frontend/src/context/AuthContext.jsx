@@ -40,6 +40,21 @@ export function AuthProvider({ children }) {
     setUser({ email: payload.sub, token: access_token });
   }
 
+  // Register
+  async function register(payload) {
+    const res = await fetch(`/api/users/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const { detail } = await res.json().catch(() => ({}));
+      throw new Error(detail ?? 'Registration failed');
+    }
+    await login(payload.email, payload.password);
+  }
+
   // Logout
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
