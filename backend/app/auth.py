@@ -13,7 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-load_dotenv(dotenv_path="../../.env")
+load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
