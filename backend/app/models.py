@@ -63,6 +63,7 @@ class Library(SQLModel, table=True):
 
 class Book(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    library_id: Optional[int] = Field(foreign_key="library.id")
     title: str
     author: str
     description: str
@@ -96,14 +97,12 @@ class Booking(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="libuser.id")
     book_id: int = Field(foreign_key="book.id")
-    library_id: int = Field(foreign_key="library.id")
     date_from: date
     date_to: date
     status: BookingStatus = Field(default=BookingStatus.PENDING)
 
     user: Optional["LibUser"] = Relationship(back_populates="bookings")
     book: Optional["Book"] = Relationship(back_populates="bookings")
-    library: Optional["Library"] = Relationship(back_populates="bookings")
 
 class BookingUpdate(SQLModel):
     status: BookingStatus
