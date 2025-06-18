@@ -10,21 +10,23 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <div id="navbar">
-      <div>
-        <span id="navbar-logo" onClick={() => navigate('/')}>libnet</span>
-        <Link to="/" id="navbar-link">Каталог</Link>
-        <Link to="/orders" id="navbar-link">Заказы</Link>
-        <Link to="/faq" id="navbar-link">FAQ</Link>
-        <Link to="/favorites" id="navbar-link">Избранное</Link>
+    <div class="user__header">
+      <div class="user__navbar-logo-container">
+        <img class="user__navbar-logo" src="../../public/user-logo-2x.png" alt="логотип" onClick={() => navigate('/')}></img>
       </div>
-      <div id="navbar-right">
+      <div class="user__navbar">
+        <Link to="/" class="user__navbar-link">Каталог</Link>
+        <Link to="/orders" class="user__navbar-link">Заказы</Link>
+        <Link to="/faq" class="user__navbar-link">FAQ</Link>
+        <Link to="/favorites" class="user__navbar-link">Избранное</Link>
+      </div>
+      <div class="user__header-account">
         {user ? (
-          <span id="navbar-username" onClick={() => navigate('/profile')}>
+          <span class="user__header-username" onClick={() => navigate('/profile')}>
             {user.username}
           </span>
         ) : (
-          <span id="navbar-loginbtn" onClick={() => setShowLogin(true)}>Войти</span>
+          <span class="user__header-login-button" onClick={() => setShowLogin(true)}>Войти</span>
         )}
       </div>
       {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
