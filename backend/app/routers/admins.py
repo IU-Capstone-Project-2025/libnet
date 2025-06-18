@@ -7,6 +7,7 @@ from app import models
 
 router = APIRouter()
 
+# Login an Admin
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.email == form_data.username)).first()

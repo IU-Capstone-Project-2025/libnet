@@ -69,12 +69,10 @@ def get_managers_in_library(library_id: int, db: Session=Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
-    managers = db.exec(select(models.LibUser).where(models.LibUser.role == "manager",
-                                                      models.LibUser.library_id == library_id)).all()
-    return managers
+    return library.managers
 
 # Delete a Library
-@router.delete("/{library_id}", response_model=models.Library)
+@router.delete("/{library_id}", status_code=204)
 def delete_library(library_id: int, db: Session = Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id))
     if not library:
