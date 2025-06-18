@@ -9,5 +9,8 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
-CMD ["npm", "run", "dev"]
+RUN npm install -g http-server
+
+EXPOSE 8080
+
+CMD ["http-server", "dist", "-p", "8080"]
