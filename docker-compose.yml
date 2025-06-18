@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:14
     env_file: 
-      - ./libnet/backend/.env
+      - /root/libnet/backend/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres-init:/docker-entrypoint-initdb.d
@@ -24,7 +24,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      postgres
+      - postgres
     environment:
       - WAIT_HOSTS=postgres:5432
       - WAIT_HOSTS_TIMEOUT=300
