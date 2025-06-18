@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import RegisterPopup from './RegisterPopup';
+import './LoginPopup.css'; 
 
 export default function LoginPopup({ onClose }) {
   const [email, setEmail] = useState('');
@@ -22,57 +23,38 @@ export default function LoginPopup({ onClose }) {
   }
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.popup}>
-        <input
+    <div className="user__login-overlay" onClick={onClose}>
+      <div className="user__login-popup" onClick={(e) => e.stopPropagation()}>
+        <h2 class="user__login-heading">Авторизация</h2>
+        <h3 class="user__login-subheading">Чтобы войти, введите вашу почту и пароль</h3>
+        <div class="user__login-inputs">
+          <input
+          class="user__login-input"
           type="email"
-          placeholder="email"
+          placeholder="E-Mail"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          style={styles.input}
         />
         <input
+          class="user__login-input"
           type="password"
           placeholder="Пароль"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          style={styles.input}
         />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <div style={styles.buttons}>
-          <button onClick={() => setShowRegister(true)}>Зарегистрироваться</button>
-          <button onClick={handleLogin}>Войти</button>
-          <button onClick={onClose}>Отмена</button>
+
         </div>
+        
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div class="user__login-button-list">
+          <button class="user__login-button" onClick={handleLogin}>Войти</button>
+          {/* <button onClick={onClose}>Отмена</button> */}
+        </div>
+        <h3 class="user__login-subheading">У вас еще нет аккаунта? <span class="user__login-reg" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
+
       </div>
     </div>
   );
 }
 
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0, left: 0,
-    width: '100%', height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  popup: {
-    background: 'white',
-    padding: 20,
-    borderRadius: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10
-  },
-  input: {
-    padding: 8,
-    fontSize: 16
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  }
-};
+

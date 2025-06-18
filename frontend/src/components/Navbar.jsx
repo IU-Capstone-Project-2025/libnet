@@ -12,7 +12,7 @@ export default function Navbar() {
   return (
     <div className="user__header">
       <div className="user__navbar-logo-container">
-        <img className="user__navbar-logo" src="../../public/user-logo-2x.png" alt="логотип" onClick={() => navigate('/')}></img>
+        <img className="user__navbar-logo" src="/user-logo-2x.png" alt="логотип" onClick={() => navigate('/')}></img>
       </div>
       <div className="user__navbar">
         <Link to="/" className="user__navbar-link">Каталог</Link>
