@@ -44,7 +44,7 @@ export default function BookDetails() {
     >
       {/* Book cover on left */}
       <img
-        src={book.coverUrl || "https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg"} //"https://via.placeholder.com/200x300?text=Book+Cover"}
+        src={book.image_url || "https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg"} //"https://via.placeholder.com/200x300?text=Book+Cover"}
         alt={`${book.title} cover`}
         style={{ width: "200px", height: "300px", objectFit: "cover", borderRadius: "4px" }}
       />
