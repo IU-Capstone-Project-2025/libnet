@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import LoginPopup from './LoginPopup';
+import './AuthPopup.css'; 
+
 
 export default function RegisterPopup({ onClose }) {
   const [email, setEmail] = useState('');
@@ -35,62 +37,70 @@ export default function RegisterPopup({ onClose }) {
   }
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.popup}>
-        <input
-          type="email"
-          placeholder="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="Пароль"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <input placeholder="Имя"       value={firstName} onChange={e=>setFirstName(e.target.value)} style={styles.input}/>
-        <input placeholder="Фамилия"   value={lastName}  onChange={e=>setLastName(e.target.value)}  style={styles.input}/>
-        <input placeholder="Телефон"   value={phone}     onChange={e=>setPhone(e.target.value)}    style={styles.input}/>
-        <input placeholder="Город"     value={city}      onChange={e=>setCity(e.target.value)}     style={styles.input}/>
+<div className="user__login-overlay" onClick={onClose}>
+  <div className="user__login-popup" onClick={e => e.stopPropagation()}>
+    <h2 className="user__login-heading">Регистрация</h2>
+    <h3 className="user__login-subheading">Введите данные для создания аккаунта</h3>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <div style={styles.buttons}>
-          <button onClick={handleRegister}>Зарегистрироваться</button>
-          <button onClick={onClose}>Отмена</button>
-          Уже есть аккаунт? <button onClick={() => setShowLogin(true)}>Войти</button>
-        </div>
-      </div>
+    <div className="user__login-inputs">
+      <input
+        className="user__login-input"
+        type="email"
+        placeholder="E-Mail"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
+      <input
+        className="user__login-input"
+        type="password"
+        placeholder="Пароль"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+      <input
+        className="user__login-input"
+        placeholder="Имя"
+        value={firstName}
+        onChange={e => setFirstName(e.target.value)}
+      />
+      <input
+        className="user__login-input"
+        placeholder="Фамилия"
+        value={lastName}
+        onChange={e => setLastName(e.target.value)}
+      />
+      <input
+        className="user__login-input"
+        placeholder="Телефон"
+        value={phone}
+        onChange={e => setPhone(e.target.value)}
+      />
+      <input
+        className="user__login-input"
+        placeholder="Город"
+        value={city}
+        onChange={e => setCity(e.target.value)}
+      />
     </div>
+
+    {error && <p style={{ color: 'red' }}>{error}</p>}
+
+    <div className="user__login-checkbox-container">
+      <input type="checkbox" className="user__login-checkbox" name="terms" required />
+      <h3 className="user__login-terms-text">Я согласен с условиями пользования сервиса</h3>
+    </div>
+    
+    
+    <div className="user__login-button-list">
+      <button className="user__login-button" onClick={handleRegister}>Зарегистрироваться</button>
+    </div>
+
+    <h3 className="user__login-subheading">
+      Уже есть аккаунт? <span className="user__login-switch" onClick={() => setShowLogin(true)}>Войти</span>
+    </h3>
+  </div>
+</div>
+
   );
 }
 
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0, left: 0,
-    width: '100%', height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  popup: {
-    background: 'white',
-    padding: 20,
-    borderRadius: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10
-  },
-  input: {
-    padding: 8,
-    fontSize: 16
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  }
-};

@@ -59,11 +59,11 @@
   position: fixed;
 }
 
-.user__login-input:not(:last-child) {
+.user__login-input:first-child {
   border-radius: 20px 0 0 0;
 }
 
-.user__login-input:not(:first-child) {
+.user__login-input:last-child {
   border-radius: 0 0 20px 0;
 }
 
@@ -86,10 +86,22 @@
   background-color: var(--main-user-color);
 }
 
-.user__login-reg {
+.user__login-switch {
   text-decoration: underline;
 }
 
-.user__login-reg:hover {
+.user__login-switch:hover {
   text-decoration: none;
+}
+
+.user__login-checkbox-container {
+  display: flex;
+  justify-content: start;
+  gap: 5px;
+  width: 100%;
+}
+
+.user__login-terms-text {
+  font-size: 16px;
+  font-weight: 400;
 }
