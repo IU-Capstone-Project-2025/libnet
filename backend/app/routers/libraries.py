@@ -44,6 +44,35 @@ def update_library(library_id: int, library_update: models.Library, db: Session 
     db.refresh(library)
     return library
 
+# Get list of books in a Library
+@router.get("/{library_id}/books", response_model=list[models.Book])
+def get_books_in_library(library_id: int, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="Library not found")
+    books = []
+    for book in library.books:
+        books.append(book.book)
+    return books
+
+# Get list of bookings in a Library
+@router.get("/{library_id}/bookings", response_model=list[models.Booking])
+def get_bookings_in_library(library_id: int, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="Library not found")
+    return library.bookings
+
+# Get list of managers in a Library
+@router.get("/{library_id}/managers", response_model=list[models.LibUser])
+def get_managers_in_library(library_id: int, db: Session=Depends(get_session)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="Library not found")
+    managers = db.exec(select(models.LibUser).where(models.LibUser.role == "manager",
+                                                      models.LibUser.library_id == library_id)).all()
+    return managers
+
 # Delete a Library
 @router.delete("/{library_id}", response_model=models.Library)
 def delete_library(library_id: int, db: Session = Depends(get_session)):
