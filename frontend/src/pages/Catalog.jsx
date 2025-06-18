@@ -16,7 +16,7 @@ export default function Catalog() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBooks(data);
-        console.log(data);
+        // console.log(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -29,6 +29,8 @@ export default function Catalog() {
 
   if (loading) return <p>Загружаем…</p>;
   if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
+
+
 
   return (
     <>
@@ -57,7 +59,7 @@ export default function Catalog() {
                   <span className="user__book-info-author">{b.author}</span>
                 </div>
                 <div className="user__book-like-button">
-                  <img className="user__book-like-icon" src="" alt="Лайк"></img>
+                  <img className="user__book-like-icon" src='/like-2.svg' alt="Лайк" width={"40px"} height={"40px"}></img> {/*  TODO: change image, don't set to ""*/}
                 </div>
               </div>
             </div>

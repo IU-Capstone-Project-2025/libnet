@@ -2,14 +2,46 @@ import {React, useState} from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, logout, update_user } = useAuth();
+  const [error, setError] = useState(null);
 
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [phone, setPhone] = useState(user.phone);
-  const [city, setCity] = useState(user.setCity);
+  const [city, setCity] = useState(user.city);
+
+  async function handleUpdate() {
+    if (password != '') {
+      try {
+      await update_user({
+       first_name: firstName,
+       last_name : lastName,
+       email: email,
+       password: password,
+       phone: phone,
+       city: city,
+      });
+        onClose();
+      } catch (err) {
+        setError(err.message);
+      }
+    } else {
+      try {
+      await update_user({
+       first_name: firstName,
+       last_name : lastName,
+       email: email,
+       phone: phone,
+       city: city,
+      });
+        onClose();
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }
 
   return (
     <>
@@ -55,8 +87,8 @@ export default function Profile() {
         onChange={e => setLastName(e.target.value)}
       /> */}
 
-      <button>Сохранить</button>
-      <button>Выйти из аккаунта</button>
+      <button onClick={handleUpdate}>Сохранить</button>
+      <button onClick={logout}>Выйти из аккаунта</button>
     </>
   )
 }

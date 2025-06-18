@@ -31,6 +31,11 @@ export default function BookDetails() {
   if (error) return <p style={{ color: "red" }}>Ошибка: {error}</p>;
   if (!book) return <p>Книга не найдена.</p>;
 
+  // TODO: handle bookings
+  async function handleBooking(book_id) {
+    
+  }
+
   return (
     <div
       style={{
@@ -48,6 +53,8 @@ export default function BookDetails() {
         alt={`${book.title} cover`}
         style={{ width: "200px", height: "300px", objectFit: "cover", borderRadius: "4px" }}
       />
+      {/* <br/>
+      <button onClick={handleBooking()}>Забронировать</button> */}
 
       {/* Book info on right */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
