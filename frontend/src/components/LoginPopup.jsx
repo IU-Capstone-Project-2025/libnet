@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import RegisterPopup from './RegisterPopup';
-import './LoginPopup.css'; 
+import './AuthPopup.css'; 
 
 export default function LoginPopup({ onClose }) {
   const [email, setEmail] = useState('');
@@ -50,7 +50,7 @@ export default function LoginPopup({ onClose }) {
           <button class="user__login-button" onClick={handleLogin}>Войти</button>
           {/* <button onClick={onClose}>Отмена</button> */}
         </div>
-        <h3 class="user__login-subheading">У вас еще нет аккаунта? <span class="user__login-reg" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
+        <h3 class="user__login-subheading">У вас еще нет аккаунта? <span class="user__login-switch" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
 
       </div>
     </div>
