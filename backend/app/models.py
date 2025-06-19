@@ -26,6 +26,7 @@ class LibUser(SQLModel, table=True):
     role: UserRole = Field(default=UserRole.USER)
     library_id: Optional[int] = Field(foreign_key="library.id")
 
+    library: Optional["Library"] = Relationship(back_populates="managers")
     bookings: List["Booking"] = Relationship(back_populates="user")
 
 class LibUserCreate(SQLModel):
