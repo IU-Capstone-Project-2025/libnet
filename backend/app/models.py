@@ -72,6 +72,7 @@ class Library(SQLModel, table=True):
 
     books: List["LibraryBook"] = Relationship(back_populates="library")
     managers: List["LibUser"] = Relationship(back_populates="library")
+    bookings: List["Booking"] = Relationship(back_populates="library")
 
 class Book(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
