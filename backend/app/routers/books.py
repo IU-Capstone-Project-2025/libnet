@@ -3,6 +3,8 @@ from sqlmodel import Session, select
 from app.database import get_session
 from app import models
 
+router = APIRouter()
+
 # Create a Book
 @router.post("/", response_model=models.Book)
 def create_book(book: models.Book, db: Session = Depends(get_session)):
