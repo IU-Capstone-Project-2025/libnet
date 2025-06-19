@@ -24,7 +24,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Catalog />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/favorites" element={<Favorites />} />
           <Route path="/books/:id" element={<Book/>} />
           <Route
             path="/orders"
@@ -42,7 +41,14 @@ export default function App() {
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRoute>
+                <Favorites />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

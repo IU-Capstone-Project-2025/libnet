@@ -31,6 +31,11 @@ export default function BookDetails() {
   if (error) return <p style={{ color: "red" }}>Ошибка: {error}</p>;
   if (!book) return <p>Книга не найдена.</p>;
 
+  // TODO: handle bookings
+  async function handleBooking(book_id) {
+    
+  }
+
   return (
     <div
       style={{
@@ -44,10 +49,12 @@ export default function BookDetails() {
     >
       {/* Book cover on left */}
       <img
-        src={book.coverUrl || "https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg"} //"https://via.placeholder.com/200x300?text=Book+Cover"}
+        src={book.image_url || "https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg"} //"https://via.placeholder.com/200x300?text=Book+Cover"}
         alt={`${book.title} cover`}
         style={{ width: "200px", height: "300px", objectFit: "cover", borderRadius: "4px" }}
       />
+      {/* <br/>
+      <button onClick={handleBooking()}>Забронировать</button> */}
 
       {/* Book info on right */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
