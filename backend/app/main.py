@@ -8,9 +8,9 @@ from app.routers.books import router as books_router
 
 app = FastAPI()
 
-app.include_router(users_router, prefix="/users", tags=["users"])
-app.include_router(managers_router, prefix="/managers", tags=["managers"])
-app.include_router(admins_router, prefix="/admins", tags=["admins"])
-app.include_router(bookings_router, prefix="/bookings", tags=["bookings"])
-app.include_router(libraries_router, prefix="/libraries", tags=["libraries"])
-app.include_router(books_router, prefix="/books", tags=["books"])
+app.include_router(users_router, prefix="/api/users", tags=["users"])
+app.include_router(managers_router, prefix="/api/managers", tags=["managers"])
+app.include_router(admins_router, prefix="/api/admins", tags=["admins"])
+app.include_router(bookings_router, prefix="/api/bookings", tags=["bookings"])
+app.include_router(libraries_router, prefix="/api/libraries", tags=["libraries"])
+app.include_router(books_router, prefix="/api/books", tags=["books"])
