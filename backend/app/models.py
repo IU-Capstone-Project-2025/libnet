@@ -59,12 +59,6 @@ class Library(SQLModel, table=True):
     city: str
     address: str
 
-    bookings: List["Booking"] = Relationship(
-        back_populates="library",
-        primaryjoin="Library.id == Book.library_id",
-        secondary="join(Book, Booking, Book.id == Booking.book_id)",
-        viewonly=True
-    )
     books: List["LibraryBook"] = Relationship(back_populates="library")
     managers: List["LibUser"] = Relationship(back_populates="library")
 
