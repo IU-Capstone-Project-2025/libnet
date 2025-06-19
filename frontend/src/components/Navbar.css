@@ -1,0 +1,48 @@
+.user__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding: 10px 20px;
+  font-weight: var(--weight-regular);
+  font-size: 24px;
+  background-color: var(--main-user-color);
+}
+
+.user__navbar {
+  display: flex;
+  gap: 33px;
+  font-weight: var(--weight-regular);
+}
+
+.user__navbar-right {
+  cursor: pointer;
+}
+
+.user__navbar-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.user__navbar-logo {
+  width: 184px;
+  height: 59px;
+  cursor: pointer;
+}
+
+.user__navbar-link {
+  text-decoration: none;
+}
+
+.user__navbar-link:hover {
+  text-decoration: underline;
+}
+
+.user__header-username {
+  font-weight: 500;
+}
+
+.user__header-login-button:hover {
+  text-decoration: underline;
+}

@@ -1,10 +1,6 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:14
-    env_file: 
-      - /root/libnet/backend/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres-init:/docker-entrypoint-initdb.d
@@ -33,7 +29,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "80:4173"
     depends_on:
       - backend
 
