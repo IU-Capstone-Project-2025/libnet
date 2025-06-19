@@ -11,8 +11,8 @@ class BookingStatus(str, Enum):
     RETURNED = "returned"
 
 class UserRole(str, Enum):
-    USER = "user",
-    MANAGER = "manager",
+    USER = "user"
+    MANAGER = "manager"
     ADMIN = "admin"
 
 class LibUser(SQLModel, table=True):
@@ -59,7 +59,12 @@ class Library(SQLModel, table=True):
     city: str
     address: str
 
-    bookings: List["Booking"] = Relationship(back_populates="library")
+    bookings: List["Booking"] = Relationship(
+        back_populates="library",
+        primaryjoin="Library.id == Book.library_id",
+        secondary="join(Book, Booking, Book.id == Booking.book_id)",
+        viewonly=True
+    )
     books: List["LibraryBook"] = Relationship(back_populates="library")
     managers: List["LibUser"] = Relationship(back_populates="library")
 
