@@ -67,7 +67,8 @@ class Library(SQLModel, table=True):
     open_at: str
     close_at: str
     days_open: str
-    duration: int = Field(default=7, nullable=False)
+    booking_duration: int = Field(default=7, nullable=False)
+    rent_duration: int = Field(default=14, nullable=False)
 
     books: List["LibraryBook"] = Relationship(back_populates="library")
     managers: List["LibUser"] = Relationship(back_populates="library")
