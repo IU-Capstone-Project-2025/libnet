@@ -40,6 +40,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
     user = db.exec(select(LibUser).where(LibUser.email == email)).first()
     if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(status_code=401, detail="User does not exist")
     return user
 

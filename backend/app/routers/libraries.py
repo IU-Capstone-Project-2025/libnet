@@ -35,7 +35,7 @@ def get_library_cities(db: Session = Depends(get_session)):
 def get_library(library_id: int, db: Session = Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     return library
 
 # Update a Library
@@ -43,7 +43,7 @@ def get_library(library_id: int, db: Session = Depends(get_session)):
 def update_library(library_id: int, library_update: models.Library, db: Session = Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     
     updated_data = library_update.model_dump(exclude_unset=True)
     for key, value in updated_data.items():
@@ -59,7 +59,7 @@ def update_library(library_id: int, library_update: models.Library, db: Session 
 def get_books_in_library(library_id: int, db: Session=Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     books = []
     for book in library.books:
         books.append(book.book)
@@ -70,7 +70,7 @@ def get_books_in_library(library_id: int, db: Session=Depends(get_session)):
 def get_bookings_in_library(library_id: int, db: Session=Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     return library.bookings
 
 # Get list of managers in a Library
@@ -78,7 +78,7 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session)):
 def get_managers_in_library(library_id: int, db: Session=Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     return library.managers
 
 # Delete a Library
@@ -86,7 +86,7 @@ def get_managers_in_library(library_id: int, db: Session=Depends(get_session)):
 def delete_library(library_id: int, db: Session = Depends(get_session)):
     library = db.exec(select(models.Library).where(models.Library.id == library_id))
     if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
+        raise HTTPException(status_code=404, detail="Library does not exist")
     
     db.delete(library)
     db.commit()
