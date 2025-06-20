@@ -20,6 +20,16 @@ def get_libraries(db: Session = Depends(get_session)):
     libraries = db.exec(select(models.Library)).all()
     return libraries
 
+# Get cities of all Libraries
+@router.get("/cities", response_model=list[str])
+def get_library_cities(db: Session = Depends(get_session)):
+    libraries = db.exec(select(models.Library)).all()
+    if not libraries:
+        raise HTTPException(status_code=404, detail="No libraries found")
+    
+    cities = list(set(library.city for library in libraries))
+    return cities
+
 # Get single Library
 @router.get("/{library_id}", response_model=models.Library)
 def get_library(library_id: int, db: Session = Depends(get_session)):
