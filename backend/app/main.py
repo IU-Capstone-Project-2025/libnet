@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from app.routers.users import router as users_router
 from app.routers.managers import router as managers_router
 from app.routers.admins import router as admins_router
@@ -7,6 +8,8 @@ from app.routers.libraries import router as libraries_router
 from app.routers.books import router as books_router
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(managers_router, prefix="/managers", tags=["managers"])
