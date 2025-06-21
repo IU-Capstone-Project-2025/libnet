@@ -27,6 +27,7 @@ class LibUser(SQLModel, table=True):
     role: UserRole = Field(default=UserRole.USER)
     library_id: Optional[int] = Field(foreign_key="library.id")
 
+    favorite_books: List["FavoriteBook"] = Relationship(back_populates="user")
     library: Optional["Library"] = Relationship(back_populates="managers")
     bookings: List["Booking"] = Relationship(back_populates="user")
     library: Optional["Library"] = Relationship(back_populates="managers")
@@ -86,6 +87,7 @@ class Book(SQLModel, table=True):
     genre: str
     rating: int = Field(default=0, nullable=False)
 
+    favorite_users: List["FavoriteBook"] = Relationship(back_populates="book")
     bookings: List["Booking"] = Relationship(back_populates="book")
     libraries: List["LibraryBook"] = Relationship(back_populates="book")
 
@@ -98,6 +100,13 @@ class BookUpdate(SQLModel):
     image_url: Optional[str] = None
     isbn: Optional[str] = None
     genre: Optional[str] = None
+
+class FavoriteBook(SQLModel, table=True):
+    user_id: int = Field(foreign_key="libuser.id", primary_key=True)
+    book_id: int = Field(foreign_key="book.id", primary_key=True)
+
+    user: Optional["LibUser"] = Relationship(back_populates="favorite_books")
+    book: Optional["Book"] = Relationship(back_populates="favorite_users")
 
 class LibraryBook(SQLModel, table=True):
     library_id: int = Field(foreign_key="library.id", primary_key=True)

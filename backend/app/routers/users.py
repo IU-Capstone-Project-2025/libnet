@@ -58,10 +58,39 @@ def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="User does not exist")
     return user
 
+# Add favorite book to user
+@router.post("/like", response_model=models.FavoriteBook)
+def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == favorite_book.user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User does not exist")
+    
+    book = db.exec(select(models.Book).where(models.Book.id == favorite_book.book_id)).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book does not exist")
+    
+    existing_fav = db.exec(select(models.FavoriteBook).where(
+        models.FavoriteBook.user_id == favorite_book.user_id,
+        models.FavoriteBook.book_id == favorite_book.book_id
+    )).first()
+    if existing_fav:
+        raise HTTPException(status_code=400, detail="Book is already liked by this user")
+    
+    db.add(favorite_book)
+    db.commit()
+    return favorite_book
+
+# Get user's favorite books
+@router.get("/likes/{user_id}", response_model=list[int])
+def get_user_liked_books_by_id(user_id: int, db: Session = Depends(get_session)):
+    fav_books = db.exec(select(models.FavoriteBook.book_id).where(models.FavoriteBook.user_id == user_id)).all()
+    return fav_books
+
+
 # Update user
 @router.patch("/{user_id}", response_model=models.LibUserRead)
-def update_user(user_id: int, user_update: models.LibUserUpdate, session: Session = Depends(get_session)):
-    user = session.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
+def update_user(user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
 
@@ -69,9 +98,9 @@ def update_user(user_id: int, user_update: models.LibUserUpdate, session: Sessio
     for key, value in user_data.items():
         setattr(user, key, value)
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
     return user
 
 # Delete user
