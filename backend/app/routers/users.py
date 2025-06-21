@@ -86,6 +86,13 @@ def get_user_liked_books_by_id(user_id: int, db: Session = Depends(get_session))
     fav_books = db.exec(select(models.FavoriteBook.book_id).where(models.FavoriteBook.user_id == user_id)).all()
     return fav_books
 
+# Get user's specific favorite book
+@router.get("/likes/{user_id}/{book_id}", response_model=models.FavoriteBook)
+def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(get_session)):
+    fav_book = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.user_id == user_id and models.FavoriteBook.book_id == book_id)).first()
+    if not fav_book:
+        raise HTTPException(status_code=404, detail="Book is not liked by this user")
+    return fav_book
 
 # Update user
 @router.patch("/{user_id}", response_model=models.LibUserRead)
