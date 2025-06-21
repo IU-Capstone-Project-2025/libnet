@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from '../context/AuthContext';
 
 export default function BookDetails() {
+  const {user} = useAuth();
+
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,8 +35,37 @@ export default function BookDetails() {
   if (!book) return <p>Книга не найдена.</p>;
 
   // TODO: handle bookings
-  async function handleBooking(book_id) {
-    
+  async function handleBooking() {
+    const date = new Date();
+
+    try {
+      const lib = await fetch(`/api/libraries/${book.library_id}`);
+      if (!lib.ok) throw new Error(`HTTP ${lib.status}`);
+      const lib_data = await lib.json();
+
+      const date_to = new Date();
+      date_to.setDate(date.getDate() + lib_data.booking_duration);
+
+      const res = await fetch('/api/bookings/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id:    user.id,          
+          book_id:    id,
+          library_id: book.library_id,
+          date_from:  date.toISOString().slice(0, 10),
+          date_to: date_to.toISOString().slice(0, 10)
+        }),
+      }); 
+
+      if (!res.ok) {
+        throw new Error('Booking failed');
+      } else {
+        console.log("200 all good")
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
@@ -53,8 +85,8 @@ export default function BookDetails() {
         alt={`${book.title} cover`}
         style={{ width: "200px", height: "300px", objectFit: "cover", borderRadius: "4px" }}
       />
-      {/* <br/>
-      <button onClick={handleBooking()}>Забронировать</button> */}
+      <br/>
+      <button onClick={handleBooking}>Забронировать</button>
 
       {/* Book info on right */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>

@@ -45,4 +45,5 @@
 
 .user__header-login-button:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
