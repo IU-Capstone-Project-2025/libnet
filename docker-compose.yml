@@ -76,7 +76,7 @@ services:
     labels:
       - "prometheus-job=backend"
     expose:
-      - "3000"
+      - "8000"
 
   frontend:
     container_name: frontend
