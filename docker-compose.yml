@@ -1,6 +1,29 @@
 services:
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafanadata:/var/lib/grafana
+    depends_on:
+      - loki
+
   postgres:
     image: postgres:14
+    container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres-init:/docker-entrypoint-initdb.d
@@ -10,8 +33,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
+    logging:
+      driver: loki
+      options: 
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=postgres,service=db"
 
   backend:
+    container_name: backend
     build: ./backend
     ports:
       - "8000:8000"
@@ -25,13 +54,26 @@ services:
       - WAIT_HOSTS=postgres:5432
       - WAIT_HOSTS_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=5
+    logging:
+      driver: loki
+      options:
+        loki_url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=backend,service=api"
 
   frontend:
+    container_name: frontend
     build: ./frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=frontend,service=web"
 
 volumes:
   postgres_data:
+  loki_data:
+  grafana_data:
