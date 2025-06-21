@@ -55,7 +55,7 @@ def read_all_users(db: Session = Depends(get_session)):
 def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User does not exist")
     return user
 
 # Update user

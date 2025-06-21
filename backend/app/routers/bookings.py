@@ -24,7 +24,7 @@ def get_bookings(db: Session = Depends(get_session)):
 def get_booking(booking_id: int, db: Session = Depends(get_session)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
-        raise HTTPException(status_code = 404, detail="Booking not found")
+        raise HTTPException(status_code = 404, detail="Booking does not exist")
     return booking
 
 # Get Bookings of a certain User
@@ -32,7 +32,7 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
 def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
     booking = db.exec(select(models.Booking).where(models.LibUser.id == user_id)).first()
     if not booking:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User does not exist")
     return booking
 
 # Update Booking's status
@@ -40,7 +40,7 @@ def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
 def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
+        raise HTTPException(status_code=404, detail="Booking does not exist")
     
     booking.status = booking_update.status
 
@@ -54,7 +54,7 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
 def update_bookings(booking_id: int, db: Session = Depends(get_session)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
-        raise HTTPException(status_code = 404, detail="Booking not found")
+        raise HTTPException(status_code = 404, detail="Booking does not exist")
 
     db.delete(booking)
     db.commit()
