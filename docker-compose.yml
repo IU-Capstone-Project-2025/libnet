@@ -24,7 +24,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    container-name: prometheus
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
