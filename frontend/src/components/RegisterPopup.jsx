@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import LoginPopup from './LoginPopup';
 import './AuthPopup.css'; 
 
-
 export default function RegisterPopup({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
