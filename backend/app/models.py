@@ -9,6 +9,7 @@ class BookingStatus(str, Enum):
     PENDING = "pending"
     ACTIVE = "active"
     RETURNED = "returned"
+    CANCELLED = "cancelled"
 
 class UserRole(str, Enum):
     USER = "user"
