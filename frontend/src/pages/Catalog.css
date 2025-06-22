@@ -14,9 +14,42 @@
   background-color: var(--grey-color);
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center;
   border-radius: 0 20px 20px 0;
-  width: fit-content;
+  max-width: fit-content;
+  width: 100%;
+  padding: 20px 0;
+  height: fit-content;
+}
+
+.user__sidebar-heading {
+  font-size: 24px;
+}
+
+.user__genre-list {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 0 20px;
+  font-size: 20px;
+  gap: 20px;
+  list-style: none;
+}
+
+.user__genre-link:hover {
+  border-bottom: 1px solid black;
+}
+
+.user__genre-link:active {
+  opacity: 0.5;
+}
+
+.user__genre-item--active {
+  font-weight: var(--weight-bold);
+}
+
+.user__genre-item--active:hover {
+  text-decoration: none;
 }
 
 .user__books-list {
@@ -77,5 +110,3 @@
   overflow: hidden;
   font-weight: var(--weight-bold);
 }
-
-
