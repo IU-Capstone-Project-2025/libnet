@@ -7,13 +7,13 @@ export default function Footer() {
 
   return (
     <div className="user__footer">
-      <div className="user__navbar">
+      <div className="user__navbar user__footer-navbar">
         <Link to="/" className="user__navbar-link">Каталог</Link>
         <Link to="/orders" className="user__navbar-link">Заказы</Link>
         <Link to="/faq" className="user__navbar-link">FAQ</Link>
         <Link to="/favorites" className="user__navbar-link">Избранное</Link>
       </div>
-      <p>libnet 2025 ©</p>
+      <p className="copyright">libnet 2025 ©</p>
     </div>
   );
 }

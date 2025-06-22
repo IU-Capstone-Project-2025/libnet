@@ -22,7 +22,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Navbar />
-        <Footer />
+
         <Routes>
           <Route path="/" element={<Catalog />} />
           <Route path="/faq" element={<FAQ />} />
@@ -52,6 +52,7 @@ export default function App() {
             }
           />
         </Routes>
+        <Footer />
       </Router>
     </AuthProvider>
   );
