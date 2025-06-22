@@ -21,6 +21,7 @@ services:
     volumes:
       - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
       - grafana_data:/var/lib/grafana
+    command: sh -c "mkdir -p /etc/grafana/provisioning/datasources/ && /run.sh"
     depends_on:
       - loki
       - prometheus
