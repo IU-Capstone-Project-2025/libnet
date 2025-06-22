@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel import Session, select
+from sqlmodel import Session, select, and_
 from app.database import get_session
 from app.auth import hash_password, verify_password, create_access_token
 from app import models
@@ -83,7 +83,7 @@ def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_se
 # Remove favorite book from user
 @router.delete("/like/{user_id}/{book_id}", status_code=204)
 def unlike_a_book(user_id: int, book_id: int, db: Session = Depends(get_session)):
-    fav_book = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.user_id == user_id and models.FavoriteBook.book_id == book_id)).first()
+    fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
         raise HTTPException(status_code=404, detail="Book is not liked by this user")
     db.delete(fav_book)
@@ -98,9 +98,9 @@ def get_user_liked_books_by_id(user_id: int, db: Session = Depends(get_session))
 # Get user's specific favorite book
 @router.get("/likes/{user_id}/{book_id}", response_model=models.FavoriteBook)
 def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(get_session)):
-    fav_book = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.user_id == user_id and models.FavoriteBook.book_id == book_id)).first()
+    fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
-        raise Response(status_code=204)
+        return Response(status_code=204)
     return fav_book
 
 # Update user

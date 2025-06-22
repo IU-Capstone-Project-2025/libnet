@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 
@@ -20,7 +20,7 @@ def create_book(book: models.Book, quantity: int, db: Session = Depends(get_sess
 # Get quantity of books in a library
 @router.get("/quantity/{library_id}/{book_id}", response_model=int)
 def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session)):
-    book = db.exec(select(models.LibraryBook).where(models.LibraryBook.library_id == library_id and models.LibraryBook.book_id == book_id)).first()
+    book = db.exec(select(models.LibraryBook).where(_and(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
