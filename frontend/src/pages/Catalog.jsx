@@ -81,16 +81,9 @@ export default function Catalog() {
                   <strong className="user__book-info-title">{b.title}</strong>
                   <span className="user__book-info-author">{b.author}</span>
                 </div>
-                <div className="user__book-like-button">
-                  <img
-                    className="user__book-like-icon"
-                    src="/like-2.svg"
-                    alt="Лайк"
-                    width={'40px'}
-                    height={'40px'}
-                  ></img>{' '}
-                  {/*  TODO: change image, don't set to ""*/}
-                </div>
+                {/* <div className="user__book-like-button">
+                  <img className="user__book-like-icon" src='/like-2.svg' alt="Лайк" width={"40px"} height={"40px"}></img>
+                </div> */}
               </div>
             </div>
           ))}

@@ -25,18 +25,18 @@ export default function LoginPopup({ onClose }) {
   return (
     <div className="user__login-overlay" onClick={onClose}>
       <div className="user__login-popup" onClick={(e) => e.stopPropagation()}>
-        <h2 class="user__login-heading">Авторизация</h2>
-        <h3 class="user__login-subheading">Чтобы войти, введите вашу почту и пароль</h3>
-        <div class="user__login-inputs">
+        <h2 className="user__login-heading">Авторизация</h2>
+        <h3 className="user__login-subheading">Чтобы войти, введите вашу почту и пароль</h3>
+        <div className="user__login-inputs">
           <input
-          class="user__login-input"
+          className="user__login-input"
           type="email"
           placeholder="E-Mail"
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
         <input
-          class="user__login-input"
+          className="user__login-input"
           type="password"
           placeholder="Пароль"
           value={password}
@@ -46,11 +46,11 @@ export default function LoginPopup({ onClose }) {
         </div>
         
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <div class="user__login-button-list">
-          <button class="user__login-button" onClick={handleLogin}>Войти</button>
+        <div className="user__login-button-list">
+          <button className="user__login-button" onClick={handleLogin}>Войти</button>
           {/* <button onClick={onClose}>Отмена</button> */}
         </div>
-        <h3 class="user__login-subheading">У вас еще нет аккаунта? <span class="user__login-switch" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
+        <h3 className="user__login-subheading">У вас еще нет аккаунта? <span className="user__login-switch" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
 
       </div>
     </div>

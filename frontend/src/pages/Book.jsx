@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function BookDetails() {
   const {user} = useAuth();
-
+  const [favorite, setFavorite] = useState(false);
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,14 +27,39 @@ export default function BookDetails() {
         setLoading(false);
       }
     }
+
     fetchBook();
+    
   }, [id]);
+
+  useEffect(() => {
+    if (user == null) return;
+
+    async function checkFavorite() {
+
+      try {
+        const res = await fetch(`/api/users/likes/${user.id}/${id}`);
+        if (!res.ok) {
+          if (res.status == "204") {
+            setFavorite(false);
+            console.log("nety");
+          }
+        } else {
+          setFavorite(true);
+          console.log("yest?>!");
+        }
+        
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    checkFavorite();
+  }, [user]);
 
   if (loading) return <p>Загружаем…</p>;
   if (error) return <p style={{ color: "red" }}>Ошибка: {error}</p>;
   if (!book) return <p>Книга не найдена.</p>;
 
-  // TODO: handle bookings
   async function handleBooking() {
     const date = new Date();
 
@@ -61,11 +86,54 @@ export default function BookDetails() {
       if (!res.ok) {
         throw new Error('Booking failed');
       } else {
-        console.log("200 all good")
+        // TODO: errors
       }
     } catch (err) {
       setError(err.message);
     }
+  }
+
+  async function handleFavorite() {
+    if (!favorite) {
+      try {
+        const res = await fetch('/api/users/like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id:    user.id,          
+            book_id:    id,
+          }),
+        }); 
+
+        if (!res.ok) {
+          throw new Error('Favorite failed');
+        } else {
+          setFavorite(true);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    } else {
+      try {
+        const res = await fetch(`/api/users/like/${user.id}/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id:    user.id,          
+            book_id:    id,
+          }),
+        }); 
+
+        if (!res.ok) {
+          // throw new Error(res.statusText);
+        } else {
+          setFavorite(false);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    
   }
 
   return (
@@ -87,6 +155,8 @@ export default function BookDetails() {
       />
       <br/>
       <button onClick={handleBooking}>Забронировать</button>
+
+      <button onClick={handleFavorite}>{favorite ? "Удалить из избранного" : "Добавить в избранное"}</button>
 
       {/* Book info on right */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
