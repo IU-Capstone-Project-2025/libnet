@@ -88,11 +88,11 @@
 }
 
 .user__login-switch {
-  text-decoration: underline;
+  border-bottom: 1px solid black;
 }
 
 .user__login-switch:hover {
-  text-decoration: none;
+  border-bottom: 1px solid transparent;
   cursor: pointer;
 }
 

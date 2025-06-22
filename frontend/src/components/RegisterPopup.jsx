@@ -70,6 +70,7 @@ export default function RegisterPopup({ onClose }) {
       />
       <input
         className="user__login-input"
+        type="tel"
         placeholder="Телефон"
         value={phone}
         onChange={e => setPhone(e.target.value)}
