@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import { AuthProvider } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import Footer from './components/Footer';
 
 export function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -21,6 +22,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Navbar />
+        <Footer />
         <Routes>
           <Route path="/" element={<Catalog />} />
           <Route path="/faq" element={<FAQ />} />
