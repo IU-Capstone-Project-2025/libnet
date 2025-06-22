@@ -110,4 +110,4 @@ volumes:
 
 networks:
   observability_net:
-    driver: bridge
+    external: true
