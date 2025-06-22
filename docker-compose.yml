@@ -7,6 +7,8 @@ services:
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
       - loki_data:/loki
+    networks:
+      - observability_net
 
   grafana:
     image: grafana/grafana:latest
@@ -21,6 +23,8 @@ services:
     depends_on:
       - loki
       - prometheus
+    networks:
+      - observability_net
 
   prometheus:
     image: prom/prometheus:latest
@@ -34,6 +38,8 @@ services:
       - postgres
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - observability_net
 
   postgres:
     image: postgres:14
@@ -52,6 +58,8 @@ services:
       options: 
         loki-url: "http://loki:3100/loki/api/v1/push"
         loki-external-labels: "job=postgres,service=db"
+    networks:
+      - observability_net
 
   backend:
     container_name: backend
@@ -77,6 +85,8 @@ services:
       - "prometheus-job=backend"
     expose:
       - "8000"
+    networks:
+      - observability_net
 
   frontend:
     container_name: frontend
@@ -90,8 +100,14 @@ services:
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
         loki-external-labels: "job=frontend,service=web"
+    networks:
+      - observability_net
 
 volumes:
   postgres_data:
   loki_data:
   grafana_data:
+
+networks:
+  observability_net:
+    driver: bridge
