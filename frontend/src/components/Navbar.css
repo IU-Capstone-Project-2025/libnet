@@ -29,6 +29,7 @@
   display: flex;
   gap: 33px;
   font-weight: var(--weight-regular);
+  box-sizing: border-box;;
 }
 
 .user__navbar-right {
@@ -48,10 +49,16 @@
 
 .user__navbar-link {
   text-decoration: none;
+  border-bottom: 1px solid transparent;
+
 }
 
 .user__navbar-link:hover {
-  text-decoration: underline;
+  border-bottom: 1px solid black;
+}
+.user__navbar-link:active {
+  opacity: 0.5;
+
 }
 
 .user__header-username {
@@ -59,6 +66,11 @@
 }
 
 .user__header-login-button:hover {
-  text-decoration: underline;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+.user__header-login-button:active {
+  opacity: 0.5;
   cursor: pointer;
 }

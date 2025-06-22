@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Catalog.css';
 
 export default function Catalog() {
@@ -30,16 +30,39 @@ export default function Catalog() {
   if (loading) return <p>Загружаем…</p>;
   if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
 
-
-
   return (
     <>
       <h1 className="user__heading">Каталог книг</h1>
       <div className="user__genre-section">
         <div className="user__sidebar">
-          <h2>Жанры</h2>
-          <h3>Триллер</h3>
-          <h3>Приключения</h3>
+          <h2 className="user__sidebar-heading">Жанры</h2>
+          <ul className="user__genre-list">
+            <li className="user__genre-item">
+              <Link to="/" className="user__genre-link">
+                Приключения
+              </Link>
+            </li>
+            <li className="user__genre-item">
+              <Link to="/" className="user__genre-link">
+                Детектив
+              </Link>
+            </li>
+            <li className="user__genre-item">
+              <Link to="" className="user__genre-link">
+                Исторический роман
+              </Link>
+            </li>
+            <li className="user__genre-item ">
+              <Link to="" className="user__genre-link user__genre-item--active">
+                Фантастика
+              </Link>
+            </li>
+            <li className="user__genre-item">
+              <Link to="" className="user__genre-link">
+                Фэнтези
+              </Link>
+            </li>
+          </ul>
         </div>
         <div className="user__books-list">
           {books.map((b) => (
