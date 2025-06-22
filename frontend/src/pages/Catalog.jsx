@@ -27,8 +27,8 @@ export default function Catalog() {
     fetchBooks();
   }, []);
 
-  if (loading) return <p>Загружаем…</p>;
-  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (loading) return <p className="user__catalog-content"></p>;
+  if (error) return <p className="user__catalog-content" style={{ color: 'red' } }>Ошибка: {error}</p>;
 
   return (
     <>
