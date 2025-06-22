@@ -81,6 +81,11 @@ services:
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
         loki-external-labels: "job=backend,service=api"
+        loki-retries: 2
+        loki-max-backoff: 800ms
+        loki-timeout: 1s
+        keep-file: "true"
+        mode: "non-blocking"
     labels:
       - "prometheus-job=backend"
     expose:
