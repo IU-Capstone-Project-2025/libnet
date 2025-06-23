@@ -2,12 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
+from datetime import timedelta, date
 
 router = APIRouter()
 
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
+    library = booking.library
+    if not library:
+        raise HTTPException(status_code=404, detail="Library not found")
+
+    booking.date_to = booking.date_from + timedelta(days=library.booking_duration)
+
     db.add(booking)
     db.commit()
     db.refresh(booking)
@@ -58,11 +65,24 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
     
-    booking.status = booking_update.status
+    if booking_update.status:
+        booking.status = booking_update.status
+
+        if booking.status == models.BookingStatus.ACTIVE:
+            booking.date_from = date.today()
+
+    if booking_update.date_from:
+        booking.date_from = booking_update.date_from
+
+    if booking.date_from:
+        library = db.exec(select(models.Library).where(models.Library.id == booking.library_id)).first()
+        if not library:
+            raise HTTPException(status_code=404, detail="Library not found")
+        booking.date_to = booking.date_from + timedelta(days=library.booking_duration)
 
     db.add(booking)
     db.commit()
-    db.refresh()
+    db.refresh(booking)
     return booking
 
 # Delete a Booking
