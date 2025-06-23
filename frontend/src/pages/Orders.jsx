@@ -1,5 +1,6 @@
-import {React, useState, useEffect} from 'react';
+import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Orders.css';
 
 export default function Orders() {
   const [bookings, setBookings] = useState([]);
@@ -25,7 +26,7 @@ export default function Orders() {
   }
 
   useEffect(() => {
-    fetchBookings();                 // runs once
+    fetchBookings(); // runs once
   }, []);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function Orders() {
 
     fetchBooks();
   }, [bookings]);
-  
+
   useEffect(() => {
     if (bookings.length === 0) return;
 
@@ -72,30 +73,45 @@ export default function Orders() {
     fetchLibraries();
   }, [bookings]);
 
-  if (loading) return <p>Загружаем…</p>;
-  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (loading) return <p className="user__catalog-content"></p>;
+  if (error) return <p className="user__catalog-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
-    console.log("Cancelled " + booking_id);
+    console.log('Cancelled ' + booking_id);
   }
-  
+
   return (
     <>
-      <div>
-        {bookings.map((b) => (
-          <div key={b.id}>
-            <img src={b.image_url} alt={`${books[b.id]?.title ?? '…'} cover`}></img>
-            <p>{books[b.id]?.title ?? '…'}</p>
-            <p>{books[b.id]?.author ?? '…'}</p>
-            <p>Номер заказа: {b.id}</p>
-            <p>Пункт выдачи: {libraries[b.id]?.name ?? '…'}</p>
-            <p>{b.status == "pending" ? "Хранится до: " + b.date_to : (b.status == "active" ? "Вернуть до: " + b.date_to : "Возвращена")}{}</p>
-            
-            {b.status == "pending" && <button onClick={() => handleCancel(b.id)}>Отменить</button>}
-          </div>
-        ))}
+      <div className="user__orders-content">
+        <h1 className="user__heading">Мои заказы</h1>
+        <div>
+          {bookings.map((b) => (
+            <div key={b.id}>
+              <img
+                src={b.image_url}
+                alt={`${books[b.id]?.title ?? '…'} cover`}
+              ></img>
+              <p>{books[b.id]?.title ?? '…'}</p>
+              <p>{books[b.id]?.author ?? '…'}</p>
+              <p>Номер заказа: {b.id}</p>
+              <p>Пункт выдачи: {libraries[b.id]?.name ?? '…'}</p>
+              <p>
+                {b.status == 'pending'
+                  ? 'Хранится до: ' + b.date_to
+                  : b.status == 'active'
+                  ? 'Вернуть до: ' + b.date_to
+                  : 'Возвращена'}
+                {}
+              </p>
+
+              {b.status == 'pending' && (
+                <button onClick={() => handleCancel(b.id)}>Отменить</button>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </>
-  )
+  );
 }

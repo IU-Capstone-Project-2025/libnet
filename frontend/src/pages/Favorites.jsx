@@ -1,6 +1,7 @@
 import {React, useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './Favorites.css';
 
 export default function Favorites() {
   const {user} = useAuth();
@@ -88,7 +89,8 @@ export default function Favorites() {
   }
   
   return (
-    <div>
+    <div className="user__favorites-content">
+      <h1 className="user__heading">То, что Вам понравилось</h1>
       {favorites.map((f) => {
         const book = books[f];        // undefined on the first render
 

@@ -1,15 +1,21 @@
+.user__catalog-content {
+  min-height: calc(100vh - 79px - 74.5px);
+}
+
 .user__heading {
   text-align: center;
   font-size: 48px;
   font-weight: var(--weight-bold);
   color: black;
   padding: 20px 0;
+  text-transform: uppercase;
 }
 
 .user__genre-section {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  padding: 20px 0;
 }
 
 .user__sidebar {
@@ -128,4 +134,10 @@
   font-weight: var(--weight-regular);
   white-space: nowrap;
   max-width: 100%;
+}
+
+.user__book-like-icon {
+  width: 30px;
+  height: 30px;
+  margin: 5px 5px 0 0;;
 }
