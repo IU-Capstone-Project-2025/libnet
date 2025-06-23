@@ -85,6 +85,7 @@
 }
 
 .user__catalog-book-cover {
+  background-color: #EE6C61; 
   width: 100%;
   aspect-ratio: 240 / 310;
   max-width: 240px;

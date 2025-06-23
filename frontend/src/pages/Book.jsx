@@ -54,9 +54,9 @@ export default function BookDetails() {
     checkFavorite();
   }, [user]);
 
-  if (loading) return <p>Загружаем…</p>;
-  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
-  if (!book) return <p>Книга не найдена.</p>;
+  if (loading) return <p className="user__book-content">Загружаем…</p>;
+  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   async function handleBooking() {
     const date = new Date();

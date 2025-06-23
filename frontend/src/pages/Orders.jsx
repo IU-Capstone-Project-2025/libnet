@@ -74,7 +74,12 @@ export default function Orders() {
   }, [bookings]);
 
   if (loading) return <p className="user__catalog-content"></p>;
-  if (error) return <p className="user__catalog-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__catalog-content" style={{ color: 'red' }}>
+        Ошибка: {error}
+      </p>
+    );
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
@@ -84,29 +89,51 @@ export default function Orders() {
   return (
     <>
       <div className="user__orders-content">
-        <h1 className="user__heading">Мои заказы</h1>
-        <div>
+        <h1 className="user__heading">Ваши бронирования</h1>
+        <div className="user__orders-content-container">
           {bookings.map((b) => (
-            <div key={b.id}>
-              <img
-                src={b.image_url}
-                alt={`${books[b.id]?.title ?? '…'} cover`}
-              ></img>
-              <p>{books[b.id]?.title ?? '…'}</p>
-              <p>{books[b.id]?.author ?? '…'}</p>
-              <p>Номер заказа: {b.id}</p>
-              <p>Пункт выдачи: {libraries[b.id]?.name ?? '…'}</p>
-              <p>
-                {b.status == 'pending'
-                  ? 'Хранится до: ' + b.date_to
-                  : b.status == 'active'
-                  ? 'Вернуть до: ' + b.date_to
-                  : 'Возвращена'}
-                {}
-              </p>
+            <div className="user__orders-book-section" key={b.id}>
+              <div className="user__orders-book">
+                <img
+                  className="user__orders-book-cover"
+                  src={b.image_url}
+                  alt={`${books[b.id]?.title ?? '…'} cover`}
+                ></img>
 
+                <div className="user__orders-book-details">
+                  <div className="user__orders-book-title-container">
+                    <p className="user__orders-book-title">
+                      {books[b.id]?.title ?? '…'}
+                    </p>
+                    <p className="user__orders-book-author">
+                      {books[b.id]?.author ?? '…'}
+                    </p>
+                  </div>
+                  <p className="user__orders-book-detail">
+                    <strong>Номер заказа: </strong>
+                    {b.id}
+                  </p>
+                  <p className="user__orders-book-detail">
+                    <strong>Пункт выдачи:</strong>{' '}
+                    {libraries[b.id]?.name ?? '…'}
+                  </p>
+                  <p className="user__orders-book-detail">
+                    {b.status == 'pending'
+                      ? 'Хранится до: ' + b.date_to
+                      : b.status == 'active'
+                      ? 'Вернуть до: ' + b.date_to
+                      : 'Возвращена'}
+                    {}
+                  </p>
+                </div>
+              </div>
               {b.status == 'pending' && (
-                <button onClick={() => handleCancel(b.id)}>Отменить</button>
+                <button
+                  className="user__orders-button user__orders-button--red"
+                  onClick={() => handleCancel(b.id)}
+                >
+                  Отменить бронь
+                </button>
               )}
             </div>
           ))}

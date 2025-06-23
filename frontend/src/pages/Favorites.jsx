@@ -1,10 +1,10 @@
-import {React, useState, useEffect} from 'react';
+import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Favorites.css';
 
 export default function Favorites() {
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function Favorites() {
       }
     }
 
-    fetchFavorites();                 // runs once
+    fetchFavorites(); // runs once
   }, [user]);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Favorites() {
 
     fetchBooks();
   }, [favorites]);
-  
+
   useEffect(() => {
     if (books.length === 0) return;
 
@@ -68,7 +68,7 @@ export default function Favorites() {
             const res = await fetch(`/api/libraries/${book.library_id}`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
-            return [book.id, data];                // [bookId, library]
+            return [book.id, data]; // [bookId, library]
           })
         );
         setLibraries(Object.fromEntries(entries));
@@ -80,40 +80,75 @@ export default function Favorites() {
     fetchLibraries();
   }, [books]);
 
-  if (loading) return <p>Загружаем…</p>;
-  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (loading) return <p className="user__book-content">Загружаем…</p>;
+  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
-    console.log("Cancelled " + booking_id);
+    console.log('Cancelled ' + booking_id);
   }
-  
+
   return (
-    <div className="user__favorites-content">
-      <h1 className="user__heading">То, что Вам понравилось</h1>
-      {favorites.map((f) => {
-        const book = books[f];        // undefined on the first render
+    <>
+      <div className="user__favorites-content">
+        <h1 className="user__heading">То, что Вам понравилось</h1>
+        <div className="user__favorites-content-container">
+          {favorites.map((f) => {
+            const book = books[f];
 
-        if (!book) {
-          // skeleton / placeholder while the book data is loading
-          return (
-            <div key={f}>
-              <p>Loading…</p>
-            </div>
-          );
-        }
+            if (!book) {
+              return (
+                <div className="user__favorites-book-section" key={f}>
+                  <div className="user__favorites-book">
+                    <p>Loading…</p>
+                  </div>
+                </div>
+              );
+            }
 
-        return (
-          <div key={f}>
-            <img src={book.image_url} alt={`${book.title} cover`} />
-            <p>{book.title}</p>
-            <p>{book.author}</p>
-            <p>Год выпуска: {book.year}</p>
-            <p>В наличии: {libraries[book.id]?.name ?? '…'}</p>
-          </div>
-        );
-      })}
-    </div>
+            return (
+              <div className="user__favorites-book-section" key={f}>
+                <div className="user__favorites-book">
+                  <img
+                    className="user__favorites-book-cover"
+                    src={book.image_url}
+                    alt={`${book.title} cover`}
+                  />
+
+                  <div className="user__favorites-book-details">
+                    <div className="user__favorites-book-title-container">
+                      <p className="user__favorites-book-title">{book.title}</p>
+                      <p className="user__favorites-book-author">
+                        {book.author}
+                      </p>
+                    </div>
+                    <p className="user__favorites-book-detail">
+                      <strong>Год выпуска:</strong> {book.year}
+                    </p>
+                    <p className="user__favorites-book-detail">
+                      <strong>В наличии:</strong>{' '}
+                      {libraries[book.id]?.name ?? '…'}
+                    </p>
+                  </div>
+                </div>
+                <div className="user__favorites-buttons">
+                <button
+                  className="user__favorites-bin-button"
+                  onClick={() => handleCancel(b.id)}
+                ></button>
+                <button
+                  className="user__orders-button"
+                  // onClick={() => handleCancel(b.id)}
+                >
+                  Забронировать
+                </button>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
-
 }
