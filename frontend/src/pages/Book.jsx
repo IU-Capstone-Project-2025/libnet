@@ -38,11 +38,9 @@ export default function BookDetails() {
     async function checkFavorite() {
       try {
         const res = await fetch(`/api/users/likes/${user.id}/${id}`);
-        if (!res.ok) {
-          if (res.status == '204') {
+        if (res.status == '204') {
             setFavorite(false);
             console.log('nety');
-          }
         } else {
           setFavorite(true);
           console.log('yest?>!');
