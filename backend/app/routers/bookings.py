@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 
@@ -34,6 +34,22 @@ def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
     return booking
+
+# Get active bookings of a user
+@router.get("active/{user_id}", response_model=list[models.Booking])
+def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
+    bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "pending; active"))).all()
+    if not bookings:
+        raise HTTPException(status_code=404, detail="User has no active bookings")
+    return bookings
+
+# Get dismissed bookings of a user
+@router.get("dismissed/{user_id}", response_model=list[models.Booking])
+def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
+    bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "returned; cancelled"))).all()
+    if not bookings:
+        raise HTTPException(status_code=404, detail="User has no dismissed bookings")
+    return bookings
 
 # Update Booking's status
 @router.patch("/{booking_id}", response_model=models.Booking)
