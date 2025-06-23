@@ -53,13 +53,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
-    logging:
-      driver: loki
-      options: 
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=postgres,service=db"
-    networks:
-      - observability_net
 
   backend:
     container_name: backend
@@ -80,12 +73,7 @@ services:
       driver: loki
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=backend,service=api"
-        loki-retries: 2
-        loki-max-backoff: 800ms
-        loki-timeout: 1s
-        keep-file: "true"
-        mode: "non-blocking"
+        loki-external-labels: "job=backend"
     labels:
       - "prometheus-job=backend"
     expose:
@@ -100,13 +88,6 @@ services:
       - "80:4173"
     depends_on:
       - backend
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=frontend,service=web"
-    networks:
-      - observability_net
 
 volumes:
   postgres_data:
