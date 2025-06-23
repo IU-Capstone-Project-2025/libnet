@@ -1,15 +1,16 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import './Book.css';
 
 export default function BookDetails() {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [favorite, setFavorite] = useState(false);
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedPlace, setSelectedPlace] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState('');
 
   useEffect(() => {
     async function fetchBook() {
@@ -29,26 +30,23 @@ export default function BookDetails() {
     }
 
     fetchBook();
-    
   }, [id]);
 
   useEffect(() => {
     if (user == null) return;
 
     async function checkFavorite() {
-
       try {
         const res = await fetch(`/api/users/likes/${user.id}/${id}`);
         if (!res.ok) {
-          if (res.status == "204") {
+          if (res.status == '204') {
             setFavorite(false);
-            console.log("nety");
+            console.log('nety');
           }
         } else {
           setFavorite(true);
-          console.log("yest?>!");
+          console.log('yest?>!');
         }
-        
       } catch (err) {
         setError(err.message);
       }
@@ -57,7 +55,7 @@ export default function BookDetails() {
   }, [user]);
 
   if (loading) return <p>Загружаем…</p>;
-  if (error) return <p style={{ color: "red" }}>Ошибка: {error}</p>;
+  if (error) return <p style={{ color: 'red' }}>Ошибка: {error}</p>;
   if (!book) return <p>Книга не найдена.</p>;
 
   async function handleBooking() {
@@ -75,13 +73,13 @@ export default function BookDetails() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id:    user.id,          
-          book_id:    id,
+          user_id: user.id,
+          book_id: id,
           library_id: book.library_id,
-          date_from:  date.toISOString().slice(0, 10),
-          date_to: date_to.toISOString().slice(0, 10)
+          date_from: date.toISOString().slice(0, 10),
+          date_to: date_to.toISOString().slice(0, 10),
         }),
-      }); 
+      });
 
       if (!res.ok) {
         throw new Error('Booking failed');
@@ -100,10 +98,10 @@ export default function BookDetails() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_id:    user.id,          
-            book_id:    id,
+            user_id: user.id,
+            book_id: id,
           }),
-        }); 
+        });
 
         if (!res.ok) {
           throw new Error('Favorite failed');
@@ -119,10 +117,10 @@ export default function BookDetails() {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_id:    user.id,          
-            book_id:    id,
+            user_id: user.id,
+            book_id: id,
           }),
-        }); 
+        });
 
         if (!res.ok) {
           // throw new Error(res.statusText);
@@ -133,65 +131,85 @@ export default function BookDetails() {
         setError(err.message);
       }
     }
-    
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "24px",
-        maxWidth: "800px",
-        margin: "20px auto",
-        padding: "16px",
-        borderRadius: "8px",
-      }}
-    >
-      {/* Book cover on left */}
-      <img
-        src={book.image_url || "https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg"} //"https://via.placeholder.com/200x300?text=Book+Cover"}
-        alt={`${book.title} cover`}
-        style={{ width: "200px", height: "300px", objectFit: "cover", borderRadius: "4px" }}
-      />
-      <br/>
-      <button onClick={handleBooking}>Забронировать</button>
-
-      <button onClick={handleFavorite}>{favorite ? "Удалить из избранного" : "Добавить в избранное"}</button>
-
-      {/* Book info on right */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-        <h1 style={{ marginBottom: "8px" }}>{book.title}</h1>
-        <h3 style={{ marginTop: 0, color: "#555" }}>{book.author}</h3>
-        <p style={{ marginTop: "16px", lineHeight: "1.5", color: "#333" }}>
-          {book.description || "Описание отсутствует."}
-        </p>
-        <p style={{ marginTop: "16px", lineHeight: "1.5", color: "#333" }}> Количество страниц: {book.pages || "Нет информации."}</p>
-        <p style={{ marginTop: "16px", lineHeight: "1.5", color: "#333" }}> Год выпуска: {book.year || "Нет информации."}</p>
-        <p style={{ marginTop: "16px", lineHeight: "1.5", color: "#333" }}> Рейтинг: {book.rate || "Нет информации."}</p>
-        {book.stockLocations && book.stockLocations.length > 0 && (
-          <div style={{ marginTop: "24px" }}>
-            <label htmlFor="stockSelect" style={{ fontWeight: "bold" }}>
-              В наличии в:
-            </label>
-            <br />
-            <select
-              id="stockSelect"
-              value={selectedPlace}
-              onChange={(e) => setSelectedPlace(e.target.value)}
-              style={{ marginTop: "8px", padding: "8px", fontSize: "16px", borderRadius: "4px" }}
-            >
-              {book.stockLocations.map((place) => (
-                <option key={place} value={place}>
-                  {place}
-                </option>
-              ))}
-            </select>
+    <>
+      <div className="user__book-content">
+        <div className="user__book">
+          <div className="user__book-left-section">
+            <img
+              className="user__book-cover"
+              src={
+                book.image_url ||
+                'https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg'
+              } //"https://via.placeholder.com/200x300?text=Book+Cover"}
+              alt={`${book.title} cover`}
+            />
+            <div className="user__book-buttons">
+              <button className="user__book-button" onClick={handleBooking}>
+                Забронировать
+              </button>
+              <button className="user__book-button" onClick={handleFavorite}>
+                {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+              </button>
+            </div>
           </div>
-        )}
-        {(!book.stockLocations || book.stockLocations.length == 0) && (
-            <p style={{ marginTop: "16px", lineHeight: "1.5", color: "#333" }}> Нет в наличии.</p>
-        )}
+          <div className="user__book-right-section">
+            <div className="user__book-title-container">
+              <h1 className="user__book-title">{book.title}</h1>
+              <h2 className="user__book-author">{book.author}</h2>
+            </div>
+            <p className="user__book-description">
+              {book.description || 'Описание отсутствует.'}
+            </p>
+            <div className="user__book-details">
+              <p className="user__book-detail">
+                {' '}
+                <strong>Количество страниц:</strong>{' '}
+                {book.pages || 'Нет информации.'}
+              </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>Жанры:</strong>{' '}
+                {book.pages || 'Нет информации.'}
+              </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>ISBN:</strong>{' '}
+                {book.pages || 'Нет информации.'}
+              </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>Год выпуска:</strong> {book.year || 'Нет информации.'}
+              </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>Рейтинг:</strong> {book.rate || 'Нет информации.'}
+              </p>
+              {book.stockLocations && book.stockLocations.length > 0 && (
+                <div>
+                  <label htmlFor="stockSelect">В наличии в:</label>
+                  <select
+                    id="stockSelect"
+                    value={selectedPlace}
+                    onChange={(e) => setSelectedPlace(e.target.value)}
+                  >
+                    {book.stockLocations.map((place) => (
+                      <option key={place} value={place}>
+                        {place}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {(!book.stockLocations || book.stockLocations.length == 0) && (
+                <p> Нет в наличии.</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

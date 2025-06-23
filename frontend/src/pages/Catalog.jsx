@@ -68,26 +68,26 @@ export default function Catalog() {
               </li>
             </ul>
           </div>
-          <div className="user__books-list">
+          <div className="user__catalog-books-list">
             {books.map((b) => (
               <div
                 key={b.id}
-                className="user__book-card"
+                className="user__catalog-book-card"
                 onClick={() => navigate(`/books/${b.id}`)}
               >
                 <img
-                  className="user__book-cover"
+                  className="user__catalog-book-cover"
                   src="https://via.placeholder.com/150x220?text=Book+Cover"
                   alt={`${b.title} cover`}
                 />
-                <div className="user__book-info">
-                  <div className="user__book-info-text-container">
-                    <strong className="user__book-info-title">{b.title}</strong>
-                    <span className="user__book-info-author">{b.author}</span>
+                <div className="user__catalog-book-info">
+                  <div className="user__catalog-book-info-text-container">
+                    <strong className="user__catalog-book-info-title">{b.title}</strong>
+                    <span className="user__catalog-book-info-author">{b.author}</span>
                   </div>
-                  <div className="user__book-like-button">
+                  <div className="user__catalog-book-like-button">
                     <img
-                      className="user__book-like-icon"
+                      className="user__catalog-book-like-icon"
                       src="/like-2.svg"
                       alt="Лайк"
                     ></img>

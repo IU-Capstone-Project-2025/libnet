@@ -83,7 +83,6 @@
 .user__profile-button:active {
   font-weight: bold;
   background-color: var(--main-user-color);
-
 }
 
 .user__profile-button--red {

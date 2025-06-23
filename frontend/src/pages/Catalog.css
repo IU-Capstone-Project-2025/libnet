@@ -64,7 +64,7 @@
   text-decoration: none;
 }
 
-.user__books-list {
+.user__catalog-books-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 30px;
@@ -74,7 +74,7 @@
   width: 1134px;
 }
 
-.user__book-card {
+.user__catalog-book-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,7 +84,7 @@
   cursor: pointer;
 }
 
-.user__book-cover {
+.user__catalog-book-cover {
   width: 100%;
   aspect-ratio: 240 / 310;
   max-width: 240px;
@@ -94,7 +94,7 @@
   object-fit: cover;
 }
 
-.user__book-info {
+.user__catalog-book-info {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -111,13 +111,13 @@
   box-sizing: border-box;
 }
 
-.user__book-info-text-container {
+.user__catalog-book-info-text-container {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.user__book-info-title {
+.user__catalog-book-info-title {
   font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -127,7 +127,7 @@
   text-transform: uppercase;
 }
 
-.user__book-info-author {
+.user__catalog-book-info-author {
   font-size: 12px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -136,7 +136,7 @@
   max-width: 100%;
 }
 
-.user__book-like-icon {
+.user__catalog-book-like-icon {
   width: 30px;
   height: 30px;
   margin: 5px 5px 0 0;;
