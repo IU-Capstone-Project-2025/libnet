@@ -9,7 +9,7 @@ router = APIRouter()
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
-    library = booking.library
+    library = db.exec(select(models.Library).where(models.Library.id == booking.library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
 
