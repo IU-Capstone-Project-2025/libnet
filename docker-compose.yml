@@ -26,21 +26,6 @@ services:
     networks:
       - observability_net
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    depends_on:
-      - backend
-      - postgres
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    networks:
-      - observability_net
-
   postgres:
     image: postgres:14
     container_name: postgres
@@ -73,8 +58,6 @@ services:
       driver: loki
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
-    labels:
-      - "prometheus-job=backend"
     expose:
       - "8000"
     networks:
