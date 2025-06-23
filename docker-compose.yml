@@ -22,7 +22,6 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - loki
-      - prometheus
     networks:
       - observability_net
 
