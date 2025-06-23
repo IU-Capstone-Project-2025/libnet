@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import LoginPopup from './LoginPopup';
 import './AuthPopup.css'; 
@@ -9,7 +9,8 @@ export default function RegisterPopup({ onClose }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
-  const [city,   setCity]   = useState('');
+  const [city, setCity] = useState("");
+  const [cities, setCities] = useState([]);
   const { register } = useAuth();
   const [error, setError] = useState(null);
   
@@ -34,6 +35,25 @@ export default function RegisterPopup({ onClose }) {
       setError(err.message);      // show “incorrect email/password”
     }
   }
+
+  useEffect(() => {
+    async function fetchCities() {
+      try {
+        const res = await fetch(`/api/libraries/cities`, {
+          method: 'GET',
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // const unique = [...new Set(data.map(lib => lib.city))];
+        setCities(data);
+
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchCities();                 // runs once
+  }, []);
 
   return (
 <div className="user__login-overlay" onClick={onClose}>
@@ -75,12 +95,20 @@ export default function RegisterPopup({ onClose }) {
         value={phone}
         onChange={e => setPhone(e.target.value)}
       />
-      <input
+      <select
         className="user__login-input"
-        placeholder="Город"
         value={city}
         onChange={e => setCity(e.target.value)}
-      />
+      >
+        <option value="" disabled>
+          {"Город"}
+        </option>
+        {cities.map(c => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
     </div>
 
     {error && <p style={{ color: 'red' }}>{error}</p>}
