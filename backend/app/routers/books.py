@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, Form
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
@@ -74,7 +74,7 @@ def get_book_cover(book_id: int, db: Session = Depends(get_session)):
 
 # Create a Book
 @router.post("/{quantity}", response_model=models.Book)
-async def create_book(book: models.Book, quantity: int, file: UploadFile = File(None), cover_url: Optional[str] = None, db: Session = Depends(get_session)):
+async def create_book(book: models.Book, quantity: int, db: Session = Depends(get_session)):
     db.add(book)
     db.commit()
     db.refresh(book)
@@ -83,9 +83,6 @@ async def create_book(book: models.Book, quantity: int, file: UploadFile = File(
     db.add(library_book)
     db.commit()
     db.refresh(library_book)
-
-    if file or cover_url:
-        return await upload_book_cover(book.id, file, cover_url, db)
     
     return book
 
