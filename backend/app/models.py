@@ -131,6 +131,8 @@ class Booking(SQLModel, table=True):
     library: Optional[Library] = Relationship(back_populates="bookings")
 
 class BookingUpdate(SQLModel):
-    status: BookingStatus
+    #status: BookingStatus
+    status: Optional[BookingStatus] = None
+    date_from: Optional[date] = None
 
 SQLModel.metadata.create_all(engine)

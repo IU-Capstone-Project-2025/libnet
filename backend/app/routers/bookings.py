@@ -2,12 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
+from datetime import timedelta, date
 
 router = APIRouter()
 
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
+    booking.date_to = booking.date_from + timedelta(days=booking.booking_duation)
+
     db.add(booking)
     db.commit()
     db.refresh(booking)
@@ -58,11 +61,21 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
     
-    booking.status = booking_update.status
+    if booking_update.status:
+        booking.status = booking_update.status
+
+        if booking.status == models.BookingStatus.ACTIVE or booking.status == models.BookingStatus.RETURNED:
+            booking.date_from = date.today()
+            if booking.status == models.BookingStatus.RETURNED:
+                booking.date_to = None
+            else:
+                booking.date_to = booking.date_from + timedelta(days=booking.library.rent_duration)
+        elif booking.status == models.BookingStatus.CANCELLED:
+            booking.date_to = None
 
     db.add(booking)
     db.commit()
-    db.refresh()
+    db.refresh(booking)
     return booking
 
 # Delete a Booking
