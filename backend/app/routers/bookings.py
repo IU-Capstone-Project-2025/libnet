@@ -9,11 +9,7 @@ router = APIRouter()
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
-    library = db.exec(select(models.Library).where(models.Library.id == booking.library_id)).first()
-    if not library:
-        raise HTTPException(status_code=404, detail="Library not found")
-
-    booking.date_to = booking.date_from + timedelta(days=library.booking_duration)
+    booking.date_to = booking.date_from + timedelta(days=booking.booking_duation)
 
     db.add(booking)
     db.commit()
@@ -68,17 +64,14 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
     if booking_update.status:
         booking.status = booking_update.status
 
-        if booking.status == models.BookingStatus.ACTIVE:
+        if booking.status == models.BookingStatus.ACTIVE or booking.status == models.BookingStatus.RETURNED:
             booking.date_from = date.today()
-
-    if booking_update.date_from:
-        booking.date_from = booking_update.date_from
-
-    if booking.date_from:
-        library = db.exec(select(models.Library).where(models.Library.id == booking.library_id)).first()
-        if not library:
-            raise HTTPException(status_code=404, detail="Library not found")
-        booking.date_to = booking.date_from + timedelta(days=library.booking_duration)
+            if booking.status == models.BookingStatus.RETURNED:
+                booking.date_to = None
+            else:
+                booking.date_to = booking.date_from + timedelta(days=booking.library.rent_duration)
+        elif booking.status == models.BookingStatus.CANCELLED:
+            booking.date_to = None
 
     db.add(booking)
     db.commit()
