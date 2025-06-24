@@ -1,20 +1,92 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
+import os
+from typing import Optional
+import uuid
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 router = APIRouter()
 
-# Create a Book
-@router.post("/{quantity}", response_model=models.Book)
-def create_book(book: models.Book, quantity: int, db: Session = Depends(get_session)):
+COVERS_DIR = "book_covers"
+os.makedirs(COVERS_DIR, exist_ok=True)
+
+# Upload book cover
+@router.post("/upload-cover/{book_id}", response_model=models.Book)
+async def upload_book_cover(
+    book_id: int,
+    file: Optional[UploadFile] = File(None),
+    cover_url: Optional[str] = Query(None),
+    db: Session = Depends(get_session)
+):
+    book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+    if file:
+        filename = f"{book_id}.jpg"
+        file_path = os.path.join(COVERS_DIR, filename)
+
+        if book.image_url and book.image_url.startswith(COVERS_DIR):
+            old_file_path = os.path.join(COVERS_DIR, os.path.basename(book.image_url))
+            try:
+                os.remove(old_file_path)
+            except OSError:
+                pass
+        
+        with open(file_path, "wb") as buffer:
+            buffer.write(file.file.read())
+        
+        book.image_url = f"backend/{file_path}"
+
+    elif cover_url:
+        if book.image_url and book.image_url.startswith(COVERS_DIR):
+            old_file_path = os.path.join(COVERS_DIR, os.path.basename(book.image_url))
+            try:
+                os.remove(old_file_path)
+            except OSError:
+                pass
+        
+        book.image_url = cover_url
+    
     db.add(book)
     db.commit()
     db.refresh(book)
+    return book
+
+# Get book cover
+@router.get("/cover/{book_id}")
+def get_book_cover(book_id: int, db: Session = Depends(get_session)):
+    book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+    if book.cover_file and os.path.exists(book.cover_file):
+        return FileResponse(book.cover_file)
+    
+    if book.cover_url:
+        return {"cover_url": book.cover_url}
+    
+    else:
+        raise HTTPException(status_code=404, detail="No cover available")
+
+# Create a Book
+@router.post("/{quantity}", response_model=models.Book)
+async def create_book(book: models.Book, quantity: int, file: UploadFile = File(None), cover_url: Optional[str] = None, db: Session = Depends(get_session)):
+    db.add(book)
+    db.commit()
+    db.refresh(book)
+
     library_book = models.LibraryBook(library_id=book.library_id, book_id=book.id, quantity=quantity)
     db.add(library_book)
     db.commit()
     db.refresh(library_book)
+
+    if file or cover_url:
+        return await upload_book_cover(book.id, file, cover_url, db)
+    
     return book
 
 # Get quantity of books in a library
