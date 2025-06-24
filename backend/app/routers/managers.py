@@ -21,7 +21,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Assign manager to a library
 @router.post("/assign/{manager_email}/{library_id}")
-def assign_manager(manager_email: int, library_id: int, db: Session = Depends(get_session)):
+def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session)):
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
