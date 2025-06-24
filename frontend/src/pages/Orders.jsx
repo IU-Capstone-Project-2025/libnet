@@ -83,7 +83,17 @@ export default function Orders() {
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
-    console.log('Cancelled ' + booking_id);
+    console.log(booking_id);
+    // const res = await fetch(`/api/bookings/${booking_id}`, {
+    //       method: 'PATCH',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({
+    //         status: "cancelled",
+    //       }),
+    //     });
+    // if (res.ok) {
+    //   console.log("cancelled");
+    // }
   }
 
   return (
@@ -122,6 +132,8 @@ export default function Orders() {
                       ? 'Хранится до: ' + b.date_to
                       : b.status == 'active'
                       ? 'Вернуть до: ' + b.date_to
+                      : b.status == 'cancelled'
+                      ? 'Отменен'
                       : 'Возвращена'}
                     {}
                   </p>

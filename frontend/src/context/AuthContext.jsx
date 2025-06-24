@@ -127,6 +127,7 @@ export function AuthProvider({ children }) {
 }
 
   async function register(payload) {
+    // payload["role"] = "manager";
     const res = await fetch(`/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -153,7 +154,7 @@ export function AuthProvider({ children }) {
       payload.email,
       payload.first_name,
       payload.last_name,
-      payload.role,
+      user.role,
       payload.city,
       payload.phone
     )

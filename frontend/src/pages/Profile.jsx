@@ -1,10 +1,11 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 export default function Profile() {
   const { user, logout, update_user } = useAuth();
   const [error, setError] = useState(null);
+  const [cities, setCities] = useState([]);
 
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState('');
@@ -12,6 +13,8 @@ export default function Profile() {
   const [lastName, setLastName] = useState(user.lastName);
   const [phone, setPhone] = useState(user.phone);
   const [city, setCity] = useState(user.city);
+  const [role, setRole] = useState(user.role);
+  const [library, setLibrary] = useState(user.library_id);
 
   async function handleUpdate() {
     if (password != '') {
@@ -23,8 +26,9 @@ export default function Profile() {
           password: password,
           phone: phone,
           city: city,
+          library_id: library
         });
-        onClose();
+        // onClose();
       } catch (err) {
         setError(err.message);
       }
@@ -36,13 +40,33 @@ export default function Profile() {
           email: email,
           phone: phone,
           city: city,
+          library_id: library
         });
-        onClose();
+        // onClose();
       } catch (err) {
         setError(err.message);
       }
     }
   }
+
+  useEffect(() => {
+      async function fetchCities() {
+        try {
+          const res = await fetch(`/api/libraries/cities`, {
+            method: 'GET',
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          // const unique = [...new Set(data.map(lib => lib.city))];
+          setCities(data);
+  
+        } catch (err) {
+          setError(err.message);
+        }
+      }
+  
+      fetchCities();                 // runs once
+    }, []);
 
   return (
     <>
@@ -51,12 +75,20 @@ export default function Profile() {
           <label className="user__profile-city-label" for="user__profile-city">
             Выберите город:
           </label>
-          <select className="user__profile-city-select">
-            <option value="1">Иннополис</option>
-            <option value="1">Казань</option>
-            <option value="1">Екатеринбург</option>
-            <option value="1">Санкт-Петербург</option>
-          </select>
+          <select
+                className="user__profile-city-select"
+                value={city}
+                onChange={e => setCity(e.target.value)}
+              >
+                <option value="" disabled>
+                  {"Город"}
+                </option>
+                {Array.isArray(cities) && cities.map(c => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
         </div>
 
         <div className="user__profile-inputs">
@@ -93,12 +125,14 @@ export default function Profile() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {/* <input
-          className="user__profile-input"
-          placeholder="Фамилия"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        /> */}
+          {/* {role == "manager" && (
+            <input
+            className="user__profile-input"
+            placeholder="Библиотека"
+            value={library}
+            onChange={(e) => setLibrary(e.target.value)}
+          />
+          )} */}
         </div>
         <div className="user__profile-buttons">
           <button className="user__profile-button" onClick={handleUpdate}>

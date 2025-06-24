@@ -7,6 +7,10 @@ import Book from './pages/Book';
 import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
+import ManagerCatalog from './pages/ManagerCatalog';
+import ManagerOrders from './pages/ManagerOrders';
+import ManagerLibrary from './pages/ManagerLibrary';
+import ManagerBook from './pages/ManagerBook';
 import { AuthProvider } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -48,6 +52,39 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Favorites />
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/manager/"
+            element={
+              <PrivateRoute>
+                <ManagerCatalog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager/orders"
+            element={
+              <PrivateRoute>
+                <ManagerOrders />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager/library"
+            element={
+              <PrivateRoute>
+                <ManagerLibrary />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager/books/:id"
+            element={
+              <PrivateRoute>
+                <ManagerBook />
               </PrivateRoute>
             }
           />

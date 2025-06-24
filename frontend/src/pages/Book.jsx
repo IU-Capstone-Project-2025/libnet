@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './Book.css';
 
 export default function BookDetails() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [favorite, setFavorite] = useState(false);
   const { id } = useParams();
@@ -12,6 +13,17 @@ export default function BookDetails() {
   const [error, setError] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState('');
 
+  const [title, setTitle] = useState(null);
+  const [author, setAuthor] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [src, setSrc] = useState(null);
+  const [pages, setPages] = useState(null);
+  const [isbn, setIsbn] = useState(null);
+  const [genre, setGenre] = useState(null);
+  const [year, setYear] = useState(null);
+  const [rating, setRating] = useState(null);
+  const [libraries, setLibraries] = useState([]);
+
   useEffect(() => {
     async function fetchBook() {
       try {
@@ -19,9 +31,16 @@ export default function BookDetails() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBook(data);
-        if (data.stockLocations && data.stockLocations.length > 0) {
-          setSelectedPlace(data.stockLocations[0]);
-        }
+        setBook(data);
+        setTitle(data.title);
+        setAuthor(data.author);
+        setDescription(data.description);
+        setSrc(data.image_url);
+        setPages(data.pages);
+        setIsbn(data.isbn);
+        setGenre(data.genre);
+        setYear(data.year);
+        setRating(data.rating);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -33,6 +52,34 @@ export default function BookDetails() {
   }, [id]);
 
   useEffect(() => {
+    if (book == null) return;
+
+    async function fetchLibraries() {
+      try {
+        const res = await fetch(`/api/books/libraries/${book.id}`);
+        const data = await res.json();
+        setLibraries(data);
+        // console.log(data);
+        // setSelectedPlace(libraries[0].name);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    fetchLibraries();
+  }, [book]);
+
+  useEffect(() => {
+    if (!libraries || libraries.length === 0) return;
+
+    async function setLibs() {
+  
+        setSelectedPlace(libraries[0].name);
+      
+    }
+    setLibs();
+  }, [libraries]);
+
+  useEffect(() => {
     if (user == null) return;
 
     async function checkFavorite() {
@@ -40,10 +87,10 @@ export default function BookDetails() {
         const res = await fetch(`/api/users/likes/${user.id}/${id}`);
         if (res.status == '204') {
             setFavorite(false);
-            console.log('nety');
+            // console.log('nety');
         } else {
           setFavorite(true);
-          console.log('yest?>!');
+          // console.log('yest?>!');
         }
       } catch (err) {
         setError(err.message);
@@ -131,6 +178,16 @@ export default function BookDetails() {
     }
   }
 
+  async function updateBook(libname) {
+    // for (var i = 0; i < libraries.length; i++) {
+    //   if (libraries[i].name == libname) {
+
+    //     navigate(`/books/${b.id}`)
+    //   }
+    // }
+    setSelectedPlace(libname);
+  }
+
   return (
     <>
       <div className="user__book-content">
@@ -139,8 +196,8 @@ export default function BookDetails() {
             <img
               className="user__book-cover"
               src={
-                book.image_url ||
-                'https://m.media-amazon.com/images/I/61HkdyBpKOL.jpg'
+                src ||
+                'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
               } //"https://via.placeholder.com/200x300?text=Book+Cover"}
               alt={`${book.title} cover`}
             />
@@ -159,23 +216,23 @@ export default function BookDetails() {
               <h2 className="user__book-author">{book.author}</h2>
             </div>
             <p className="user__book-description">
-              {book.description || 'Описание отсутствует.'}
+              {description || 'Описание отсутствует.'}
             </p>
             <div className="user__book-details">
               <p className="user__book-detail">
                 {' '}
                 <strong>Количество страниц:</strong>{' '}
-                {book.pages || 'Нет информации.'}
+                {pages || 'Нет информации.'}
               </p>
               <p className="user__book-detail">
                 {' '}
                 <strong>Жанры:</strong>{' '}
-                {book.pages || 'Нет информации.'}
+                {pages || 'Нет информации.'}
               </p>
               <p className="user__book-detail">
                 {' '}
                 <strong>ISBN:</strong>{' '}
-                {book.pages || 'Нет информации.'}
+                {pages || 'Нет информации.'}
               </p>
               <p className="user__book-detail">
                 {' '}
@@ -185,25 +242,20 @@ export default function BookDetails() {
                 {' '}
                 <strong>Рейтинг:</strong> {book.rate || 'Нет информации.'}
               </p>
-              {book.stockLocations && book.stockLocations.length > 0 && (
-                <div>
-                  <label htmlFor="stockSelect">В наличии в:</label>
-                  <select
-                    id="stockSelect"
-                    value={selectedPlace}
-                    onChange={(e) => setSelectedPlace(e.target.value)}
-                  >
-                    {book.stockLocations.map((place) => (
-                      <option key={place} value={place}>
-                        {place}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              {(!book.stockLocations || book.stockLocations.length == 0) && (
-                <p> Нет в наличии.</p>
-              )}
+              <select
+                className="user__book-select"
+                value={selectedPlace}
+                onChange={e => updateBook(e.target.value)}
+              >
+                <option value="" disabled>
+                  {"Библиотека"}
+                </option>
+                {Array.isArray(libraries) && libraries.map(lib => (
+                  <option key={lib.id} value={lib.name}>
+                    {lib.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

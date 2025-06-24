@@ -15,8 +15,8 @@
 }
 
 .user__book-cover {
-  min-height: 466px;
-  min-width: 316px;
+  height: 466px;
+  width: 316px;
   border-radius: 20px 0 20px 0;
 }
 
@@ -80,4 +80,11 @@
   flex-direction: column;
   gap: 10px;
   font-size: 24px;
+}
+
+.user__book-select {
+  font-family: "Montserrat", sans-serif;
+  font-size: 24px;
+  padding: 5px 20px;
+  border-radius: 20px 0 20px 0;
 }
