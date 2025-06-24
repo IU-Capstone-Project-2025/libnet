@@ -92,7 +92,7 @@ export default function ManagerBook() {
               alt={`${title} cover`}
             />
             <div className="user__book-buttons">
-              <button className="user__book-button" onClick={handleUpdate}>
+              <button className="manager__book-button" onClick={handleUpdate}>
                 Сохранить
               </button>
             </div>
@@ -100,64 +100,71 @@ export default function ManagerBook() {
           <div className="user__book-right-section">
             <div className="user__book-title-container">
               <input
-                className="user__book-title"
+                className="user__book-title manager__book-detail-input"
                 placeholder='Название'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <input
-                className="user__book-author"
+                className="user__book-author manager__book-detail-input"
                 placeholder='Автор'
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
             <input
-                className="user__book-description"
+                className="user__book-description manager__book-detail-input"
                 placeholder='Описание'
                 value={description || 'Описание отсутствует.'}
                 onChange={(e) => setDescription(e.target.value)}
               />
-            <div className="user__book-details">
+            <div className="manager__book-details">
               <strong>Ссылка на обложку:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='Ссылка на обложку'
                 value={src}
                 onChange={(e) => setSrc(e.target.value)}
               />
               <strong>Количество страниц:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='Страницы'
                 value={pages || 'Нет информации.'}
                 onChange={(e) => setPages(e.target.value)}
               />
               <strong>Жанры:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='Жанры'
                 value={genre || 'Нет информации.'}
                 onChange={(e) => setGenre(e.target.value)}
               />
               <strong>ISBN:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='ISBN'
                 value={isbn || 'Нет информации.'}
                 onChange={(e) => setIsbn(e.target.value)}
               />
               <strong>Год выпуска:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='Год'
                 value={year || 'Нет информации.'}
                 onChange={(e) => setYear(e.target.value)}
               />
               <strong>Рейтинг:</strong>
               <input
-                className="user__book-detail"
+                className="manager__book-detail-input"
                 placeholder='Рейтинг'
+                value={rating || 'Нет информации.'}
+                onChange={(e) => setRating(e.target.value)}
+              />
+              <strong>В наличии:</strong>
+              <input
+                className="manager__book-detail-input"
+                placeholder='шт'
                 value={rating || 'Нет информации.'}
                 onChange={(e) => setRating(e.target.value)}
               />
