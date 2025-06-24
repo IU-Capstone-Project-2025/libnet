@@ -137,8 +137,11 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
 # Delete a Book
 @router.delete("/{book_id}", status_code=204)
 def delete_book(book_id: int, db: Session = Depends(get_session)):
+    library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
+    db.delete(library_book)
+    db.commit()
     db.delete(book)
     db.commit()
