@@ -97,7 +97,7 @@ def get_book_isbn(library_id: int, book_isbn: str, db: Session = Depends(get_ses
     book = db.exec(select(models.Book).where(and_(
             models.Book.isbn == book_isbn,
             models.Book.library_id == library_id
-        )).first()
+        ))).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
     return book
