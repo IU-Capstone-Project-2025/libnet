@@ -90,3 +90,11 @@ def delete_library(library_id: int, db: Session = Depends(get_session)):
     
     db.delete(library)
     db.commit()
+
+# Get a Book by ISBN
+@router.get("/isbn/{book_isbn}", response_model=models.Book)
+def get_book_isbn(book_isbn: str, db: Session = Depends(get_session)):
+    book = db.exec(select(models.Book).where(models.Book.isbn == book_isbn)).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book does not exist")
+    return book
