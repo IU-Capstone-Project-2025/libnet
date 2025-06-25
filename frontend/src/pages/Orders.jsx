@@ -1,8 +1,11 @@
 import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Orders.css';
+import { useAuth } from '../context/AuthContext';
 
 export default function Orders() {
+  const { user } = useAuth();
+
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,12 +14,18 @@ export default function Orders() {
   const [books, setBooks] = useState({});
   const [libraries, setLibraries] = useState({});
 
-  async function fetchBookings() {
+  
+
+  useEffect(() => {
+    async function fetchBookings() {
+    if (user == null) return;
     try {
-      const res = await fetch('/api/bookings/');
+      console.log("trying");
+      const res = await fetch(`/api/bookings/users/${user.id}`);
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+      console.log("bookings fetched:", data);
       setBookings(data);
     } catch (err) {
       setError(err.message);
@@ -24,10 +33,8 @@ export default function Orders() {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    fetchBookings(); // runs once
-  }, []);
+    fetchBookings();
+  }, [user]);
 
   useEffect(() => {
     if (bookings.length === 0) return;
@@ -84,16 +91,16 @@ export default function Orders() {
   // TODO: handle cancel
   async function handleCancel(booking_id) {
     console.log(booking_id);
-    // const res = await fetch(`/api/bookings/${booking_id}`, {
-    //       method: 'PATCH',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({
-    //         status: "cancelled",
-    //       }),
-    //     });
-    // if (res.ok) {
-    //   console.log("cancelled");
-    // }
+    const res = await fetch(`/api/bookings/${booking_id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: "cancelled",
+          }),
+        });
+    if (res.ok) {
+      console.log("cancelled");
+    }
   }
 
   return (
@@ -139,14 +146,14 @@ export default function Orders() {
                   </p>
                 </div>
               </div>
-              {b.status == 'pending' && (
+              {/* {b.status == 'pending' && (
                 <button
                   className="user__orders-button user__orders-button--red"
                   onClick={() => handleCancel(b.id)}
                 >
                   Отменить бронь
                 </button>
-              )}
+              )} */}
             </div>
           ))}
         </div>
