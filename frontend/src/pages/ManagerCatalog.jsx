@@ -12,13 +12,13 @@ export default function ManagerCatalog() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (!user) {
-    //   return;
-    // }
+    if (!user) {
+      return;
+    }
     
     async function fetchBooks() {
       try {
-        const res = await fetch('/api/books/');
+        const res = await fetch(`/api/libraries/${user.libraryId}/books`);
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
