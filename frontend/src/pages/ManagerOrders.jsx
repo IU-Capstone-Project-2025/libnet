@@ -12,6 +12,7 @@ export default function ManagerOrders() {
     const navigate = useNavigate();
 
     const [books, setBooks] = useState({});
+    const [users, setUsers] = useState({});
     const [libraries, setLibraries] = useState({});
 
     const [statuses, setStatuses] = useState({});    
@@ -55,6 +56,23 @@ export default function ManagerOrders() {
         }
     }
 
+    async function fetchUsers() {
+        try {
+        const entries = await Promise.all(
+            bookings.map(async (booking) => {
+            const res = await fetch(`/api/users/${booking.user_id}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            return [booking.id, data];
+            })
+        );
+        setUsers(Object.fromEntries(entries));
+        } catch (err) {
+        setError(err.message);
+        }
+    }
+
+    fetchUsers();
     fetchBooks();
     }, [bookings]);
 
@@ -145,7 +163,7 @@ export default function ManagerOrders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
-                  src={b.image_url}
+                  src={b.image_url || "https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg"}
                   alt={`${books[b.id]?.title ?? '…'} cover`}
                 ></img>
 
@@ -163,8 +181,10 @@ export default function ManagerOrders() {
                     {b.id}
                   </p>
                   <p className="user__orders-book-detail">
-                    <strong>Пункт выдачи:</strong>{' '}
-                    {libraries[b.id]?.name ?? '…'}
+                    {users[b.id] ? (
+                      <><strong>Заказчик:</strong> {users[b.id].first_name + " " + users[b.id].last_name}</>
+                    ) : (<></>)}
+                    
                   </p>
                   <p className="user__orders-book-detail">
                     {b.status == 'pending'

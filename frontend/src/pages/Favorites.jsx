@@ -107,7 +107,7 @@ export default function Favorites() {
             }
 
             return (
-              <div className="user__favorites-book-section" key={f}>
+              <div className="user__favorites-book-section" key={f} onClick={() => navigate(`/books/${book.id}`)}>
                 <div className="user__favorites-book">
                   <img
                     className="user__favorites-book-cover"
@@ -132,16 +132,16 @@ export default function Favorites() {
                   </div>
                 </div>
                 <div className="user__favorites-buttons">
-                <button
+                {/* <button
                   className="user__favorites-bin-button"
                   onClick={() => handleCancel(b.id)}
-                ></button>
-                <button
+                ></button> */}
+                {/* <button
                   className="user__orders-button"
                   // onClick={() => handleCancel(b.id)}
                 >
                   Забронировать
-                </button>
+                </button> */}
                 </div>
 
               </div>

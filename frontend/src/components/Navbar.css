@@ -70,6 +70,14 @@
   cursor: pointer;
 }
 
+.user__header-account {
+  cursor: pointer;
+}
+
+.manager__header-account {
+  cursor: pointer;
+}
+
 
 .user__footer{
   display: flex;
