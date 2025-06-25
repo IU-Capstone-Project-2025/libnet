@@ -59,8 +59,7 @@ export default function BookDetails() {
         const res = await fetch(`/api/books/libraries/${book.id}`);
         const data = await res.json();
         setLibraries(data);
-        // console.log(data);
-        // setSelectedPlace(libraries[0].name);
+        
       } catch (err) {
         setError(err.message);
       }
@@ -72,8 +71,13 @@ export default function BookDetails() {
     if (!libraries || libraries.length === 0) return;
 
     async function setLibs() {
-  
-        setSelectedPlace(libraries[0].name);
+      for (var i = 0; i < libraries.length; i++) {
+        if (libraries[i].id == book.library_id) {
+          setSelectedPlace(libraries[i].name);
+          return;
+        }
+      }
+      
       
     }
     setLibs();
@@ -110,7 +114,7 @@ export default function BookDetails() {
       const lib = await fetch(`/api/libraries/${book.library_id}`);
       if (!lib.ok) throw new Error(`HTTP ${lib.status}`);
       const lib_data = await lib.json();
-
+      console.log(book, user);
       const date_to = new Date();
       date_to.setDate(date.getDate() + lib_data.booking_duration);
 
@@ -119,7 +123,7 @@ export default function BookDetails() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: user.id,
-          book_id: id,
+          book_id: book.id,
           library_id: book.library_id,
           date_from: date.toISOString().slice(0, 10),
           date_to: date_to.toISOString().slice(0, 10),
@@ -127,6 +131,7 @@ export default function BookDetails() {
       });
 
       if (!res.ok) {
+        console.log(res.statusText);
         throw new Error('Booking failed');
       } else {
         // TODO: errors
@@ -179,12 +184,15 @@ export default function BookDetails() {
   }
 
   async function updateBook(libname) {
-    // for (var i = 0; i < libraries.length; i++) {
-    //   if (libraries[i].name == libname) {
-
-    //     navigate(`/books/${b.id}`)
-    //   }
-    // }
+    for (var i = 0; i < libraries.length; i++) {
+      if (libraries[i].name == libname) {
+        console.log(libraries[i].id)
+        const res = await fetch(`/api/libraries/isbn/${libraries[i].id}/${book.isbn}`)
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+        navigate(`/books/${data.id}`)
+      }
+    }
     setSelectedPlace(libname);
   }
 
