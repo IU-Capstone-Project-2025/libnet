@@ -68,8 +68,8 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
                 booking.date_to = None
             else:
                 booking.date_to = booking.date_from + timedelta(days=booking.library.rent_duration)
-        elif booking.status == models.BookingStatus.CANCELLED:
-            booking.date_to = None
+        #elif booking.status == models.BookingStatus.CANCELLED:
+            #booking.date_to = None
 
     db.add(booking)
     db.commit()
