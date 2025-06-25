@@ -161,13 +161,6 @@ export default function ManagerBook() {
                 value={rating || 'Нет информации.'}
                 onChange={(e) => setRating(e.target.value)}
               />
-              <strong>В наличии:</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder='шт'
-                value={rating || 'Нет информации.'}
-                onChange={(e) => setRating(e.target.value)}
-              />
             </div>
           </div>
         </div>
