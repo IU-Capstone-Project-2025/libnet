@@ -93,7 +93,7 @@ def delete_library(library_id: int, db: Session = Depends(get_session)):
 
 # Get a Book by ISBN
 @router.get("/isbn/{library_id}/{book_isbn}", response_model=models.Book)
-def get_book_isbn(library_id: str, book_isbn: str, db: Session = Depends(get_session)):
+def get_book_isbn(library_id: int, book_isbn: str, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(and_(
             models.Book.isbn == book_isbn,
             models.Book.library_id == library_id
