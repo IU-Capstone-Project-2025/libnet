@@ -113,7 +113,7 @@ export default function Orders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
-                  src={b.image_url}
+                  src={b.image_url || "https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg"}
                   alt={`${books[b.id]?.title ?? '…'} cover`}
                 ></img>
 

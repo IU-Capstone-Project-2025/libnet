@@ -19,7 +19,7 @@ export default function ManagerCatalog() {
     async function fetchBooks() {
       try {
         const res = await fetch(`/api/libraries/${user.libraryId}/books`);
-
+        // const res = await fetch('api/books');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBooks(data);
@@ -93,11 +93,11 @@ export default function ManagerCatalog() {
                     <span className="user__catalog-book-info-author">{b.author}</span>
                   </div>
                   <div className="user__catalog-book-like-button">
-                    <img
+                    {/* <img
                       className="user__catalog-book-like-icon"
                       src="/like-2.svg"
                       alt="Лайк"
-                    ></img>
+                    ></img> */}
                   </div>
                 </div>
               </div>

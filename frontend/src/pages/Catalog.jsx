@@ -77,7 +77,7 @@ export default function Catalog() {
               >
                 <img
                   className="user__catalog-book-cover"
-                  src="https://via.placeholder.com/150x220?text=Book+Cover"
+                  src={b.image_url || "https://via.placeholder.com/150x220?text=Book+Cover"}
                   alt={`${b.title} cover`}
                 />
                 <div className="user__catalog-book-info">
@@ -86,11 +86,11 @@ export default function Catalog() {
                     <span className="user__catalog-book-info-author">{b.author}</span>
                   </div>
                   <div className="user__catalog-book-like-button">
-                    <img
+                    {/* <img
                       className="user__catalog-book-like-icon"
                       src="/like-2.svg"
                       alt="Лайк"
-                    ></img>
+                    ></img> */}
                   </div>
                 </div>
               </div>

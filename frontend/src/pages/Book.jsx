@@ -209,14 +209,20 @@ export default function BookDetails() {
               } //"https://via.placeholder.com/200x300?text=Book+Cover"}
               alt={`${book.title} cover`}
             />
-            <div className="user__book-buttons">
-              <button className="user__book-button" onClick={handleBooking}>
-                Забронировать
-              </button>
-              <button className="user__book-button" onClick={handleFavorite}>
-                {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-              </button>
-            </div>
+            
+              { user ? (
+                <div className="user__book-buttons">
+                  <button className="user__book-button" onClick={handleBooking}>
+                    Забронировать
+                  </button>
+                  <button className="user__book-button" onClick={handleFavorite}>
+                    {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+                  </button>
+                </div>
+                ) : (<div className="user__book-buttons"></div>)
+              }
+              
+            
           </div>
           <div className="user__book-right-section">
             <div className="user__book-title-container">
