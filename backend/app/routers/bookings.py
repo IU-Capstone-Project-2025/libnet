@@ -31,7 +31,7 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
 # Get Bookings of a certain User
 @router.get("/users/{user_id}", response_model=list[models.Booking])
 def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
-    booking = db.exec(select(models.Booking).where(models.LibUser.id == user_id)).first()
+    booking = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
     return booking
