@@ -84,7 +84,7 @@ export default function ManagerCatalog() {
               >
                 <img
                   className="user__catalog-book-cover"
-                  src="https://via.placeholder.com/150x220?text=Book+Cover"
+                  src={b.image_url ||"https://via.placeholder.com/150x220?text=Book+Cover"}
                   alt={`${b.title} cover`}
                 />
                 <div className="user__catalog-book-info">

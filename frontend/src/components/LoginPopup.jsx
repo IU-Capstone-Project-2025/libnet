@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import RegisterPopup from './RegisterPopup';
 import './AuthPopup.css'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPopup({ onClose }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
@@ -15,7 +17,12 @@ export default function LoginPopup({ onClose }) {
 
   async function handleLogin() {
     try {
-      await login(email, password);
+      const res = await login(email, password);
+      if (res == "manager") {
+        navigate("/manager/");
+      } else {
+        navigate("/");
+      }
       onClose();
     } catch (err) {
       setError(err.message);      // show “incorrect email/password”

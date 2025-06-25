@@ -124,7 +124,7 @@ export function AuthProvider({ children }) {
   setUser(a);
 
   localStorage.setItem(USER_DATA, JSON.stringify(a));
-
+  return data.role;
 }
 
   async function register(payload) {
