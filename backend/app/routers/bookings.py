@@ -9,8 +9,6 @@ router = APIRouter()
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
-    booking.date_to = booking.date_from + timedelta(days=booking.booking_duation)
-
     db.add(booking)
     db.commit()
     db.refresh(booking)
