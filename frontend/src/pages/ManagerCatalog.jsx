@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Catalog.css';
 
-export default function Catalog() {
+export default function ManagerCatalog() {
+  const { user } = useAuth();
+
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+    
     async function fetchBooks() {
       try {
-        const res = await fetch('/api/books/');
-
+        const res = await fetch(`/api/libraries/${user.libraryId}/books`);
+        // const res = await fetch('api/books');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBooks(data);
@@ -73,11 +80,11 @@ export default function Catalog() {
               <div
                 key={b.id}
                 className="user__catalog-book-card"
-                onClick={() => navigate(`/books/${b.id}`)}
+                onClick={() => navigate(`/manager/books/${b.id}`)}
               >
                 <img
                   className="user__catalog-book-cover"
-                  src={b.image_url || "https://via.placeholder.com/150x220?text=Book+Cover"}
+                  src={b.image_url ||"https://via.placeholder.com/150x220?text=Book+Cover"}
                   alt={`${b.title} cover`}
                 />
                 <div className="user__catalog-book-info">
