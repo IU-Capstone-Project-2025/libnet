@@ -117,7 +117,39 @@ export default function Navbar() {
           {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
         </div>
       ) : (
-        <></>
+        <div className="admin__header">
+          <div className="user__navbar-logo-container">
+            <img
+              className="user__navbar-logo"
+              src="/user-logo-2x.png"
+              alt="логотип"
+              onClick={() => navigate('/')}
+            />
+          </div>
+          <div className="admin__navbar">
+            <Link to="/admin/" className="user__navbar-link">
+              Библиотеки
+            </Link>
+          </div>
+          <div className="user__header-account">
+            {user ? (
+              <span
+                className="user__header-username"
+                onClick={() => navigate('/profile')}
+              >
+                {user.displayName}
+              </span>
+            ) : (
+              <span
+                className="user__header-login-button"
+                onClick={() => setShowLogin(true)}
+              >
+                Войти
+              </span>
+            )}
+          </div>
+          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+        </div>
       )}
     </>
   );
