@@ -7,6 +7,11 @@
     --grey-color: #F4F3EF;
     --weight-regular: 400;
     --weight-bold: 700;
+    --font-size-heading: 48px;
+    --font-size-regular: 24px;
+    --font-size-subregular: 20px;
+    --font-size-catalog-title: 14px;
+    --font-size-catalog-author: 12px;
 }
 
 *,
@@ -61,5 +66,41 @@ button {
   border: 0; /* убирают границу, она тоже может быть у каких-то элементов */
   clip: rect(0 0 0 0); /* это свойство обрезает видимую область до нулевого значения */
   overflow: hidden; /* на всякий случай скрывают видимое за пределами блока */
+}
+
+@media (width < 1024px) {
+  :root {
+    --font-size-heading: 36px;
+    --font-size-regular: 20px;
+    --font-size-subregular: 16px;
+    --font-size-catalog-title: 12px;
+    --font-size-catalog-author: 10px;
+  }
+
+  .user__catalog-book-cover {
+    width: 85%;
+  }
+  
+  .user__catalog-book-info {
+    width: 85%;
+  }
+}
+
+@media (width < 768px) {
+  :root {
+    --font-size-heading: 28px;
+    --font-size-regular: 16px;
+    --font-size-subregular: 14px;
+    --font-size-catalog-title: 10px;
+    --font-size-catalog-author: 8px;
+  }
+
+  .user__catalog-book-cover {
+    width: 60%;
+  }
+
+  .user__catalog-book-info {
+    width: 60%;
+  }
 }
 

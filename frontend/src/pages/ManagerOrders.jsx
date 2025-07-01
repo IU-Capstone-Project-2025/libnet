@@ -156,7 +156,7 @@ export default function ManagerOrders() {
     return (
     <>
       <div className="user__orders-content">
-        <h1 className="user__heading">Ваши бронирования</h1>
+        <h1 className="user__heading">Бронирования</h1>
         <div className="user__orders-content-container">
           {bookings.map((b) => (
             <div className="user__orders-book-section" key={b.id}>
