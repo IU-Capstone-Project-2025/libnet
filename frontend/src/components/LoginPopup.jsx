@@ -20,6 +20,8 @@ export default function LoginPopup({ onClose }) {
       const res = await login(email, password);
       if (res == "manager") {
         navigate("/manager/");
+      } else if (res == "admin"){
+        navigate("/admin/");
       } else {
         navigate("/");
       }
