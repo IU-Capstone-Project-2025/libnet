@@ -7,7 +7,7 @@ from app.main import app
 from app import models
 import io
 from dotenv import load_dotenv
-from sqlmodel import select
+import shutil
 
 load_dotenv()
 
@@ -23,7 +23,6 @@ def session_fixture():
         finally:
             session.rollback()
             session.close()
-    #SQLModel.metadata.drop_all(engine)
 
 @pytest_asyncio.fixture(name="client")
 async def client_fixture(session):
@@ -55,7 +54,6 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
         "genre": "Fantasy"
     }
     create_resp = await client.post("/books/1", json=payload)
-    print(f"Created book: {create_resp.json()}")
     assert create_resp.status_code == 201
     book = create_resp.json()
 
@@ -65,21 +63,11 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
     assert data["title"] == "Slay Book"
     assert data["author"] == "Queen B"
 
-    library_books = session.exec(select(models.LibraryBook).filter_by(book_id=book["id"])).all()
-    for lb in library_books:
-        session.delete(lb)
-    session.commit()
-
-    book_in_db = session.get(models.Book, book["id"])
-    if book_in_db:
-        session.delete(book_in_db)
-        session.commit()
+    await client.delete(f"/books/{book["id"]}")
 
     if created:
-        library_in_db = session.get(models.Library, 1)
-        if library_in_db:
-            session.delete(library_in_db)
-            session.commit()
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404
 
 @pytest.mark.asyncio
 async def test_upload_cover(client: AsyncClient, session: Session):
@@ -117,25 +105,13 @@ async def test_upload_cover(client: AsyncClient, session: Session):
     assert "image_url" in data
     assert data["id"] == book["id"]
 
-    library_books = session.exec(select(models.LibraryBook).filter_by(book_id=book["id"])).all()
-    for lb in library_books:
-        session.delete(lb)
-    session.commit()
-
-    book_in_db = session.get(models.Book, book["id"])
-    if book_in_db:
-        session.delete(book_in_db)
-        session.commit()
-
-
-    if data.get("image_url") and os.path.exists(data["image_url"]):
-        os.remove(data["image_url"])
+    await client.delete(f"/books/{book["id"]}")
+    if os.path.exists("book_covers/"):
+        shutil.rmtree("book_covers/")
 
     if created:
-        library_in_db = session.get(models.Library, 1)
-        if library_in_db:
-            session.delete(library_in_db)
-            session.commit()
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404
 
 @pytest.mark.asyncio
 async def test_update_book(client: AsyncClient, session: Session):
@@ -171,21 +147,11 @@ async def test_update_book(client: AsyncClient, session: Session):
     assert data["title"] == "New Title"
     assert data["author"] == "New Author"
 
-    library_books = session.exec(select(models.LibraryBook).filter_by(book_id=book["id"])).all()
-    for lb in library_books:
-        session.delete(lb)
-    session.commit()
-
-    book_in_db = session.get(models.Book, book["id"])
-    if book_in_db:
-        session.delete(book_in_db)
-        session.commit()
+    await client.delete(f"/books/{book["id"]}")
     
     if created:
-        library_in_db = session.get(models.Library, 1)
-        if library_in_db:
-            session.delete(library_in_db)
-            session.commit()
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404
 
 @pytest.mark.asyncio
 async def test_get_all_books(client: AsyncClient, session: Session):
@@ -200,18 +166,44 @@ async def test_get_all_books(client: AsyncClient, session: Session):
         session.commit()
         created = True
     
-    book1 = models.Book(title="Book 1", author="Author 1", isbn="111", library_id=1, description="First book", year=2023, image_url="", genre="Fiction")
-    book2 = models.Book(title="Book 2", author="Author 2", isbn="222", library_id=1, description="Second book", year=2023, image_url="", genre="Non-Fiction")
-    session.add_all([book1, book2])
-    session.commit()
+    book1_data = {
+        "title": "Book 1",
+        "author": "Author 1",
+        "isbn": "111",
+        "library_id": 1,
+        "description": "First book",
+        "year": 2023,
+        "image_url": "",
+        "genre": "Fiction"
+    }
+
+    book2_data = {
+        "title": "Book 2",
+        "author": "Author 2",
+        "isbn": "222",
+        "library_id": 1,
+        "description": "Second book",
+        "year": 2023,
+        "image_url": "",
+        "genre": "Non-Fiction"
+    }
+
+    create_resp1 = await client.post("/books/1", json=book1_data)
+    assert create_resp1.status_code == 201, create_resp1.text
+    book1 = create_resp1.json()
+
+    create_resp2 = await client.post("/books/1", json=book2_data)
+    assert create_resp2.status_code == 201, create_resp2.text
+    book2 = create_resp2.json()
 
     response = await client.get("/books/")
     assert response.status_code == 200
     data = response.json()
     assert len(data) >= 2
 
+    await client.delete(f"/books/{book1["id"]}")
+    await client.delete(f"/books/{book2["id"]}")
+
     if created:
-        library_in_db = session.get(models.Library, 1)
-        if library_in_db:
-            session.delete(library_in_db)
-            session.commit()
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404
