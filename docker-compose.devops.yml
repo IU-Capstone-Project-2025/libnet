@@ -11,6 +11,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5433:5432"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+        loki-batch-wait: "1s"
+        loki-external-labels: "job=postgres,service=db"
 
   backend:
     container_name: backend
