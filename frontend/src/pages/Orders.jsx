@@ -21,16 +21,25 @@ export default function Orders() {
         console.log('trying');
         const res = await fetch(`/api/bookings/users/${user.id}`);
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        console.log('bookings fetched:', data);
-        setBookings(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+      let data = [];
+        if (!res.ok) {
+          if (res.status === 404) {
+            // Нет бронирований — это нормально, просто оставим data пустым массивом
+            data = [];
+          } else {
+            throw new Error(`HTTP ${res.status}`);
+          }
+        } else {
+          data = await res.json();
+        }
+      console.log("bookings fetched:", data);
+      setBookings(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  }
     fetchBookings();
   }, [user]);
 
@@ -103,7 +112,8 @@ export default function Orders() {
 
   return (
     <>
-      <div className="user__orders-content">
+      {Array.isArray(bookings) && bookings.length > 0 ? (
+        <div className="user__orders-content">
         <h1 className="user__heading">Ваши бронирования</h1>
         <div className="user__orders-content-container">
           {bookings.map((b) => (
@@ -159,6 +169,12 @@ export default function Orders() {
           ))}
         </div>
       </div>
+      ) : (
+        <div className="user__orders-content">
+        <h1 className="user__heading">У вас пока нет бронирований</h1>
+        </div>
+      )}
+      
     </>
   );
 }
