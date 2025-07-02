@@ -55,5 +55,9 @@ async def test_reg_login_user(client: AsyncClient, session: Session):
     token = login_resp.json().get("access_token")
     assert token is not None
 
+    get_resp = await client.get(f"/users/{user['id']}")
+    assert get_resp.status_code == 200
+    assert get_resp.json()["email"] == "user_test_reg@test.lol"
+
     delete = await client.delete(f"/users/{user['id']}")
     assert delete.status_code == 204, delete.text

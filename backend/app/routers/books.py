@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
-from sqlmodel import Session, select, and_
+from sqlmodel import Session, select, and_, func
 from app.database import get_session
 from app import models
 import os
@@ -87,7 +87,7 @@ def get_book_cover(book_id: int, db: Session = Depends(get_session)):
 # Get quantity of books in a library
 @router.get("/quantity/{library_id}/{book_id}", response_model=int)
 def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session)):
-    book = db.exec(select(models.LibraryBook).where(_and(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
+    book = db.exec(select(models.LibraryBook).where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
@@ -95,7 +95,9 @@ def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_s
 # Get all Books
 @router.get("/", response_model=list[models.Book])
 def get_all_books(db: Session = Depends(get_session)):
-    books = db.exec(select(models.Book)).all()
+    subquery = (select(func.min(models.Book.id)).group_by(models.Book.isbn).subquery())
+
+    books = db.exec(select(models.Book).where(models.Book.id.in_(subquery))).all()
     return books
 
 # Get libraries that have a specific Book
