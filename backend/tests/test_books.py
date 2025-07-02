@@ -23,7 +23,7 @@ def session_fixture():
         finally:
             session.rollback()
             session.close()
-            
+
 
 @pytest_asyncio.fixture(name="client")
 async def client_fixture(session):
@@ -65,7 +65,7 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
     assert data["title"] == "Slay Book"
     assert data["author"] == "Queen B"
 
-    await client.delete(f"/books/{book["id"]}")
+    await client.delete(f"/books/{book['id']}")
 
     if created:
         await client.delete("/libraries/1")
@@ -108,7 +108,7 @@ async def test_upload_cover(client: AsyncClient, session: Session):
     assert "image_url" in data
     assert data["id"] == book["id"]
 
-    await client.delete(f"/books/{book["id"]}")
+    await client.delete(f"/books/{book['id']}")
     if os.path.exists("book_covers/"):
         shutil.rmtree("book_covers/")
 
@@ -145,13 +145,13 @@ async def test_update_book(client: AsyncClient, session: Session):
     book = create_resp.json()
 
     update_payload = {"title": "New Title", "author": "New Author"}
-    response = await client.patch(f"/books/{book["id"]}", json=update_payload)
+    response = await client.patch(f"/books/{book['id']}", json=update_payload)
     assert response.status_code == 200
     data = response.json()
     assert data["title"] == "New Title"
     assert data["author"] == "New Author"
 
-    await client.delete(f"/books/{book["id"]}")
+    await client.delete(f"/books/{book['id']}")
     
     if created:
         await client.delete("/libraries/1")
@@ -207,8 +207,8 @@ async def test_get_all_books(client: AsyncClient, session: Session):
     data = response.json()
     assert len(data) >= 2
 
-    await client.delete(f"/books/{book1["id"]}")
-    await client.delete(f"/books/{book2["id"]}")
+    await client.delete(f"/books/{book1['id']}")
+    await client.delete(f"/books/{book2['id']}")
 
     if created:
         await client.delete("/libraries/1")
