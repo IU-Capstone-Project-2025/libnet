@@ -31,7 +31,7 @@ async def client_fixture(session):
     app.dependency_overrides.clear()
 
 @pytest.mark.asyncio
-async def test_reg_login_user(client: AsyncClient, session: Session):
+async def test_crud_login_user(client: AsyncClient, session: Session):
     payload = {
         "first_name": "Test",
         "last_name": "User",
@@ -59,5 +59,93 @@ async def test_reg_login_user(client: AsyncClient, session: Session):
     assert get_resp.status_code == 200
     assert get_resp.json()["email"] == "user_test_reg@test.lol"
 
+    update_payload = {
+        "city": "New City"
+    }
+    patch_resp = await client.patch(f"/users/{user['id']}", json=update_payload)
+    assert patch_resp.status_code == 200
+    assert patch_resp.json()["city"] == "New City"
+
     delete = await client.delete(f"/users/{user['id']}")
     assert delete.status_code == 204, delete.text
+
+@pytest.mark.asyncio
+async def test_user_likes_book(client: AsyncClient, session: Session):
+    created = False
+    if (await client.get("/libraries/1")).status_code == 404:
+        library = models.Library(
+            id=1, name="Central Library", city="Test City",
+            address="123 Test St", phone="1234567890", email="book_test@la.la",
+            description="Main library for testing", open_at="09:00", close_at="17:00", days_open="Mon-Fri"
+        )
+        session.add(library)
+        session.commit()
+        created = True
+    
+    book1_data = {
+        "title": "testBook 1",
+        "author": "Author 1",
+        "isbn": "11100000000000",
+        "library_id": 1,
+        "description": "First book",
+        "year": 2023,
+        "image_url": "",
+        "genre": "Fiction",
+        "pages_count": 300
+    }
+
+    book2_data = {
+        "title": "testBook 2",
+        "author": "Author 2",
+        "isbn": "222000000000000",
+        "library_id": 1,
+        "description": "Second book",
+        "year": 2023,
+        "image_url": "",
+        "genre": "Non-Fiction",
+        "pages_count": 300
+    }
+
+    create_resp1 = await client.post("/books/1", json=book1_data)
+    assert create_resp1.status_code == 201, create_resp1.text
+    book1 = create_resp1.json()
+
+    create_resp2 = await client.post("/books/1", json=book2_data)
+    assert create_resp2.status_code == 201, create_resp2.text
+    book2 = create_resp2.json()
+
+    payload = {
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "user_test_reg@test.lol",
+        "password": "testing123",
+        "phone": "1234567890",
+        "city": "Test City",
+        "role": "user"
+    }
+    create_resp = await client.post("/users/register", json=payload)
+    assert create_resp.status_code == 200, create_resp.text
+    user = create_resp.json()
+    assert user["email"] == "user_test_reg@test.lol"
+
+    fav_payload = {"user_id": user["id"], "book_id": book1["id"]}
+    like_resp = await client.post("/users/like", json=fav_payload)
+    assert like_resp.status_code == 200
+
+
+    likes_resp = await client.get(f"/users/likes/{user['id']}")
+    assert likes_resp.status_code == 200
+    assert book1["id"] in likes_resp.json()
+
+
+    unlike_resp = await client.delete(f"/users/like/{user['id']}/{book1['id']}")
+    assert unlike_resp.status_code == 204
+
+
+    await client.delete(f"/books/{book1['id']}")
+    await client.delete(f"/books/{book2['id']}")
+    await client.delete(f"/users/{user['id']}")
+
+    if created:
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404
