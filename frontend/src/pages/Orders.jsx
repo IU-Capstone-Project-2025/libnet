@@ -14,17 +14,24 @@ export default function Orders() {
   const [books, setBooks] = useState({});
   const [libraries, setLibraries] = useState({});
 
-  
-
   useEffect(() => {
     async function fetchBookings() {
-    if (user == null) return;
-    try {
-      console.log("trying");
-      const res = await fetch(`/api/bookings/users/${user.id}`);
+      if (user == null) return;
+      try {
+        console.log('trying');
+        const res = await fetch(`/api/bookings/users/${user.id}`);
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      let data = [];
+        if (!res.ok) {
+          if (res.status === 404) {
+            // Нет бронирований — это нормально, просто оставим data пустым массивом
+            data = [];
+          } else {
+            throw new Error(`HTTP ${res.status}`);
+          }
+        } else {
+          data = await res.json();
+        }
       console.log("bookings fetched:", data);
       setBookings(data);
     } catch (err) {
@@ -92,20 +99,21 @@ export default function Orders() {
   async function handleCancel(booking_id) {
     console.log(booking_id);
     const res = await fetch(`/api/bookings/${booking_id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: "cancelled",
-          }),
-        });
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'cancelled',
+      }),
+    });
     if (res.ok) {
-      console.log("cancelled");
+      console.log('cancelled');
     }
   }
 
   return (
     <>
-      <div className="user__orders-content">
+      {Array.isArray(bookings) && bookings.length > 0 ? (
+        <div className="user__orders-content">
         <h1 className="user__heading">Ваши бронирования</h1>
         <div className="user__orders-content-container">
           {bookings.map((b) => (
@@ -113,7 +121,10 @@ export default function Orders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
-                  src={b.image_url || "https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg"}
+                  src={
+                    b.image_url ||
+                    'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
+                  }
                   alt={`${books[b.id]?.title ?? '…'} cover`}
                 ></img>
 
@@ -158,6 +169,12 @@ export default function Orders() {
           ))}
         </div>
       </div>
+      ) : (
+        <div className="user__orders-content">
+        <h1 className="user__heading">У вас пока нет бронирований</h1>
+        </div>
+      )}
+      
     </>
   );
 }

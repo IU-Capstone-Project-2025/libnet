@@ -81,7 +81,12 @@ export default function Favorites() {
   }, [books]);
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__book-content" style={{ color: 'red' }}>
+        Ошибка: {error}
+      </p>
+    );
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
@@ -107,7 +112,11 @@ export default function Favorites() {
             }
 
             return (
-              <div className="user__favorites-book-section" key={f} onClick={() => navigate(`/books/${book.id}`)}>
+              <div
+                className="user__favorites-book-section"
+                key={f}
+                onClick={() => navigate(`/books/${book.id}`)}
+              >
                 <div className="user__favorites-book">
                   <img
                     className="user__favorites-book-cover"
@@ -132,18 +141,17 @@ export default function Favorites() {
                   </div>
                 </div>
                 <div className="user__favorites-buttons">
-                {/* <button
+                  {/* <button
                   className="user__favorites-bin-button"
                   onClick={() => handleCancel(b.id)}
                 ></button> */}
-                {/* <button
+                  {/* <button
                   className="user__orders-button"
                   // onClick={() => handleCancel(b.id)}
                 >
                   Забронировать
                 </button> */}
                 </div>
-
               </div>
             );
           })}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoginPopup from './LoginPopup';
+import AuthPopupWrapper from './AuthPopupWrapper';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -28,7 +28,6 @@ export default function Navbar() {
               className="manager__navbar-logo"
               src="/manager-logo-2x.png"
               alt="логотип"
-              onClick={() => navigate('/')}
             />
           </div>
           <div className="manager__navbar">
@@ -57,7 +56,7 @@ export default function Navbar() {
           <div className="manager__header-account">
             {user ? (
               <span
-                className="manager__header-username"
+                className="manager__header-login-button"
                 onClick={() => navigate('/profile')}
               >
                 {user.displayName}
@@ -71,7 +70,9 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
         </div>
       ) : !user || user.role === 'user' ? (
         <div className="user__header">
@@ -80,7 +81,6 @@ export default function Navbar() {
               className="user__navbar-logo"
               src="/user-logo-2x.png"
               alt="логотип"
-              onClick={() => navigate('/')}
             />
           </div>
           <div className="user__navbar">
@@ -100,7 +100,7 @@ export default function Navbar() {
           <div className="user__header-account">
             {user ? (
               <span
-                className="user__header-username"
+                className="user__header-login-button"
                 onClick={() => navigate('/profile')}
               >
                 {user.displayName}
@@ -114,10 +114,45 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
         </div>
       ) : (
-        <></>
+        <div className="admin__header">
+          <div className="user__navbar-logo-container">
+            <img
+              className="admin__navbar-logo"
+              src="/admin-logo-2x.png"
+              alt="логотип"
+            />
+          </div>
+          <div className="admin__navbar">
+            <Link to="/admin/" className="user__navbar-link">
+              Библиотеки
+            </Link>
+          </div>
+          <div className="user__header-account">
+            {user ? (
+              <span
+                className="user__header-login-button"
+                onClick={() => navigate('/profile')}
+              >
+                {user.displayName}
+              </span>
+            ) : (
+              <span
+                className="user__header-login-button"
+                onClick={() => setShowLogin(true)}
+              >
+                Войти
+              </span>
+            )}
+          </div>
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
+        </div>
       )}
     </>
   );

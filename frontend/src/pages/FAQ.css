@@ -1,4 +1,3 @@
 .user__faq-content {
-  min-height: calc(100vh - 79px - 74.5px);
-
+  min-height: 100vh;
 }
