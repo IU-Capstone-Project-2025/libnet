@@ -28,7 +28,6 @@ export default function Navbar() {
               className="manager__navbar-logo"
               src="/manager-logo-2x.png"
               alt="логотип"
-              onClick={() => navigate('/')}
             />
           </div>
           <div className="manager__navbar">
@@ -81,7 +80,6 @@ export default function Navbar() {
               className="user__navbar-logo"
               src="/user-logo-2x.png"
               alt="логотип"
-              onClick={() => navigate('/')}
             />
           </div>
           <div className="user__navbar">
@@ -121,10 +119,9 @@ export default function Navbar() {
         <div className="admin__header">
           <div className="user__navbar-logo-container">
             <img
-              className="user__navbar-logo"
-              src="/user-logo-2x.png"
+              className="admin__navbar-logo"
+              src="/admin-logo-2x.png"
               alt="логотип"
-              onClick={() => navigate('/')}
             />
           </div>
           <div className="admin__navbar">

@@ -33,8 +33,12 @@
 
 .manager__navbar-logo {
   width: 424px;
-    aspect-ratio: 424/59;
+  aspect-ratio: 424/59;
+}
 
+.admin__navbar-logo {
+  width: 359px;
+  aspect-ratio: 359/59;
 }
 
 .user__navbar-link {
@@ -170,6 +174,54 @@
   border-bottom: 1px solid transparent;
 }
 
+.admin__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding: 10px 20px;
+  font-weight: var(--weight-regular);
+  font-size: var(--font-size-regular);
+  background-color: var(--main-admin-color);
+  width: 100%;
+}
+
+.admin__navbar {
+  display: flex;
+  gap: 33px;
+  font-weight: var(--weight-regular);
+}
+
+.admin__navbar-select {
+  padding: 5px 10px;
+  font-size: var(--font-size-subregular);
+  border-radius: 10px 0 10px 0;
+  border: 1px solid black;
+  background-color: white;
+}
+
+.admin__navbar-select:focus {
+  outline: none;
+}
+
+.admin__navbar-select:focus-visible {
+  outline: 2px solid black;
+}
+
+.admin__navbar-link:focus {
+  outline: none;
+}
+
+.admin__navbar-link:focus-visible {
+  outline: 2px solid black;
+}
+
+.admin__navbar-link {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
 @media (width < 1240px) {
   .manager__navbar {
     display: none;
@@ -188,10 +240,18 @@
   .manager__navbar-logo {
     width: 347.5px;
   }
+
+  .admin__navbar-logo {
+    width: 294px;
+  }
 }
 
 @media (width < 768px) {
   .user__navbar {
+    display: none;
+  }
+
+  .admin-navbar {
     display: none;
   }
 
@@ -202,10 +262,22 @@
   .manager__navbar-logo {
     width: 277px;
   }
+
+  .admin__navbar-logo {
+    width: 234px;
+  }
 }
 
 @media (width < 479px) {
-    .manager__navbar-logo {
+  .user__navbar-logo {
+    width: 86.8px;
+  }
+  
+  .manager__navbar-logo {
     width: 200px;
+  }
+
+  .admin__navbar-logo {
+    width: 169.3px;
   }
 }
