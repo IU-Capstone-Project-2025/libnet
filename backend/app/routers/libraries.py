@@ -17,6 +17,7 @@ def create_library(library: models.Library, db: Session=Depends(get_session)):
 # Get all Libraries
 @router.get("/", response_model=list[models.Library])
 def get_libraries(db: Session = Depends(get_session)):
+    
     libraries = db.exec(select(models.Library)).all()
     return libraries
 

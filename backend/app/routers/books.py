@@ -1,17 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, Form
-from sqlmodel import Session, select, and_
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
+from sqlmodel import Session, select, and_, func
 from app.database import get_session
 from app import models
 import os
 from typing import Optional
-import uuid
 from fastapi.responses import FileResponse
-from pathlib import Path
 
 router = APIRouter()
 
 COVERS_DIR = "book_covers"
 os.makedirs(COVERS_DIR, exist_ok=True)
+
+# Create a Book
+@router.post("/{quantity}", response_model=models.Book, status_code=201)
+async def create_book(book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session)):
+    db.add(book)
+    db.commit()
+    db.refresh(book)
+
+    library_book = models.LibraryBook(library_id=book.library_id, book_id=book.id, quantity=quantity)
+    db.add(library_book)
+    db.commit()
+    db.refresh(library_book)
+    db.refresh(book)
+    return book
 
 # Upload book cover
 @router.post("/upload-cover/{book_id}", response_model=models.Book)
@@ -72,24 +84,10 @@ def get_book_cover(book_id: int, db: Session = Depends(get_session)):
     else:
         raise HTTPException(status_code=404, detail="No cover available")
 
-# Create a Book
-@router.post("/{quantity}", response_model=models.Book)
-async def create_book(book: models.Book, quantity: int, db: Session = Depends(get_session)):
-    db.add(book)
-    db.commit()
-    db.refresh(book)
-
-    library_book = models.LibraryBook(library_id=book.library_id, book_id=book.id, quantity=quantity)
-    db.add(library_book)
-    db.commit()
-    db.refresh(library_book)
-    
-    return book
-
 # Get quantity of books in a library
 @router.get("/quantity/{library_id}/{book_id}", response_model=int)
 def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session)):
-    book = db.exec(select(models.LibraryBook).where(_and(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
+    book = db.exec(select(models.LibraryBook).where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
@@ -97,7 +95,9 @@ def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_s
 # Get all Books
 @router.get("/", response_model=list[models.Book])
 def get_all_books(db: Session = Depends(get_session)):
-    books = db.exec(select(models.Book)).all()
+    subquery = (select(func.min(models.Book.id)).group_by(models.Book.isbn).subquery())
+
+    books = db.exec(select(models.Book).where(models.Book.id.in_(subquery))).all()
     return books
 
 # Get libraries that have a specific Book
@@ -139,9 +139,10 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
 def delete_book(book_id: int, db: Session = Depends(get_session)):
     library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
+    library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
-    db.delete(library_book)
-    db.commit()
+    if library_book:
+        db.delete(library_book)
     db.delete(book)
     db.commit()
