@@ -17,6 +17,7 @@ def create_library(library: models.Library, db: Session=Depends(get_session)):
 # Get all Libraries
 @router.get("/", response_model=list[models.Library])
 def get_libraries(db: Session = Depends(get_session)):
+    
     libraries = db.exec(select(models.Library)).all()
     return libraries
 
@@ -84,7 +85,7 @@ def get_managers_in_library(library_id: int, db: Session=Depends(get_session)):
 # Delete a Library
 @router.delete("/{library_id}", status_code=204)
 def delete_library(library_id: int, db: Session = Depends(get_session)):
-    library = db.exec(select(models.Library).where(models.Library.id == library_id))
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")
     

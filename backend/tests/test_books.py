@@ -37,7 +37,7 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
             id=1, name="Central Library", city="Test City",
-            address="123 Test St", phone="1234567890", email="",
+            address="123 Test St", phone="1234567890", email="book_test@la.la",
             description="Main library for testing", open_at="09:00", close_at="17:00", days_open="Mon-Fri"
         )
         session.add(library)
@@ -75,7 +75,7 @@ async def test_upload_cover(client: AsyncClient, session: Session):
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
             id=1, name="Central Library", city="Test City",
-            address="123 Test St", phone="1234567890", email="",
+            address="123 Test St", phone="1234567890", email="book_test@la.la",
             description="Main library for testing", open_at="09:00", close_at="17:00", days_open="Mon-Fri"
         )
         session.add(library)
@@ -119,7 +119,7 @@ async def test_update_book(client: AsyncClient, session: Session):
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
             id=1, name="Central Library", city="Test City",
-            address="123 Test St", phone="1234567890", email="",
+            address="123 Test St", phone="1234567890", email="book_test@la.la",
             description="Main library for testing", open_at="09:00", close_at="17:00", days_open="Mon-Fri"
         )
         session.add(library)
@@ -159,7 +159,7 @@ async def test_get_all_books(client: AsyncClient, session: Session):
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
             id=1, name="Central Library", city="Test City",
-            address="123 Test St", phone="1234567890", email="",
+            address="123 Test St", phone="1234567890", email="book_test@la.la",
             description="Main library for testing", open_at="09:00", close_at="17:00", days_open="Mon-Fri"
         )
         session.add(library)
