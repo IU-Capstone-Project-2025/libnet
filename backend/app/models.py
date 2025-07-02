@@ -136,5 +136,5 @@ class BookingUpdate(SQLModel):
     status: Optional[BookingStatus] = None
     date_from: Optional[date] = None
 
-SQLModel.metadata.drop_all(engine)
+# SQLModel.metadata.drop_all(engine)
 SQLModel.metadata.create_all(engine)
