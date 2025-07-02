@@ -23,6 +23,7 @@ def session_fixture():
         finally:
             session.rollback()
             session.close()
+            
 
 @pytest_asyncio.fixture(name="client")
 async def client_fixture(session):
@@ -51,7 +52,8 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
         "description": "A book about slaying",
         "year": 2023,
         "image_url": "",
-        "genre": "Fantasy"
+        "genre": "Fantasy",
+        "pages_count": 300
     }
     create_resp = await client.post("/books/1", json=payload)
     assert create_resp.status_code == 201
@@ -90,7 +92,8 @@ async def test_upload_cover(client: AsyncClient, session: Session):
         "description": "A book to test cover upload",
         "year": 2023,
         "image_url": "",
-        "genre": "Mystery"
+        "genre": "Mystery",
+        "pages_count": 300
     }
     create_resp = await client.post("/books/1", json=payload)
     assert create_resp.status_code == 201, create_resp.text
@@ -134,7 +137,8 @@ async def test_update_book(client: AsyncClient, session: Session):
         "description": "A book to update",
         "year": 2023,
         "image_url": "",
-        "genre": "Sci-Fi"
+        "genre": "Sci-Fi",
+        "pages_count": 300
     }
     create_resp = await client.post("/books/1", json=payload)
     assert create_resp.status_code == 201, create_resp.text
@@ -174,7 +178,8 @@ async def test_get_all_books(client: AsyncClient, session: Session):
         "description": "First book",
         "year": 2023,
         "image_url": "",
-        "genre": "Fiction"
+        "genre": "Fiction",
+        "pages_count": 300
     }
 
     book2_data = {
@@ -185,7 +190,8 @@ async def test_get_all_books(client: AsyncClient, session: Session):
         "description": "Second book",
         "year": 2023,
         "image_url": "",
-        "genre": "Non-Fiction"
+        "genre": "Non-Fiction",
+        "pages_count": 300
     }
 
     create_resp1 = await client.post("/books/1", json=book1_data)

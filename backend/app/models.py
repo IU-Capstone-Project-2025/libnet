@@ -87,6 +87,7 @@ class Book(SQLModel, table=True):
     isbn: str = Field(index=True)
     genre: str
     rating: int = Field(default=0, nullable=False)
+    pages_count: Optional[int] = None
 
     favorite_users: List["FavoriteBook"] = Relationship(back_populates="book")
     bookings: List["Booking"] = Relationship(back_populates="book")
@@ -131,7 +132,6 @@ class Booking(SQLModel, table=True):
     library: Optional[Library] = Relationship(back_populates="bookings")
 
 class BookingUpdate(SQLModel):
-    #status: BookingStatus
     status: Optional[BookingStatus] = None
     date_from: Optional[date] = None
 

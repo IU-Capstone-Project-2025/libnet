@@ -37,7 +37,7 @@ async def test_create_and_get_library(client: AsyncClient):
         "city": "Test City",
         "address": "123 Test St",
         "phone": "1234567890",
-        "email": "lol@gmail.com",
+        "email": "libtest@la.la",
         "description": "Test library",
         "open_at": "09:00",
         "close_at": "17:00",

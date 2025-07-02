@@ -4,9 +4,7 @@ from app.database import get_session
 from app import models
 import os
 from typing import Optional
-import uuid
 from fastapi.responses import FileResponse
-from pathlib import Path
 
 router = APIRouter()
 
