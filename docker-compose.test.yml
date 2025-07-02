@@ -18,4 +18,4 @@ services:
     depends_on:
       - postgres_test
     environment:
-      DB_URL: ${TEST_DB_URL}
+      DATABASE_URL: ${TEST_DB_URL}
