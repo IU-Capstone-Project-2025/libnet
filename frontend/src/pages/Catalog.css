@@ -64,6 +64,31 @@
   text-decoration: none;
 }
 
+.user__search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.user__search-input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.user__search-button {
+  padding: 8px 16px;
+  font-weight: bold;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
 .user__catalog-books-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

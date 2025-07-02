@@ -4,7 +4,7 @@ import RegisterPopup from './RegisterPopup';
 import './AuthPopup.css'; 
 import { useNavigate } from 'react-router-dom';
 
-export default function LoginPopup({ onClose }) {
+export default function LoginPopup({ onClose, switchToRegister  }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,7 +59,7 @@ export default function LoginPopup({ onClose }) {
           <button className="user__login-button" onClick={handleLogin}>Войти</button>
           {/* <button onClick={onClose}>Отмена</button> */}
         </div>
-        <h3 className="user__login-subheading">У вас еще нет аккаунта? <span className="user__login-switch" onClick={() => setShowRegister(true)}>Создать аккаунт</span></h3>
+        <h3 className="user__login-subheading">У вас еще нет аккаунта? <span className="user__login-switch" onClick={switchToRegister}>Создать аккаунт</span></h3>
 
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoginPopup from './LoginPopup';
+import AuthPopupWrapper from './AuthPopupWrapper';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -71,7 +71,8 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
+
         </div>
       ) : !user || user.role === 'user' ? (
         <div className="user__header">
@@ -114,7 +115,7 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
         </div>
       ) : (
         <div className="admin__header">
@@ -148,7 +149,8 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <LoginPopup onClose={() => setShowLogin(false)} />}
+          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
+
         </div>
       )}
     </>

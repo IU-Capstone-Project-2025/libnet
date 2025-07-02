@@ -11,6 +11,7 @@ export default function AdminLibrary() {
     
     const [library, setLibrary] = useState([]);
     const { id } = useParams();
+    const [managers, setManagers] = useState([]);
 
     const [title, setTitle] = useState(null);
     const [phone, setPhone] = useState(null);
@@ -50,7 +51,23 @@ export default function AdminLibrary() {
             }
         }
 
+        async function fetchManagers() {
+            if (user == null) return;
+            try {
+                const res = await fetch(`/api/libraries/${id}/managers`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                setManagers(data);
+            } catch (err) {
+                console.log("here");
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
         fetchLibrary();
+        fetchManagers();
     }, [user]);
 
     async function handleUpdate() {
@@ -167,8 +184,13 @@ export default function AdminLibrary() {
               </button>
           </div>
           <div className="user__book-left-section"></div>
+          </div><div>
+            {managers.map((m) => (
+              <div key={m.id}>{m.first_name} </div>
+            ))}
           </div>
           </div>
+          
         </>
     );
 }
