@@ -88,6 +88,7 @@ class Book(SQLModel, table=True):
     genre: str
     rating: int = Field(default=0, nullable=False)
     pages_count: Optional[int] = None
+    publisher: Optional[str] = None
 
     favorite_users: List["FavoriteBook"] = Relationship(back_populates="book")
     bookings: List["Booking"] = Relationship(back_populates="book")
@@ -135,5 +136,5 @@ class BookingUpdate(SQLModel):
     status: Optional[BookingStatus] = None
     date_from: Optional[date] = None
 
-# SQLModel.metadata.drop_all(engine)
+SQLModel.metadata.drop_all(engine)
 SQLModel.metadata.create_all(engine)

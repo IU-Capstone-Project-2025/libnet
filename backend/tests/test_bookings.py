@@ -114,13 +114,12 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     delete = await client.delete(f"/bookings/{booking['id']}")
     assert delete.status_code == 204
 
-    for item in created:
-        if item == "library":
-            await client.delete("/libraries/1")
-            assert (await client.get("/libraries/1")).status_code == 404
-        elif item == "user":
-            await client.delete("/users/1")
-            assert (await client.get("/users/1")).status_code == 404
-        elif item == "book":
-            await client.delete("/books/1")
-            assert (await client.get("/books/1")).status_code == 404
+    if "book" in created:
+        await client.delete("/books/1")
+        assert (await client.get("/books/1")).status_code == 404
+    if "user" in created:
+        await client.delete("/users/1")
+        assert (await client.get("/users/1")).status_code == 404
+    if "library" in created:
+        await client.delete("/libraries/1")
+        assert (await client.get("/libraries/1")).status_code == 404

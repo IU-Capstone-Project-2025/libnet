@@ -35,6 +35,8 @@ async def client_fixture(session):
 @pytest.mark.asyncio
 async def test_create_and_get_book(client: AsyncClient, session: Session):
     created = False
+    print(await client.get("/libraries/1"))
+    print((await client.get("/libraries/1")).status_code)
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
             id=1, name="Central Library", city="Test City",
