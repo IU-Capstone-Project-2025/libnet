@@ -8,7 +8,7 @@ const USER_DATA = "user_data"
 const AuthContext = createContext(null);
 
 class User {
-  constructor(id, email, firstName, lastName, role, city, phone) {
+  constructor(id, email, firstName, lastName, role, city, phone, lib) {
     this.id = id;
     this.email = email;
     this.firstName = firstName;
@@ -16,6 +16,7 @@ class User {
     this.role = role;
     this.city = city;
     this.phone = phone;
+    this.libraryId = lib;
   }
 
   get displayName() {
@@ -42,7 +43,8 @@ export function AuthProvider({ children }) {
           user_data.lastName,
           user_data.role,
           user_data.city,
-          user_data.phone
+          user_data.phone,
+          user_data.libraryId
         ));
       }
       else if (token && userId) {
@@ -64,7 +66,8 @@ export function AuthProvider({ children }) {
             data.lastName,
             data.role,
             data.city,
-            data.phone
+            data.phone,
+            data.libraryId
           );
           setUser(loadedUser);
           localStorage.setItem(USER_DATA, JSON.stringify(loadedUser));
@@ -96,20 +99,17 @@ export function AuthProvider({ children }) {
   localStorage.setItem(TOKEN_KEY, access_token);
   localStorage.setItem(USER_ID_KEY, user_id.toString());
   // const payload = jwtDecode(access_token);
-  console.log(user_id + " = user_id")
   const profileRes = await fetch(`/api/users/${user_id}`, {
     headers: { Authorization: `Bearer ${access_token}` },
   });
 
   if (!profileRes.ok) {
     console.log(profileRes.json)
-    setUser(new User(user_id, email, '', '', '', '', ''));
+    setUser(new User(user_id, email, '', '', '', '', '', ''));
     throw new Error('Could not load user profile');
   }
 
   const data = await profileRes.json();
-  console.log("User data recived: ");
-  console.log(data);
   let a = new User(
       data.id,
       data.email,
@@ -117,16 +117,18 @@ export function AuthProvider({ children }) {
       data.last_name,
       data.role,
       data.city,
-      data.phone
+      data.phone,
+      data.library_id
     )
+  console.log(data.library_id);
   setUser(a);
-  console.log(a);
-  console.log(user)
+
   localStorage.setItem(USER_DATA, JSON.stringify(a));
-  console.log("USER_DATA was set to: " + localStorage.getItem(USER_DATA));
+  return data.role;
 }
 
   async function register(payload) {
+    // payload["role"] = "manager";
     const res = await fetch(`/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -153,9 +155,10 @@ export function AuthProvider({ children }) {
       payload.email,
       payload.first_name,
       payload.last_name,
-      payload.role,
+      user.role,
       payload.city,
-      payload.phone
+      payload.phone,
+      user.libraryId
     )
     setUser(new_user)
     if (!res.ok) {

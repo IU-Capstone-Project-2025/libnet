@@ -50,6 +50,7 @@ class LibUserRead(SQLModel):
     phone: str
     city: str
     role: UserRole
+    library_id: Optional[int]
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
@@ -87,6 +88,8 @@ class Book(SQLModel, table=True):
     isbn: str = Field(index=True)
     genre: str
     rating: int = Field(default=0, nullable=False)
+    pages_count: Optional[int] = None
+    publisher: Optional[str] = None
 
     favorite_users: List["FavoriteBook"] = Relationship(back_populates="book")
     bookings: List["Booking"] = Relationship(back_populates="book")
@@ -131,6 +134,8 @@ class Booking(SQLModel, table=True):
     library: Optional[Library] = Relationship(back_populates="bookings")
 
 class BookingUpdate(SQLModel):
-    status: BookingStatus
+    status: Optional[BookingStatus] = None
+    date_from: Optional[date] = None
 
+SQLModel.metadata.drop_all(engine)
 SQLModel.metadata.create_all(engine)

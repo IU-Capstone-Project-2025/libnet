@@ -1,5 +1,12 @@
 import React from 'react';
+import "./FAQ.css"
 
 export default function FAQ() {
-  return <h1>FAQ</h1>;
+    return (
+    <>
+    <div className="user__faq-content">
+      <h1 className="user__heading">FAQ</h1>
+    </div>
+    </>
+  );
 }
