@@ -37,15 +37,15 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
     return booking
 
 # Get Bookings of a certain User
-@router.get("/{user_id}", response_model=list[models.Booking])
+@router.get("/users/{user_id}", response_model=list[models.Booking])
 def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
-    booking = db.exec(select(models.Booking).where(models.LibUser.id == user_id)).first()
+    booking = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
     return booking
 
 # Get active bookings of a user
-@router.get("active/{user_id}", response_model=list[models.Booking])
+@router.get("/active/{user_id}", response_model=list[models.Booking])
 def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
     bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "pending; active"))).all()
     if not bookings:
@@ -53,7 +53,7 @@ def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_sessio
     return bookings
 
 # Get dismissed bookings of a user
-@router.get("dismissed/{user_id}", response_model=list[models.Booking])
+@router.get("/dismissed/{user_id}", response_model=list[models.Booking])
 def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
     bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "returned; cancelled"))).all()
     if not bookings:

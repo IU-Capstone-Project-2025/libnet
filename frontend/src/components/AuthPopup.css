@@ -79,6 +79,7 @@
 
 .user__login-button:hover {
   font-weight: bold;
+  cursor: pointer;
 }
 
 .user__login-button:active {
@@ -87,11 +88,12 @@
 }
 
 .user__login-switch {
-  text-decoration: underline;
+  border-bottom: 1px solid black;
 }
 
 .user__login-switch:hover {
-  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
 }
 
 .user__login-checkbox-container {

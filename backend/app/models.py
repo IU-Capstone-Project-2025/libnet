@@ -50,6 +50,7 @@ class LibUserRead(SQLModel):
     phone: str
     city: str
     role: UserRole
+    library_id: Optional[int]
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None

@@ -74,19 +74,27 @@
 ### 🚀 Week 3 MVP Development
 
 #### Core Features
-- [ ] Implement the highest priority features from the backlog
-- [ ] Add basic error handling for critical paths
+- [x] Implement the highest priority features from the backlog  
+  - Book covers upload (file/URL)  
+  - Favorites functionality  
+  - Multi-library support 
+  - Booking date calculation
 
 #### Frontend
-- [ ] Connect key pages to backend APIs
-- [ ] Implement the highest priority features from the backlog
-
+- [x] Connect key pages to backend APIs  
+  - User orders & favorites 
+  - Library selection 
+  - Manager panel 
+- [x] Implement high-priority features  
+  - City/library switching 
+  - Component styling 
+  - Layout restructuring  
 #### Backend
-- [ ] Complete essential API endpoints
-- [ ] Implement the highest priority features from the backlog
-
-#### Testing 
-- [] Test main user flow manually
+- [x] Complete essential API endpoints    
+  - Book quantity management 
+- [x] Implement high-priority features  
+  - JWT token protection   
+  - Image handling 
 
 ### 🚀 Week 4 Priorities: Testing & Deployment
 
