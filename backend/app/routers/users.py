@@ -58,6 +58,14 @@ def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="User does not exist")
     return user
 
+# Get user by email
+@router.get("/email/{email}", response_model=models.LibUserRead)
+def read_user_by_email(email: str, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.email == email)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User does not exist")
+    return user
+
 # Add favorite book to user
 @router.post("/like", response_model=models.FavoriteBook)
 def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_session)):

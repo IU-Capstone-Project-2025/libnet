@@ -22,7 +22,6 @@ def session_fixture():
         finally:
             session.rollback()
             session.close()
-    # SQLModel.metadata.drop_all(engine)
 
 @pytest_asyncio.fixture(name="client")
 async def client_fixture(session):
@@ -33,6 +32,7 @@ async def client_fixture(session):
 
 @pytest.mark.asyncio
 async def test_crud_booking(client: AsyncClient, session: Session):
+    created = []
     if (await client.get("/libraries/1")).status_code == 404:
         lib_payload = {
             "id": 1,
@@ -50,8 +50,9 @@ async def test_crud_booking(client: AsyncClient, session: Session):
         }
         lib_resp = await client.post("/libraries/", json=lib_payload)
         assert lib_resp.status_code in (200, 201), lib_resp.text
+        created.append("library")
 
-    if (await client.get("/users/1")).status_code == 404:
+    if (await client.get("/users/email/lol@girl.yes")).status_code == 404:
         user_payload = {
             "first_name": "string",
             "last_name": "string",
@@ -63,6 +64,8 @@ async def test_crud_booking(client: AsyncClient, session: Session):
         }
         user_resp = await client.post("/users/register", json=user_payload)
         assert user_resp.status_code in (200, 201), user_resp.text
+        created.append("user")
+    user_id = (await client.get("/users/email/lol@girl.yes")).json()["id"]
 
     if (await client.get("/books/1")).status_code == 404:
         book_payload = {
@@ -78,10 +81,11 @@ async def test_crud_booking(client: AsyncClient, session: Session):
         }
         book_resp = await client.post("/books/1", json=book_payload)
         assert book_resp.status_code in (200, 201), book_resp.text
+        created.append("book")
 
 
     payload = {
-        "user_id": 1,
+        "user_id": user_id,
         "book_id": 1,
         "library_id": 1,
         "date_from": "2025-07-02",
@@ -92,7 +96,7 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     response = await client.post("/bookings/", json=payload)
     assert response.status_code == 200, response.text
     booking = response.json()
-    assert booking["user_id"] == 1
+    assert booking["user_id"] == user_id
     assert booking["book_id"] == 1
     assert booking["library_id"] == 1
 
@@ -109,4 +113,14 @@ async def test_crud_booking(client: AsyncClient, session: Session):
 
     delete = await client.delete(f"/bookings/{booking['id']}")
     assert delete.status_code == 204
-    
+
+    for item in created:
+        if item == "library":
+            await client.delete("/libraries/1")
+            assert (await client.get("/libraries/1")).status_code == 404
+        elif item == "user":
+            await client.delete("/users/1")
+            assert (await client.get("/users/1")).status_code == 404
+        elif item == "book":
+            await client.delete("/books/1")
+            assert (await client.get("/books/1")).status_code == 404
