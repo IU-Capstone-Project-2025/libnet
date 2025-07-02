@@ -92,12 +92,20 @@ def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_s
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
 
-# Get all Books
-@router.get("/", response_model=list[models.Book])
-def get_all_books(db: Session = Depends(get_session)):
+# Get unique Books
+@router.get("/unique/", response_model=list[models.Book])
+def get_unique_books(db: Session = Depends(get_session)):
     subquery = (select(func.min(models.Book.id)).group_by(models.Book.isbn).subquery())
 
     books = db.exec(select(models.Book).where(models.Book.id.in_(subquery))).all()
+    return books
+
+# Get all Books
+@router.get("/", response_model=list[models.Book])
+def get_books(db: Session = Depends(get_session)):
+    books = db.exec(select(models.Book)).all()
+    if not books:
+        raise HTTPException(status_code=404, detail="No books found")
     return books
 
 # Get libraries that have a specific Book
@@ -137,7 +145,6 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
 # Delete a Book
 @router.delete("/{book_id}", status_code=204)
 def delete_book(book_id: int, db: Session = Depends(get_session)):
-    library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     if not book:
