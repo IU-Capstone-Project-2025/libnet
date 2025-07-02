@@ -31,7 +31,7 @@
 
 .user__login-subheading {
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--font-size-subregular);
 }
 
 .user__login-inputs {
@@ -49,7 +49,7 @@
   height: 55px;
   text-align: start;
   padding: 0 20px;
-  font-size: 20px;
+  font-size: var(--font-size-subregular);
   font-family: "Montserrat", sans-serif;
   border: solid black 1px;
 }
@@ -74,7 +74,7 @@
   height: 55px;
   border-radius: 20px 0 20px 0;
   text-align: center;
-  font-size: 20px;
+  font-size: var(--font-size-subregular);
 }
 
 .user__login-button:hover {
