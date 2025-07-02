@@ -1,5 +1,5 @@
 .user__book-content {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .user__book {
@@ -15,8 +15,8 @@
 }
 
 .user__book-cover {
-  height: 466px;
   width: 316px;
+  height: 466px;
   border-radius: 20px 0 20px 0;
 }
 
@@ -27,13 +27,13 @@
 }
 
 .user__book-button {
-  background-color: white;
-  border: solid var(--main-user-color) 4px;
   width: 100%;
   height: 55px;
+  border: solid var(--main-user-color) 4px;
   border-radius: 20px 0 20px 0;
-  text-align: center;
   font-size: var(--font-size-subregular);
+  text-align: center;
+  background-color: white;
 }
 
 .user__book-button:hover {
@@ -89,16 +89,16 @@
 }
 
 .user__book-select {
+  border-radius: 20px 0 20px 0;
+  padding: 5px 20px;
   font-family: 'Montserrat', sans-serif;
   font-size: var(--font-size-regular);
-  padding: 5px 20px;
-  border-radius: 20px 0 20px 0;
 }
 
 .manager__book-detail-input {
-  padding: 10px;
-  border-radius: 10px;
   border: 1px solid #000;
+  border-radius: 10px;
+  padding: 10px;
   font-size: var(--font-size-regular);
 }
 
@@ -110,13 +110,13 @@
 }
 
 .manager__book-button {
-  background-color: white;
-  border: solid var(--main-manager-color) 4px;
   width: 100%;
   height: 55px;
+  border: solid var(--main-manager-color) 4px;
   border-radius: 20px 0 20px 0;
-  text-align: center;
   font-size: var(--font-size-subregular);
+  text-align: center;
+  background-color: white;
 }
 
 .manager__book-button:hover {
@@ -144,7 +144,6 @@
 }
 
 @media (width < 479px) {
-
   .user__book-cover {
     width: 100%;
     height: auto;

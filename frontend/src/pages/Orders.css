@@ -28,10 +28,10 @@
 }
 
 .user__orders-book-cover {
-  background-color: #ee6c61;
   width: 100px;
   height: 148px;
   border-radius: 10px 0 10px 0;
+  background-color: #ee6c61;
 }
 
 .user__orders-book-details {
@@ -56,14 +56,14 @@
 }
 
 .user__orders-button {
-  background-color: white;
-  border: solid var(--main-user-color) 4px;
+  align-self: end;
   width: 250px;
   height: 55px;
+  border: solid var(--main-user-color) 4px;
   border-radius: 20px 0 20px 0;
-  text-align: center;
   font-size: var(--font-size-subregular);
-  align-self: end;
+  text-align: center;
+  background-color: white;
 }
 
 .user__orders-button:hover {

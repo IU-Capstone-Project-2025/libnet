@@ -56,7 +56,7 @@ export default function Navbar() {
           <div className="manager__header-account">
             {user ? (
               <span
-                className="manager__header-username"
+                className="manager__header-login-button"
                 onClick={() => navigate('/profile')}
               >
                 {user.displayName}
@@ -70,8 +70,9 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
-
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
         </div>
       ) : !user || user.role === 'user' ? (
         <div className="user__header">
@@ -99,7 +100,7 @@ export default function Navbar() {
           <div className="user__header-account">
             {user ? (
               <span
-                className="user__header-username"
+                className="user__header-login-button"
                 onClick={() => navigate('/profile')}
               >
                 {user.displayName}
@@ -113,7 +114,9 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
         </div>
       ) : (
         <div className="admin__header">
@@ -132,7 +135,7 @@ export default function Navbar() {
           <div className="user__header-account">
             {user ? (
               <span
-                className="user__header-username"
+                className="user__header-login-button"
                 onClick={() => navigate('/profile')}
               >
                 {user.displayName}
@@ -146,8 +149,9 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          {showLogin && <AuthPopupWrapper onClose={() => setShowLogin(false)} />}
-
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
         </div>
       )}
     </>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Catalog.css';
+import './AdminLibraries.css';
 
 export default function AdminLibraries() {
   const [libraries, setLibraries] = useState([]);
@@ -28,19 +29,31 @@ export default function AdminLibraries() {
   }, []);
 
   if (loading) return <p className="user__catalog-content"></p>;
-  if (error) return <p className="user__catalog-content" style={{ color: 'red' } }>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__catalog-content" style={{ color: 'red' }}>
+        Ошибка: {error}
+      </p>
+    );
 
   return (
     <>
-      <h2>Управление библиотеками</h2>
+      <h1 className="user__heading">Управление библиотеками</h1>
       {/* TODO: поиск
       TODO: создание */}
-      <div className='manager__libraries'>
-        {libraries.map((l) => (
-          <button key={l.id} onClick={() => navigate(`/admin/libraries/${l.id}`)}>{l.name}</button>
-        ))}
+      <div className="admin__libraries-content">
+        <div className="admin__libraries-list">
+          {libraries.map((l) => (
+            <button
+              className="admin__libraries-list-item"
+              key={l.id}
+              onClick={() => navigate(`/admin/libraries/${l.id}`)}
+            >
+              {l.name}
+            </button>
+          ))}
+        </div>
       </div>
-      
     </>
   );
 }

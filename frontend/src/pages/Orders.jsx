@@ -14,25 +14,23 @@ export default function Orders() {
   const [books, setBooks] = useState({});
   const [libraries, setLibraries] = useState({});
 
-  
-
   useEffect(() => {
     async function fetchBookings() {
-    if (user == null) return;
-    try {
-      console.log("trying");
-      const res = await fetch(`/api/bookings/users/${user.id}`);
+      if (user == null) return;
+      try {
+        console.log('trying');
+        const res = await fetch(`/api/bookings/users/${user.id}`);
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      console.log("bookings fetched:", data);
-      setBookings(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        console.log('bookings fetched:', data);
+        setBookings(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
     fetchBookings();
   }, [user]);
 
@@ -92,14 +90,14 @@ export default function Orders() {
   async function handleCancel(booking_id) {
     console.log(booking_id);
     const res = await fetch(`/api/bookings/${booking_id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: "cancelled",
-          }),
-        });
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'cancelled',
+      }),
+    });
     if (res.ok) {
-      console.log("cancelled");
+      console.log('cancelled');
     }
   }
 
@@ -113,7 +111,10 @@ export default function Orders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
-                  src={b.image_url || "https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg"}
+                  src={
+                    b.image_url ||
+                    'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
+                  }
                   alt={`${books[b.id]?.title ?? '…'} cover`}
                 ></img>
 

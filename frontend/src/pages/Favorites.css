@@ -95,6 +95,7 @@
 
 .user__favorites-bin-button:hover {
   border: 4px solid var(--red-color);
+  cursor: pointer;
 }
 
 .user__favorites-bin-button:active {

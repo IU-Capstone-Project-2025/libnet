@@ -1,5 +1,6 @@
 .user__catalog-content {
   min-height: 100vh;
+  padding: 0 20px;
 }
 
 .user__heading {
@@ -23,7 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px;
   max-width: fit-content;
   width: 100%;
   padding: 20px 0;
@@ -50,6 +51,7 @@
 
 .user__genre-link:hover {
   border-bottom: 1px solid black;
+  cursor: pointer;
 }
 
 .user__genre-link:active {
@@ -62,6 +64,7 @@
 
 .user__genre-item--active:hover {
   text-decoration: none;
+  cursor: pointer;
 }
 
 .user__search-form {
@@ -81,13 +84,12 @@
 .user__search-button {
   padding: 8px 16px;
   font-weight: bold;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
-
 
 .user__catalog-books-list {
   display: grid;
@@ -95,7 +97,7 @@
   gap: 30px;
   padding: 40px;
   background-color: var(--grey-color);
-  border-radius: 20px 0 0 20px;
+  border-radius: 20px;
   width: 3000px;
 }
 

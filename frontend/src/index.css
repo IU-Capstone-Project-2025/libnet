@@ -1,32 +1,30 @@
 :root {
-    font-family: "Montserrat", sans-serif;
-    --main-user-color: #D8FF5A;
-    --main-manager-color: #9FC4FF;
-    --main-admin-color: #FFB76B;
-    --red-color: #FFA1A3;
-    --grey-color: #F4F3EF;
-    --weight-regular: 400;
-    --weight-bold: 700;
-    --font-size-heading: 48px;
-    --font-size-regular: 24px;
-    --font-size-subregular: 20px;
-    --font-size-catalog-title: 14px;
-    --font-size-catalog-author: 12px;
+  --main-user-color: #d8ff5a;
+  --main-manager-color: #9fc4ff;
+  --main-admin-color: #ffb76b;
+  --red-color: #ffa1a3;
+  --grey-color: #f4f3ef;
+  --weight-regular: 400;
+  --weight-bold: 700;
+  --font-size-heading: 48px;
+  --font-size-regular: 24px;
+  --font-size-subregular: 20px;
+  --font-size-catalog-title: 14px;
+  --font-size-catalog-author: 12px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
-
+  font-family: 'Montserrat', sans-serif;
 }
 
 body {
-  
   width: 100%;
   margin: 0 auto;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 h1,
@@ -62,10 +60,12 @@ button {
   width: 1px; /* делают элемент очень маленьким, но таким, чтобы не пропал совсем */
   height: 1px;
   margin: -1px; /* элемент убирают из поля зрения, сдвинув на размер самого себя */
-  padding: 0; /* обнуляют отступы, они есть у некоторых элементов по умолчанию */
   border: 0; /* убирают границу, она тоже может быть у каких-то элементов */
-  clip: rect(0 0 0 0); /* это свойство обрезает видимую область до нулевого значения */
+  padding: 0; /* обнуляют отступы, они есть у некоторых элементов по умолчанию */
   overflow: hidden; /* на всякий случай скрывают видимое за пределами блока */
+  clip: rect(
+    0 0 0 0
+  ); /* это свойство обрезает видимую область до нулевого значения */
 }
 
 @media (width < 1024px) {
@@ -80,7 +80,7 @@ button {
   .user__catalog-book-cover {
     width: 85%;
   }
-  
+
   .user__catalog-book-info {
     width: 85%;
   }
@@ -103,4 +103,3 @@ button {
     width: 60%;
   }
 }
-
