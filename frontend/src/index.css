@@ -1,0 +1,105 @@
+:root {
+  --main-user-color: #d8ff5a;
+  --main-manager-color: #9fc4ff;
+  --main-admin-color: #ffb76b;
+  --red-color: #ffa1a3;
+  --grey-color: #f4f3ef;
+  --weight-regular: 400;
+  --weight-bold: 700;
+  --font-size-heading: 48px;
+  --font-size-regular: 24px;
+  --font-size-subregular: 20px;
+  --font-size-catalog-title: 14px;
+  --font-size-catalog-author: 12px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+li,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
+}
+
+button {
+  font: inherit;
+}
+
+.visually-hidden {
+  position: absolute; /* элемент вырывают из потока */
+  width: 1px; /* делают элемент очень маленьким, но таким, чтобы не пропал совсем */
+  height: 1px;
+  margin: -1px; /* элемент убирают из поля зрения, сдвинув на размер самого себя */
+  border: 0; /* убирают границу, она тоже может быть у каких-то элементов */
+  padding: 0; /* обнуляют отступы, они есть у некоторых элементов по умолчанию */
+  overflow: hidden; /* на всякий случай скрывают видимое за пределами блока */
+  clip: rect(
+    0 0 0 0
+  ); /* это свойство обрезает видимую область до нулевого значения */
+}
+
+@media (width < 1024px) {
+  :root {
+    --font-size-heading: 36px;
+    --font-size-regular: 20px;
+    --font-size-subregular: 16px;
+    --font-size-catalog-title: 12px;
+    --font-size-catalog-author: 10px;
+  }
+
+  .user__catalog-book-cover {
+    width: 85%;
+  }
+
+  .user__catalog-book-info {
+    width: 85%;
+  }
+}
+
+@media (width < 768px) {
+  :root {
+    --font-size-heading: 28px;
+    --font-size-regular: 16px;
+    --font-size-subregular: 14px;
+    --font-size-catalog-title: 10px;
+    --font-size-catalog-author: 8px;
+  }
+
+  .user__catalog-book-cover {
+    width: 60%;
+  }
+
+  .user__catalog-book-info {
+    width: 60%;
+  }
+}

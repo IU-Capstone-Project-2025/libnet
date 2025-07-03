@@ -1,0 +1,119 @@
+.user__favorites-content {
+  min-height: 100vh;
+  padding: 30px 90px 20px;
+}
+
+.user__favorites-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: var(--font-size-regular);
+}
+
+.user__favorites-book-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  border-bottom: 2px solid #999999;
+  padding-bottom: 15px;
+  cursor: pointer;
+}
+
+.user__favorites-book-section:last-child {
+  border-bottom: none;
+}
+
+.user__favorites-book {
+  display: flex;
+  gap: 50px;
+}
+
+.user__favorites-book-cover {
+  background-color: #ee6c61;
+  width: 100px;
+  height: 148px;
+  border-radius: 10px 0 10px 0;
+}
+
+.user__favorites-book-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user__favorites-book-title-container {
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+}
+
+.user__favorites-book-title {
+  font-weight: 700;
+}
+
+.user__favorites-book-author {
+  font-weight: 400;
+  font-size: var(--font-size-subregular);
+}
+
+.user__favorites-buttons {
+  display: flex;
+  gap: 20px;
+  align-self: end;
+}
+
+.user__favorites-button {
+  background-color: white;
+  border: solid var(--main-user-color) 4px;
+  width: 250px;
+  height: 55px;
+  border-radius: 20px 0 20px 0;
+  text-align: center;
+  font-size: var(--font-size-subregular);
+  align-self: end;
+}
+
+.user__favorites-button:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.user__favorites-button:active {
+  font-weight: bold;
+  background-color: var(--main-user-color);
+}
+
+.user__favorites-bin-button {
+  background-color: white;
+  background: url('./bin.svg') no-repeat center;
+  width: 55px;
+  height: 55px;
+  border-radius: 5px;
+  padding: 5px;
+  border: none;
+}
+
+.user__favorites-bin-button:hover {
+  border: 4px solid var(--red-color);
+  cursor: pointer;
+}
+
+.user__favorites-bin-button:active {
+  background-color: var(--red-color);
+}
+
+@media (width < 1024px) {
+  .user__favorites-content {
+    padding: 30px 60px 20px;
+  }
+}
+
+@media (width < 768px) {
+  .user__favorites-content {
+    padding: 20px 30px 20px;
+  }
+
+  .user__favorites-book {
+    gap: 30px;
+  }
+}

@@ -1,0 +1,117 @@
+.user__profile-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  min-height: 100vh;
+  padding: 40px 200px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.user__profile-city {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-size: var(--font-size-regular);
+}
+
+.user__profile-city-select {
+  border-radius: 20px 0 20px 0;
+  padding: 5px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: var(--font-size-regular);
+}
+
+.user__profile-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  font-weight: 400;
+}
+
+.user__profile-input {
+  width: 100%;
+  height: 55px;
+  border: solid black 1px;
+  padding: 0 20px;
+  opacity: 65%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: var(--font-size-subregular);
+  text-align: start;
+  background-color: white;
+}
+
+.user__profile-input:focus::placeholder {
+  position: fixed;
+  color: transparent;
+}
+
+.user__profile-input:first-child {
+  border-radius: 20px 0 0 0;
+}
+
+.user__profile-input:last-child {
+  border-radius: 0 0 20px 0;
+}
+
+.user__profile-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.user__profile-button {
+  width: 50%;
+  height: 55px;
+  border: solid var(--main-user-color) 4px;
+  border-radius: 20px 0 20px 0;
+  font-size: var(--font-size-subregular);
+  text-align: center;
+  background-color: white;
+}
+
+.user__profile-button:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.user__profile-button:active {
+  font-weight: bold;
+  background-color: var(--main-user-color);
+}
+
+.user__profile-button--red {
+  border: solid var(--red-color) 4px;
+}
+
+.user__profile-button--red:active {
+  background-color: var(--red-color);
+}
+
+@media (width < 1024px) {
+  .user__profile-content {
+    padding: 40px 100px;
+  }
+}
+
+@media (width < 768px) {
+  .user__profile-content {
+    justify-content: start;
+    padding: 40px 30px;
+  }
+}
+
+@media (width < 479px) {
+  .user__profile-buttons {
+    flex-direction: column;
+  }
+
+  .user__profile-button {
+    width: 100%;
+  }
+}

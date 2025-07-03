@@ -1,0 +1,31 @@
+.admin__libraries-content {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.admin__libraries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 20px;
+  padding: 20px;
+  font-size: var(--font-size-regular);
+  background-color: var(--grey-color);
+}
+
+.admin__libraries-list-item {
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 10px 20px;
+  text-align: start;
+}
+
+.admin__libraries-list-item:hover {
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+
+.admin__libraries-list-item:active {
+  border: 1px solid var(--grey-color);
+  background-color: var(--main-admin-color);
+}
