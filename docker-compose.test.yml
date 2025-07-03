@@ -18,8 +18,10 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile.test
+    container_name: backend_test
     depends_on:
       postgres_test:
         condition: service_healthy
+    mem_limit: 2g 
     environment:
       DATABASE_URL: ${TEST_DB_URL}

@@ -1,0 +1,33 @@
+name: CI/CD Pipeline  
+
+on:
+  push:
+    branches: 
+      - main
+      - devops
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare enviroment
+        run: |
+          echo "SECRET_KEY=126751673567" > ./backend/.env && cat > ./.env <<EOF
+          TEST_DB_USER=postgres
+          TEST_DB_PASSWORD=postgres
+          TEST_DB_NAME=postgres
+          TEST_DB_URL=jdbc:postgresql://172.17.0.1:5432/postgres
+          EOF
+
+      - name: Start test containers
+        run: docker compose -f docker-compose.test.yml up --build -d
+
+      - name: Run tests
+        run: |
+          docker compose -f docker-compose.test.yml exec backend_test python3 -m pytest 
+
+      - name: Stop test containers
+        if: always()
+        run: docker compose -f docker-compose.test.yml down

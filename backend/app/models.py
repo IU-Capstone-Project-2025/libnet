@@ -3,6 +3,7 @@ from typing import Optional, List
 from app.database import engine
 from datetime import date
 from enum import Enum
+from app.database import init_engine
 
 
 class BookingStatus(str, Enum):
@@ -136,6 +137,3 @@ class Booking(SQLModel, table=True):
 class BookingUpdate(SQLModel):
     status: Optional[BookingStatus] = None
     date_from: Optional[date] = None
-
-# SQLModel.metadata.drop_all(engine)
-SQLModel.metadata.create_all(engine)
