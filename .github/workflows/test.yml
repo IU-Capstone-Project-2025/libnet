@@ -17,14 +17,12 @@ jobs:
 
       - name: Prepare enviroment
         run: |
-          cat > ./backend/.env <<EOF 
-          SECRET_KEY=126751673567
-          EOF && cat > ./.env <<EOF
+          echo "SECRET_KEY=126751673567" > ./backend/.env && cat > ./.env <<EOF
           TEST_DB_USER=postgres
           TEST_DB_PASSWORD=postgres
           TEST_DB_NAME=postgres
           TEST_DB_URL=jdbc:postgresql://172.17.0.1:5432/postgres
-          EOF && cat backend/.env
+          EOF
 
       - name: Run tests
         run: |
