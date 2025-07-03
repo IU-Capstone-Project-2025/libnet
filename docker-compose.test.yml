@@ -18,6 +18,7 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile.test
+    container_name: backend_test
     depends_on:
       postgres_test:
         condition: service_healthy
