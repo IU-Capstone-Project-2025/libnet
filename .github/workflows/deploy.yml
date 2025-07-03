@@ -1,11 +1,13 @@
-name: Deploy to VPS
+name: CI/CD Pipeline  
+
 on:
   push:
-    branches:
+    branches: 
       - main
 
 jobs:
   deploy:
+    needs: test-and-build
     runs-on: ubuntu-latest
 
     steps:
