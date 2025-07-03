@@ -39,7 +39,7 @@ export default function ManagerBook() {
         setYear(data.year);
         setRating(data.rating);
       } catch (err) {
-        console.log("here");
+        console.log('here');
         setError(err.message);
       } finally {
         setLoading(false);
@@ -53,29 +53,34 @@ export default function ManagerBook() {
     try {
       const res = await fetch(`/api/books/${id}`, {
         method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            title: title,
-            author: author,
-            description: description,
-            image_url: src,
-            pages: pages,
-            isbn: isbn,
-            genre: genre,
-            year: year,
-            rating: rating,
+          title: title,
+          author: author,
+          description: description,
+          image_url: src,
+          pages: pages,
+          isbn: isbn,
+          genre: genre,
+          year: year,
+          rating: rating,
         }),
       });
       if (res.ok) {
-        console.log("updated");
+        console.log('updated');
       }
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
   }
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__book-content" style={{ color: 'red' }}>
+        Ошибка: {error}
+      </p>
+    );
   if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   return (
@@ -101,63 +106,63 @@ export default function ManagerBook() {
             <div className="user__book-title-container">
               <input
                 className="user__book-title manager__book-detail-input"
-                placeholder='Название'
+                placeholder="Название"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <input
                 className="user__book-author manager__book-detail-input"
-                placeholder='Автор'
+                placeholder="Автор"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
             <input
-                className="user__book-description manager__book-detail-input"
-                placeholder='Описание'
-                value={description || 'Описание отсутствует.'}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              className="user__book-description manager__book-detail-input"
+              placeholder="Описание"
+              value={description || 'Описание отсутствует.'}
+              onChange={(e) => setDescription(e.target.value)}
+            />
             <div className="manager__book-details">
               <strong>Ссылка на обложку:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='Ссылка на обложку'
+                placeholder="Ссылка на обложку"
                 value={src}
                 onChange={(e) => setSrc(e.target.value)}
               />
               <strong>Количество страниц:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='Страницы'
+                placeholder="Страницы"
                 value={pages || 'Нет информации.'}
                 onChange={(e) => setPages(e.target.value)}
               />
               <strong>Жанры:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='Жанры'
+                placeholder="Жанры"
                 value={genre || 'Нет информации.'}
                 onChange={(e) => setGenre(e.target.value)}
               />
               <strong>ISBN:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='ISBN'
+                placeholder="ISBN"
                 value={isbn || 'Нет информации.'}
                 onChange={(e) => setIsbn(e.target.value)}
               />
               <strong>Год выпуска:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='Год'
+                placeholder="Год"
                 value={year || 'Нет информации.'}
                 onChange={(e) => setYear(e.target.value)}
               />
               <strong>Рейтинг:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder='Рейтинг'
+                placeholder="Рейтинг"
                 value={rating || 'Нет информации.'}
                 onChange={(e) => setRating(e.target.value)}
               />

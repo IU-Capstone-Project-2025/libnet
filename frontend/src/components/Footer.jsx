@@ -35,7 +35,12 @@ export default function Footer() {
           <p className="copyright">libnet 2025 ©</p>
         </div>
       ): (
-        <></>
+        <div className="admin__footer">
+          <div className="admin__navbar admin__footer-navbar">
+            <Link to="/admin/" className="admin__navbar-link">Библиотеки</Link>
+          </div>
+          <p className="copyright">libnet 2025 ©</p>
+        </div>
       )}
     </>
 

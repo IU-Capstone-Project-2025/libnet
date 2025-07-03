@@ -9,27 +9,24 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-    env:
-      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
-      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
-      TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
-    
     steps:
       - uses: actions/checkout@v4
+
+      - name: Prepare enviroment
+        run: |
+          echo "SECRET_KEY=126751673567" > ./backend/.env && cat > ./.env <<EOF
+          TEST_DB_USER=postgres
+          TEST_DB_PASSWORD=postgres
+          TEST_DB_NAME=postgres
+          TEST_DB_URL=jdbc:postgresql://172.17.0.1:5432/postgres
+          EOF
 
       - name: Start test containers
         run: docker compose -f docker-compose.test.yml up --build -d
 
-      - name: Check container status
-        run: docker compose -f docker-compose.test.yml ps
-
-      - name: Show postgres logs
-        run: docker compose -f docker-compose.test.yml logs postgres_test
-  
       - name: Run tests
         run: |
-          docker compose -f docker-compose.test.yml exec backend_test pytest
+          docker compose -f docker-compose.test.yml exec backend_test python3 -m pytest 
 
       - name: Stop test containers
         if: always()
