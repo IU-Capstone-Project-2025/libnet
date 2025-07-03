@@ -19,6 +19,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.test
     depends_on:
-      - postgres_test
+      postgres_test:
+        condition: service_healthy
     environment:
       DATABASE_URL: ${TEST_DB_URL}
