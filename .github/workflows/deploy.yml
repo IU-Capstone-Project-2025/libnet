@@ -1,11 +1,50 @@
-name: Deploy to VPS
+name: CI/CD Pipeline  
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]  
 
 jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    env:
+      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
+      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+      TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start test containers
+        run: docker compose -f docker-compose.test.yml up --build -d
+
+      - name: Show postgres logs
+        run: docker compose -f docker-compose.test.yml logs postgres_test
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..30}; do
+            if docker compose -f docker-compose.test.yml exec postgres_test pg_isready -U ${{ secrets.TEST_DB_USER }} -d ${{ secrets.TEST_DB_NAME }}; then
+              break
+            fi
+            sleep 2
+          done
+          
+      - name: Run migrations
+        run: |
+          docker compose -f docker-compose.test.yml exec backend_test alembic upgrade head
+  
+      - name: Run tests
+        run: |
+          docker compose -f docker-compose.test.yml exec backend_test pytest -v --cov=app
+
+      - name: Stop test containers
+        if: always()
+        run: docker compose -f docker-compose.test.yml down
+
   deploy:
+    needs: test-and-build
     runs-on: ubuntu-latest
 
     steps:
