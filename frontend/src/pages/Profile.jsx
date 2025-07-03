@@ -26,7 +26,7 @@ export default function Profile() {
           password: password,
           phone: phone,
           city: city,
-          library_id: library
+          library_id: library,
         });
         // onClose();
       } catch (err) {
@@ -40,7 +40,7 @@ export default function Profile() {
           email: email,
           phone: phone,
           city: city,
-          library_id: library
+          library_id: library,
         });
         // onClose();
       } catch (err) {
@@ -50,23 +50,22 @@ export default function Profile() {
   }
 
   useEffect(() => {
-      async function fetchCities() {
-        try {
-          const res = await fetch(`/api/libraries/cities`, {
-            method: 'GET',
-          });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          // const unique = [...new Set(data.map(lib => lib.city))];
-          setCities(data);
-  
-        } catch (err) {
-          setError(err.message);
-        }
+    async function fetchCities() {
+      try {
+        const res = await fetch(`/api/libraries/cities`, {
+          method: 'GET',
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // const unique = [...new Set(data.map(lib => lib.city))];
+        setCities(data);
+      } catch (err) {
+        setError(err.message);
       }
-  
-      fetchCities();                 // runs once
-    }, []);
+    }
+
+    fetchCities(); // runs once
+  }, []);
 
   return (
     <>
@@ -76,19 +75,20 @@ export default function Profile() {
             Выберите город:
           </label>
           <select
-                className="user__profile-city-select"
-                value={city}
-                onChange={e => setCity(e.target.value)}
-              >
-                <option value="" disabled>
-                  {"Город"}
+            className="user__profile-city-select"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          >
+            <option value="" disabled>
+              {'Город'}
+            </option>
+            {Array.isArray(cities) &&
+              cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
                 </option>
-                {Array.isArray(cities) && cities.map(c => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              ))}
+          </select>
         </div>
 
         <div className="user__profile-inputs">
@@ -138,7 +138,10 @@ export default function Profile() {
           <button className="user__profile-button" onClick={handleUpdate}>
             Сохранить
           </button>
-          <button className="user__profile-button user__profile-button--red" onClick={logout}>
+          <button
+            className="user__profile-button user__profile-button--red"
+            onClick={logout}
+          >
             Выйти из аккаунта
           </button>
         </div>

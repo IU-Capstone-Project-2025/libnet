@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginPopup from './LoginPopup';
 import './AuthPopup.css'; 
 
-export default function RegisterPopup({ onClose }) {
+export default function RegisterPopup({ onClose, switchToLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -124,7 +124,7 @@ export default function RegisterPopup({ onClose }) {
     </div>
 
     <h3 className="user__login-subheading">
-      Уже есть аккаунт? <span className="user__login-switch" onClick={() => setShowLogin(true)}>Войти</span>
+      Уже есть аккаунт? <span className="user__login-switch" onClick={switchToLogin}>Войти</span>
     </h3>
   </div>
 </div>

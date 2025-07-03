@@ -15,6 +15,8 @@ import { AuthProvider } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Footer from './components/Footer';
+import AdminLibraries from './pages/AdminLibraries';
+import AdminLibrary from './pages/AdminLibrary';
 
 export function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -85,6 +87,23 @@ export default function App() {
             element={
               <PrivateRoute>
                 <ManagerBook />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/admin/"
+            element={
+              <PrivateRoute>
+                <AdminLibraries />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/libraries/:id"
+            element={
+              <PrivateRoute>
+                <AdminLibrary />
               </PrivateRoute>
             }
           />
