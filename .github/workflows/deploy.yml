@@ -27,7 +27,7 @@ jobs:
           
       - name: Run migrations
         run: |
-          docker compose -f docker-compose.test.yml exec backend_test alembic upgrade head
+          docker compose -f docker-compose.test.yml exec backend_test alembic upgrade head --verbose
   
       - name: Run tests
         run: |
