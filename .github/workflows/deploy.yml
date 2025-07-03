@@ -25,14 +25,8 @@ jobs:
       - name: Show postgres logs
         run: docker compose -f docker-compose.test.yml logs postgres_test
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..30}; do
-            if docker compose -f docker-compose.test.yml exec postgres_test pg_isready -U ${{ secrets.TEST_DB_USER }} -d ${{ secrets.TEST_DB_NAME }}; then
-              break
-            fi
-            sleep 2
-          done
+      - name: Wait for services to be healthy
+        run: docker compose -f docker-compose.test.yml wait
           
       - name: Run migrations
         run: |
