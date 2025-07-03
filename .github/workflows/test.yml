@@ -30,7 +30,7 @@ jobs:
           TEST_DB_PASSWORD=postgres
           TEST_DB_NAME=postgres
           TEST_DB_URL=jdbc:postgresql://172.17.0.1:5432/postgres
-          EOF
+          EOF && cat backend/.env
 
       - name: Run tests
         run: |
