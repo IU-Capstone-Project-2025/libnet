@@ -9,12 +9,6 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-    env:
-      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
-      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
-      TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
-    
     steps:
       - uses: actions/checkout@v4
 
@@ -23,9 +17,9 @@ jobs:
 
       - name: Prepare enviroment
         run: |
-          cat > ./backend/.env << EOF 
+          cat > ./backend/.env <<EOF 
           SECRET_KEY=126751673567
-          EOF && cat > ./.env << EOF
+          EOF && cat > ./.env <<EOF
           TEST_DB_USER=postgres
           TEST_DB_PASSWORD=postgres
           TEST_DB_NAME=postgres
