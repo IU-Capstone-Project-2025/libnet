@@ -13,9 +13,9 @@ def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     
-    date_from = datetime.strptime(booking.date_from, "%Y-%m-%d").date()
+    booking.date_from = datetime.strptime(booking.date_from, "%Y-%m-%d").date()
 
-    booking.date_to = date_from + timedelta(days=library.booking_duration)
+    booking.date_to = booking.date_from + timedelta(days=library.booking_duration)
 
     db.add(booking)
     db.commit()
