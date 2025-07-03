@@ -19,6 +19,9 @@ jobs:
       - name: Start test containers
         run: docker compose -f docker-compose.test.yml up --build -d
 
+      - name: Check container status
+        run: docker compose -f docker-compose.test.yml ps
+
       - name: Show postgres logs
         run: docker compose -f docker-compose.test.yml logs postgres_test
 
