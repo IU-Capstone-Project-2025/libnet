@@ -8,7 +8,7 @@ from app import models
 import io
 import shutil
 from sqlmodel.pool import StaticPool
-from app.database import get_session
+from app.database import get_session, init_engine
 
 @pytest.fixture(name="session")
 def session_fixture():
@@ -17,6 +17,7 @@ def session_fixture():
         connect_args={"check_same_thread": False},
         poolclass=StaticPool
     )
+    init_engine("sqlite://")
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
         yield session
