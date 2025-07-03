@@ -24,9 +24,6 @@ jobs:
 
       - name: Show postgres logs
         run: docker compose -f docker-compose.test.yml logs postgres_test
-
-      - name: Wait for services to be healthy
-        run: docker compose -f docker-compose.test.yml wait postgres_test
           
       - name: Run migrations
         run: |
