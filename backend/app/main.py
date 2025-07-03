@@ -9,15 +9,19 @@ from app.routers.books import router as books_router
 from app.routers.search import router as search_router
 import os
 from dotenv import load_dotenv
-from app.database import init_engine
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-init_engine(DATABASE_URL) 
+from app.database import init_engine, create_all
+from contextlib import asynccontextmanager
 
 app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_dotenv()
+
+    DATABASE_URL = os.getenv("DATABASE_URL")
+
+    init_engine(DATABASE_URL)
+    create_all()
+    yield
 
 Instrumentator().instrument(app).expose(app)
 
