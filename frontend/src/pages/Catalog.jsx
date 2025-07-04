@@ -25,7 +25,7 @@ export default function Catalog() {
         Object.fromEntries(Object.entries(params).filter(([_, v]) => v?.trim()))
       ).toString();
 
-      const res = await fetch(`/api/books/?${queryString}`);
+      const res = await fetch(`/api/search/?${queryString}`);
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
