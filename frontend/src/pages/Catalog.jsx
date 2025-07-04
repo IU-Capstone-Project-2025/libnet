@@ -120,14 +120,6 @@ export default function Catalog() {
               className="user__search-filter"
             />
             <input
-              type="number"
-              name="rating"
-              placeholder="Рейтинг"
-              value={searchParams.rating}
-              onChange={handleSearchChange}
-              className="user__search-filter"
-            />
-            <input
               type="text"
               name="year"
               placeholder="Год"
@@ -135,6 +127,20 @@ export default function Catalog() {
               onChange={handleSearchChange}
               className="user__search-filter"
             />
+                        <select
+              name="rating"
+              value={searchParams.rating}
+              onChange={handleSearchChange}
+              className="user__search-filter"
+            >
+              <option value="">Все возрасты</option>
+              <option value="0">0+</option>
+              <option value="3">3+</option>
+              <option value="6">6+</option>
+              <option value="12">12+</option>
+              <option value="16">16+</option>
+              <option value="18">18+</option>
+            </select>
           </div>
         </form>
 

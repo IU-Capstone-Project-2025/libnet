@@ -81,6 +81,7 @@
 
 .user__search-bar-container {
   display: flex;
+  gap: 4px;
 }
 
 .user__search-bar {
@@ -96,10 +97,10 @@
   width: 20%;
   border: 1px solid black;
   border-bottom-right-radius: 20px;
-  border-left: none;
   padding: 10px 20px;
   font-size: var(--font-size-subregular);
   background-color: white;
+  color: black;
 }
 
 .user__search-button:hover {
@@ -116,6 +117,7 @@
   padding: 10px;
   font-size: var(--font-size-subregular);
   background-color: white;
+  width: 100%;
 }
 
 .user__search-filter:first-child {
