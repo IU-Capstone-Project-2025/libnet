@@ -1,0 +1,92 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5433:5432"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+        loki-batch-wait: "1s"
+        loki-external-labels: "job=postgres,service=db"
+
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./backend:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - postgres
+    environment:
+      - WAIT_HOSTS=postgres:5432
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+    expose:
+      - "8000"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+        loki-batch-wait: "1s"
+        loki-external-labels: "job=backend,service=api"
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "81:4173"
+    depends_on:
+      - backend
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+        loki-batch-wait: "1s"
+        loki-external-labels: "job=frontend,service=web"
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  prometheus: 
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus.yml'
+    ports:
+      - "9090:9090"
+    
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+volumes:
+  postgres_data:
+  grafana-storage:

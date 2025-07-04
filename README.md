@@ -27,6 +27,20 @@
   - FAQ knowledge base
   - Account management
 
+## 🔐 Demo Access
+
+### User Account
+The live demo is publicly available with **standard user access**:  
+🌐 [libnet.site](http://libnet.site)  
+
+### Admin/Manager Accounts
+For testing privileged access:
+- **Manager panel**  
+- **Admin dashboard**  
+📩 Contact via Telegram: [@alliumpro](https://t.me/alliumpro) to request credentials  
+
+*Access is restricted to prevent unauthorized system changes.*
+
 ## Roadmap
 ### 🚀 Week 1 Foundation & Planning 
 
@@ -74,43 +88,62 @@
 ### 🚀 Week 3 MVP Development
 
 #### Core Features
-- [ ] Implement the highest priority features from the backlog
-- [ ] Add basic error handling for critical paths
+- [x] Implement the highest priority features from the backlog  
+  - Book covers upload (file/URL)  
+  - Favorites functionality  
+  - Multi-library support 
+  - Booking date calculation
 
 #### Frontend
-- [ ] Connect key pages to backend APIs
-- [ ] Implement the highest priority features from the backlog
-
+- [x] Connect key pages to backend APIs  
+  - User orders & favorites 
+  - Library selection 
+  - Manager panel 
+- [x] Implement high-priority features  
+  - City/library switching 
+  - Component styling 
+  - Layout restructuring  
 #### Backend
-- [ ] Complete essential API endpoints
-- [ ] Implement the highest priority features from the backlog
+- [x] Complete essential API endpoints    
+  - Book quantity management 
+- [x] Implement high-priority features  
+  - JWT token protection   
+  - Image handling 
 
-#### Testing 
-- [] Test main user flow manually
 
 ### 🚀 Week 4 Priorities: Testing & Deployment
 
-#### 🧪 Testing
-- [ ] Implement unit tests for critical components
-- [ ] Create API integration tests for core endpoints
-- [ ] Add end-to-end test for main user flow
+#### Core Features
+- [x] Implement search & filtering system  
+  - Book search functionality  
+  - Deduplication endpoint  
+- [x] Finalize admin controls  
+  - Library editing flows  
+  - Manager assignment system  
 
-#### ⚙️ CI/CD Pipeline
-- [ ] Set up GitHub Actions/GitLab CI 
-- [ ] Configure automatic staging deployment
+#### Frontend
+- [x] Connect admin interfaces to backend  
+  - Admin login/dashboard  
+  - Library management UI  
+- [x] Implement responsive design  
+  - Adaptive breakpoints  
+  - Admin panel styling  
+  - Cross-page style refinement  
 
-#### 🌐 Deployment
-- [ ] Deploy to staging
-- [ ] Verify all core features work in staging
+#### Backend
+- [x] Complete testing suite  
+- [x] Enhance book operations  
+  - Search/filter endpoints  
+  - Duplicate prevention  
 
-#### 📦 Deliverables
-- **Report**:
-  - Testing approach summary
-  - CI/CD workflow screenshots
-- **Code**:
-  - `/tests` directory
-  - `.github/workflows` configs
-  - Staging deployment link
+#### Infrastructure
+- [x] Deployment preparation  
+  - Domain configuration  
+  - CI/CD pipeline setup  
+- [x] Observability  
+  - Logging system  
+  - Monitoring integration  
+
 
 ### 🚀 Week 5 Priorities: Feedback & Refinement
 
