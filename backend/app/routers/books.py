@@ -71,7 +71,7 @@ async def upload_book_cover(
 
 # Get book cover
 @router.get("/cover/{book_id}")
-def get_book_cover(book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+def get_book_cover(book_id: int, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -87,7 +87,7 @@ def get_book_cover(book_id: int, db: Session = Depends(get_session), current_use
 
 # Get quantity of books in a library
 @router.get("/quantity/{library_id}/{book_id}", response_model=int)
-def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session)):
     book = db.exec(select(models.LibraryBook).where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist in this library")

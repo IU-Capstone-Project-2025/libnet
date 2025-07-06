@@ -39,7 +39,7 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
 
 # Get Bookings of a certain User
 @router.get("/users/{user_id}", response_model=list[models.Booking])
-def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
+def get_bookings_of_a_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -63,7 +63,7 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 
 # Update Booking's status
 @router.patch("/{booking_id}", response_model=models.Booking)
-def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+def update_booking_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
