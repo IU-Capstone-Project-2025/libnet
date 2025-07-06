@@ -44,9 +44,9 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     token = create_access_token(data={"sub": user.email})
     return {"access_token": token, "token_type": "bearer", "user_id": user.id}
 
-# Change password
-@router.post("/{user_id}/change-password")
-def change_password(user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session)):
+# Update password
+@router.patch("/{user_id}/update-password")
+def update_password(user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
