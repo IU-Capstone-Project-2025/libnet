@@ -33,6 +33,29 @@ async def client_fixture(session):
 
 @pytest.mark.asyncio
 async def test_create_and_get_book(client: AsyncClient, session: Session):
+    user_payload = {
+        "first_name": "string",
+        "last_name": "string",
+        "email": "loltotallytest@girl.yes",
+        "password": "string",
+        "phone": "string",
+        "city": "string",
+        "role": "user"
+    }
+    user_resp = await client.post("/users/register", json=user_payload)
+    assert user_resp.status_code in (200, 201), user_resp.text
+
+    login_payload = {
+        "username": "loltotallytest@girl.yes",
+        "password": "string"
+    }
+    resp = await client.post("users/login", data=login_payload)
+    access_token = resp.json()["access_token"]
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
+
     created = False
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
@@ -54,7 +77,7 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
         "genre": "Fantasy",
         "pages_count": 300
     }
-    create_resp = await client.post("/books/1", json=payload)
+    create_resp = await client.post("/books/1", json=payload, headers=headers)
     assert create_resp.status_code == 201
     book = create_resp.json()
 
@@ -64,14 +87,39 @@ async def test_create_and_get_book(client: AsyncClient, session: Session):
     assert data["title"] == "Slay Book"
     assert data["author"] == "Queen B"
 
-    await client.delete(f"/books/{book['id']}")
+    delete = await client.delete(f"/books/{book['id']}", headers=headers)
+    assert delete.status_code == 204, delete.text
 
     if created:
-        await client.delete("/libraries/1")
+        await client.delete("/libraries/1", headers=headers)
         assert (await client.get("/libraries/1")).status_code == 404
+    await client.delete(f"/users/{user_id}", headers=headers)
 
 @pytest.mark.asyncio
 async def test_upload_cover(client: AsyncClient, session: Session):
+    user_payload = {
+        "first_name": "string",
+        "last_name": "string",
+        "email": "loltotallytest@girl.yes",
+        "password": "string",
+        "phone": "string",
+        "city": "string",
+        "role": "user"
+    }
+    user_resp = await client.post("/users/register", json=user_payload)
+    assert user_resp.status_code in (200, 201), user_resp.text
+
+    login_payload = {
+        "username": "loltotallytest@girl.yes",
+        "password": "string"
+    }
+    resp = await client.post("users/login", data=login_payload)
+    access_token = resp.json()["access_token"]
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
+
     created = False
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
@@ -94,29 +142,54 @@ async def test_upload_cover(client: AsyncClient, session: Session):
         "genre": "Mystery",
         "pages_count": 300
     }
-    create_resp = await client.post("/books/1", json=payload)
+    create_resp = await client.post("/books/1", json=payload, headers=headers)
     assert create_resp.status_code == 201, create_resp.text
     book = create_resp.json()
 
     file_bytes = io.BytesIO(b"fake image data")
     files = {"file": ("cover.jpg", file_bytes, "image/jpeg")}
 
-    upload_resp = await client.post(f"/books/upload-cover/{book['id']}", files=files)
+    upload_resp = await client.post(f"/books/upload-cover/{book['id']}", files=files, headers=headers)
     assert upload_resp.status_code == 200, upload_resp.text
     data = upload_resp.json()
     assert "image_url" in data
     assert data["id"] == book["id"]
 
-    await client.delete(f"/books/{book['id']}")
+    await client.delete(f"/books/{book['id']}", headers=headers)
     if os.path.exists("book_covers/"):
         shutil.rmtree("book_covers/")
 
     if created:
-        await client.delete("/libraries/1")
+        await client.delete("/libraries/1", headers=headers)
         assert (await client.get("/libraries/1")).status_code == 404
+    
+    await client.delete(f"/users/{user_id}", headers=headers)
 
 @pytest.mark.asyncio
 async def test_update_book(client: AsyncClient, session: Session):
+    user_payload = {
+        "first_name": "string",
+        "last_name": "string",
+        "email": "loltotallytest@girl.yes",
+        "password": "string",
+        "phone": "string",
+        "city": "string",
+        "role": "user"
+    }
+    user_resp = await client.post("/users/register", json=user_payload)
+    assert user_resp.status_code in (200, 201), user_resp.text
+
+    login_payload = {
+        "username": "loltotallytest@girl.yes",
+        "password": "string"
+    }
+    resp = await client.post("users/login", data=login_payload)
+    access_token = resp.json()["access_token"]
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
+
     created = False
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
@@ -139,25 +212,49 @@ async def test_update_book(client: AsyncClient, session: Session):
         "genre": "Sci-Fi",
         "pages_count": 300
     }
-    create_resp = await client.post("/books/1", json=payload)
+    create_resp = await client.post("/books/1", json=payload, headers=headers)
     assert create_resp.status_code == 201, create_resp.text
     book = create_resp.json()
 
     update_payload = {"title": "New Title", "author": "New Author"}
-    response = await client.patch(f"/books/{book['id']}", json=update_payload)
+    response = await client.patch(f"/books/{book['id']}", json=update_payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     assert data["title"] == "New Title"
     assert data["author"] == "New Author"
 
-    await client.delete(f"/books/{book['id']}")
+    await client.delete(f"/books/{book['id']}", headers=headers)
     
     if created:
-        await client.delete("/libraries/1")
+        await client.delete("/libraries/1", headers=headers)
         assert (await client.get("/libraries/1")).status_code == 404
+    await client.delete(f"/users/{user_id}", headers=headers)
 
 @pytest.mark.asyncio
 async def test_get_all_books(client: AsyncClient, session: Session):
+    user_payload = {
+        "first_name": "string",
+        "last_name": "string",
+        "email": "loltotallytest@girl.yes",
+        "password": "string",
+        "phone": "string",
+        "city": "string",
+        "role": "user"
+    }
+    user_resp = await client.post("/users/register", json=user_payload)
+    assert user_resp.status_code in (200, 201), user_resp.text
+
+    login_payload = {
+        "username": "loltotallytest@girl.yes",
+        "password": "string"
+    }
+    resp = await client.post("users/login", data=login_payload)
+    access_token = resp.json()["access_token"]
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
+
     created = False
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
@@ -193,11 +290,11 @@ async def test_get_all_books(client: AsyncClient, session: Session):
         "pages_count": 300
     }
 
-    create_resp1 = await client.post("/books/1", json=book1_data)
+    create_resp1 = await client.post("/books/1", json=book1_data, headers=headers)
     assert create_resp1.status_code == 201, create_resp1.text
     book1 = create_resp1.json()
 
-    create_resp2 = await client.post("/books/1", json=book2_data)
+    create_resp2 = await client.post("/books/1", json=book2_data, headers=headers)
     assert create_resp2.status_code == 201, create_resp2.text
     book2 = create_resp2.json()
 
@@ -206,9 +303,10 @@ async def test_get_all_books(client: AsyncClient, session: Session):
     data = response.json()
     assert len(data) >= 2
 
-    await client.delete(f"/books/{book1['id']}")
-    await client.delete(f"/books/{book2['id']}")
-
+    await client.delete(f"/books/{book1['id']}", headers=headers)
+    await client.delete(f"/books/{book2['id']}", headers=headers)
     if created:
-        await client.delete("/libraries/1")
+        await client.delete("/libraries/1", headers=headers)
         assert (await client.get("/libraries/1")).status_code == 404
+    
+    await client.delete(f"/users/{user_id}", headers=headers)

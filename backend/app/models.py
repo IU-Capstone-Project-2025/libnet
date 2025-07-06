@@ -60,6 +60,10 @@ class LibUserUpdate(SQLModel):
     city: Optional[str] = None
     role: Optional[UserRole] = None
 
+class LibUserUpdatePassword(SQLModel):
+    old_password: str
+    new_password: str
+
 class Library(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str

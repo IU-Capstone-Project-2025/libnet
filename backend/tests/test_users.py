@@ -54,22 +54,45 @@ async def test_crud_login_user(client: AsyncClient, session: Session):
     token = login_resp.json().get("access_token")
     assert token is not None
 
-    get_resp = await client.get(f"/users/{user['id']}")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    get_resp = await client.get(f"/users/{user['id']}", headers=headers)
     assert get_resp.status_code == 200
     assert get_resp.json()["email"] == "user_test_reg@test.lol"
 
     update_payload = {
         "city": "New City"
     }
-    patch_resp = await client.patch(f"/users/{user['id']}", json=update_payload)
+    patch_resp = await client.patch(f"/users/{user['id']}", json=update_payload, headers=headers)
     assert patch_resp.status_code == 200
     assert patch_resp.json()["city"] == "New City"
 
-    delete = await client.delete(f"/users/{user['id']}")
+    delete = await client.delete(f"/users/{user['id']}", headers=headers)
     assert delete.status_code == 204, delete.text
 
 @pytest.mark.asyncio
 async def test_user_likes_book(client: AsyncClient, session: Session):
+    payload = {
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "user_test_reg@test.lol",
+        "password": "testing123",
+        "phone": "1234567890",
+        "city": "Test City",
+        "role": "user"
+    }
+    create_resp = await client.post("/users/register", json=payload)
+    assert create_resp.status_code == 200, create_resp.text
+    user = create_resp.json()
+    assert user["email"] == "user_test_reg@test.lol"
+    login_payload = {
+        "username": "user_test_reg@test.lol",
+        "password": "testing123"
+    }
+    login_resp = await client.post("/users/login", data=login_payload)
+    assert login_resp.status_code == 200, login_resp.text
+    headers = {"Authorization": f"Bearer {login_resp.json().get("access_token")}"}
+
     created = False
     if (await client.get("/libraries/1")).status_code == 404:
         library = models.Library(
@@ -105,14 +128,39 @@ async def test_user_likes_book(client: AsyncClient, session: Session):
         "pages_count": 300
     }
 
-    create_resp1 = await client.post("/books/1", json=book1_data)
+    create_resp1 = await client.post("/books/1", json=book1_data, headers=headers)
     assert create_resp1.status_code == 201, create_resp1.text
     book1 = create_resp1.json()
 
-    create_resp2 = await client.post("/books/1", json=book2_data)
+    create_resp2 = await client.post("/books/1", json=book2_data, headers=headers)
     assert create_resp2.status_code == 201, create_resp2.text
     book2 = create_resp2.json()
 
+    fav_payload = {"user_id": user["id"], "book_id": book1["id"]}
+    like_resp = await client.post("/users/like", json=fav_payload, headers=headers)
+    assert like_resp.status_code == 200
+
+
+    likes_resp = await client.get(f"/users/likes/{user['id']}", headers=headers)
+    assert likes_resp.status_code == 200
+    assert book1["id"] in likes_resp.json()
+
+
+    unlike_resp = await client.delete(f"/users/like/{user['id']}/{book1['id']}", headers=headers)
+    assert unlike_resp.status_code == 204
+
+
+    await client.delete(f"/books/{book1['id']}", headers=headers)
+    await client.delete(f"/books/{book2['id']}", headers=headers)
+
+    if created:
+        await client.delete("/libraries/1", headers=headers)
+        assert (await client.get("/libraries/1")).status_code == 404
+
+    await client.delete(f"/users/{user['id']}", headers=headers)
+
+@pytest.mark.asyncio
+async def test_user_update_password(client: AsyncClient, session: Session):
     payload = {
         "first_name": "Test",
         "last_name": "User",
@@ -127,24 +175,23 @@ async def test_user_likes_book(client: AsyncClient, session: Session):
     user = create_resp.json()
     assert user["email"] == "user_test_reg@test.lol"
 
-    fav_payload = {"user_id": user["id"], "book_id": book1["id"]}
-    like_resp = await client.post("/users/like", json=fav_payload)
-    assert like_resp.status_code == 200
+    login_payload = {
+        "username": "user_test_reg@test.lol",
+        "password": "testing123"
+    }
+    login_resp = await client.post("/users/login", data=login_payload)
+    assert login_resp.status_code == 200, login_resp.text
+    token = login_resp.json().get("access_token")
+    assert token is not None
 
+    headers = {"Authorization": f"Bearer {token}"}
 
-    likes_resp = await client.get(f"/users/likes/{user['id']}")
-    assert likes_resp.status_code == 200
-    assert book1["id"] in likes_resp.json()
+    update_password_payload = {
+        "old_password": "testing123",
+        "new_password": "newpassword123"
+    }
+    update_resp = await client.patch(f"/users/{user['id']}/update-password", json=update_password_payload, headers=headers)
+    assert update_resp.status_code == 200, update_resp.text 
 
-
-    unlike_resp = await client.delete(f"/users/like/{user['id']}/{book1['id']}")
-    assert unlike_resp.status_code == 204
-
-
-    await client.delete(f"/books/{book1['id']}")
-    await client.delete(f"/books/{book2['id']}")
-    await client.delete(f"/users/{user['id']}")
-
-    if created:
-        await client.delete("/libraries/1")
-        assert (await client.get("/libraries/1")).status_code == 404
+    delete = await client.delete(f"/users/{user['id']}", headers=headers)
+    assert delete.status_code == 204, delete.text

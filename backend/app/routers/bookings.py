@@ -3,12 +3,13 @@ from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 from datetime import timedelta, date, datetime
+from app.auth import get_current_user
 
 router = APIRouter()
 
 # Create a Booking
 @router.post("/", response_model=models.Booking)
-def create_booking(booking: models.Booking, db: Session = Depends(get_session)):
+def create_booking(booking: models.Booking, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     library = db.get(models.Library, booking.library_id)
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
@@ -38,7 +39,7 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
 
 # Get Bookings of a certain User
 @router.get("/users/{user_id}", response_model=list[models.Booking])
-def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
+def get_bookings_of_a_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -46,7 +47,7 @@ def get_users_bookings(user_id: int, db: Session = Depends(get_session)):
 
 # Get active bookings of a user
 @router.get("/active/{user_id}", response_model=list[models.Booking])
-def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
+def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "pending; active"))).all()
     if not bookings:
         raise HTTPException(status_code=404, detail="User has no active bookings")
@@ -54,7 +55,7 @@ def get_active_bookings_of_a_user(user_id: int, db: Session = Depends(get_sessio
 
 # Get dismissed bookings of a user
 @router.get("/dismissed/{user_id}", response_model=list[models.Booking])
-def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_session)):
+def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     bookings = db.exec(select(models.Booking).where(and_(models.Booking.user_id == user_id, models.Booking.status in "returned; cancelled"))).all()
     if not bookings:
         raise HTTPException(status_code=404, detail="User has no dismissed bookings")
@@ -62,7 +63,7 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 
 # Update Booking's status
 @router.patch("/{booking_id}", response_model=models.Booking)
-def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session)):
+def update_booking_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
@@ -86,7 +87,7 @@ def update_status(booking_id: int, booking_update: models.BookingUpdate, db: Ses
 
 # Delete a Booking
 @router.delete("/{booking_id}", status_code=204)
-def delete_booking(booking_id: int, db: Session = Depends(get_session)):
+def delete_booking(booking_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code = 404, detail="Booking does not exist")

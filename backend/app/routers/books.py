@@ -5,6 +5,7 @@ from app import models
 import os
 from typing import Optional
 from fastapi.responses import FileResponse
+from app.auth import get_current_user
 
 router = APIRouter()
 
@@ -13,7 +14,7 @@ os.makedirs(COVERS_DIR, exist_ok=True)
 
 # Create a Book
 @router.post("/{quantity}", response_model=models.Book, status_code=201)
-async def create_book(book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session)):
+async def create_book(book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     db.add(book)
     db.commit()
     db.refresh(book)
@@ -31,7 +32,7 @@ async def upload_book_cover(
     book_id: int,
     file: Optional[UploadFile] = File(None),
     cover_url: Optional[str] = Query(None),
-    db: Session = Depends(get_session)
+    db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)
 ):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
@@ -128,7 +129,7 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
 
 # Update a Book
 @router.patch("/{book_id}", response_model=models.Book)
-def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session)):
+def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
@@ -144,12 +145,11 @@ def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depe
 
 # Delete a Book
 @router.delete("/{book_id}", status_code=204)
-def delete_book(book_id: int, db: Session = Depends(get_session)):
+def delete_book(book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
-    if library_book:
-        db.delete(library_book)
+    db.delete(library_book)
     db.delete(book)
     db.commit()

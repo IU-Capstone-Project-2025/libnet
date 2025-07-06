@@ -26,7 +26,7 @@ def search_books(title: str = Query(default=None), authors: str = Query(default=
             genre = genre.strip()
             conditions.append(models.Book.genre.ilike(f"%{genre}%"))
         query = query.where(or_(*conditions))
-    if rating:
+    if rating is not None:
         query = query.where(models.Book.rating <= rating)
     if year:
         year_from = year.split("-")[0].strip()
