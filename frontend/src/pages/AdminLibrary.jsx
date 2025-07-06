@@ -1,15 +1,18 @@
 import { React, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Book.css';
+import './AdminLibrary.css';
 
-export default function ManagerLibrary() {
+export default function AdminLibrary() {
   const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [library, setLibrary] = useState([]);
+  const { id } = useParams();
+  const [managers, setManagers] = useState([]);
 
   const [title, setTitle] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -26,7 +29,7 @@ export default function ManagerLibrary() {
     async function fetchLibrary() {
       if (user == null) return;
       try {
-        const res = await fetch(`/api/libraries/${user.libraryId}`);
+        const res = await fetch(`/api/libraries/${id}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setLibrary(data);
@@ -48,7 +51,23 @@ export default function ManagerLibrary() {
       }
     }
 
+    async function fetchManagers() {
+      if (user == null) return;
+      try {
+        const res = await fetch(`/api/libraries/${id}/managers`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setManagers(data);
+      } catch (err) {
+        console.log('here');
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     fetchLibrary();
+    fetchManagers();
   }, [user]);
 
   async function handleUpdate() {
@@ -160,12 +179,17 @@ export default function ManagerLibrary() {
               />
               {/* TODO: дни работы */}
             </div>
-            <button className="manager__book-button" onClick={handleUpdate}>
+            <button className="admin__book-button" onClick={handleUpdate}>
               Сохранить
             </button>
           </div>
           <div className="user__book-left-section"></div>
         </div>
+        {/* <div>
+          {managers.map((m) => (
+            <div key={m.id}>{m.first_name} </div>
+          ))}
+        </div> */}
       </div>
     </>
   );

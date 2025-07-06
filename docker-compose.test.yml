@@ -8,14 +8,20 @@ services:
       POSTGRES_DB: ${TEST_DB_NAME}
     ports:
       - "5433:5432"
-    volumes:
-      - ./init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TEST_DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend_test:
     build: 
       context: ./backend
       dockerfile: Dockerfile.test
+    container_name: backend_test
     depends_on:
-      - postgres_test
+      postgres_test:
+        condition: service_healthy
+    mem_limit: 2g 
     environment:
       DATABASE_URL: ${TEST_DB_URL}
