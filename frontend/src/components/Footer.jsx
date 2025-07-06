@@ -24,7 +24,7 @@ export default function Footer() {
           </div>
           <p className="copyright">libnet 2025 ©</p>
         </div>
-      ) : !user || user.role === 'user' ? (
+      ) : user && user.role === 'user' ? (
         <div className="user__footer">
           <div className="user__navbar user__footer-navbar">
             <Link to="/" className="user__navbar-link">Каталог</Link>
@@ -34,10 +34,18 @@ export default function Footer() {
           </div>
           <p className="copyright">libnet 2025 ©</p>
         </div>
-      ): (
+      ) : user && user.role === 'admin' ?(
         <div className="admin__footer">
           <div className="admin__navbar admin__footer-navbar">
             <Link to="/admin/" className="admin__navbar-link">Библиотеки</Link>
+          </div>
+          <p className="copyright">libnet 2025 ©</p>
+        </div>
+      ) : (
+        <div className="user__footer">
+          <div className="user__navbar user__footer-navbar">
+            <Link to="/" className="user__navbar-link">Каталог</Link>
+            <Link to="/faq" className="user__navbar-link">FAQ</Link>
           </div>
           <p className="copyright">libnet 2025 ©</p>
         </div>
