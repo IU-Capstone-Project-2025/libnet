@@ -36,7 +36,7 @@ export default function BookDetails() {
         setAuthor(data.author);
         setDescription(data.description);
         setSrc(data.image_url);
-        setPages(data.pages);
+        setPages(data.pages_count);
         setIsbn(data.isbn);
         setGenre(data.genre);
         setYear(data.year);
@@ -207,7 +207,7 @@ export default function BookDetails() {
                 src ||
                 'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
               } //"https://via.placeholder.com/200x300?text=Book+Cover"}
-              alt={`${book.title} cover`}
+              alt={`${title} cover`}
             />
             
               { user ? (
@@ -226,35 +226,35 @@ export default function BookDetails() {
           </div>
           <div className="user__book-right-section">
             <div className="user__book-title-container">
-              <h1 className="user__book-title">{book.title}</h1>
-              <h2 className="user__book-author">{book.author}</h2>
+              <h1 className="user__book-title">{title}</h1>
+              <h2 className="user__book-author">{author}</h2>
             </div>
             <p className="user__book-description">
-              {description || 'Описание отсутствует.'}
+              {description || 'Описание отсутствует'}
             </p>
             <div className="user__book-details">
               <p className="user__book-detail">
                 {' '}
                 <strong>Количество страниц:</strong>{' '}
-                {pages || 'Нет информации.'}
+                {pages || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
                 <strong>Жанры:</strong>{' '}
-                {pages || 'Нет информации.'}
+                {genre || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
                 <strong>ISBN:</strong>{' '}
-                {pages || 'Нет информации.'}
+                {isbn || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
-                <strong>Год выпуска:</strong> {book.year || 'Нет информации.'}
+                <strong>Год выпуска:</strong> {year || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
-                <strong>Рейтинг:</strong> {book.rate || 'Нет информации.'}
+                <strong>Рейтинг:</strong> {rating || 'Нет информации'}
               </p>
               <select
                 className="user__book-select"
