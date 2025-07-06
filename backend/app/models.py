@@ -109,6 +109,7 @@ class BookUpdate(SQLModel):
     image_url: Optional[str] = None
     isbn: Optional[str] = None
     genre: Optional[str] = None
+    pages_count: Optional[int] = None
 
 class FavoriteBook(SQLModel, table=True):
     user_id: int = Field(foreign_key="libuser.id", primary_key=True)
