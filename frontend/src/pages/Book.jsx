@@ -6,6 +6,7 @@ import './Book.css';
 export default function BookDetails() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
   const [favorite, setFavorite] = useState(false);
   const { id } = useParams();
   const [book, setBook] = useState(null);
@@ -88,7 +89,9 @@ export default function BookDetails() {
 
     async function checkFavorite() {
       try {
-        const res = await fetch(`/api/users/likes/${user.id}/${id}`);
+        const res = await fetch(`/api/users/likes/${user.id}/${id}`, {
+          headers: {Authorization: `Bearer ${token}`,}
+        });
         if (res.status == '204') {
             setFavorite(false);
             // console.log('nety');
@@ -120,7 +123,9 @@ export default function BookDetails() {
 
       const res = await fetch('/api/bookings/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          headers: {Authorization: `Bearer ${token}`,}
+         },
         body: JSON.stringify({
           user_id: user.id,
           book_id: book.id,
@@ -146,7 +151,7 @@ export default function BookDetails() {
       try {
         const res = await fetch('/api/users/like', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`,},
           body: JSON.stringify({
             user_id: user.id,
             book_id: id,
@@ -165,7 +170,7 @@ export default function BookDetails() {
       try {
         const res = await fetch(`/api/users/like/${user.id}/${id}`, {
           method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
           body: JSON.stringify({
             user_id: user.id,
             book_id: id,

@@ -6,6 +6,7 @@ import './AdminLibrary.css';
 
 export default function AdminLibrary() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,7 +55,9 @@ export default function AdminLibrary() {
     async function fetchManagers() {
       if (user == null) return;
       try {
-        const res = await fetch(`/api/libraries/${id}/managers`);
+        const res = await fetch(`/api/libraries/${id}/managers`, {
+          headers: {Authorization: `Bearer ${token}`,}
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setManagers(data);
@@ -74,7 +77,9 @@ export default function AdminLibrary() {
     try {
       const res = await fetch(`/api/libraries/${library.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({
           name: title,
           phone: phone,
