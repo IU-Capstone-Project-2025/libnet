@@ -4,6 +4,7 @@ from sqlmodel import Session, select
 from app.database import get_session
 from app.auth import verify_password, create_access_token
 from app import models
+from app.auth import get_current_user
 
 router = APIRouter()
 
@@ -21,7 +22,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Assign manager to a library
 @router.post("/assign/{manager_email}/{library_id}")
-def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session)):
+def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -39,7 +40,7 @@ def assign_manager(manager_email: str, library_id: int, db: Session = Depends(ge
 
 # Dismiss manager from a library
 @router.post("/dismiss/{manager_email}/{library_id}")
-def dismiss_manager(manager_email: int, library_id: int, db: Session = Depends(get_session)):
+def dismiss_manager(manager_email: int, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")

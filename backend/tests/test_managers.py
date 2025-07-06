@@ -72,8 +72,10 @@ async def test_login_manager(client: AsyncClient, session: Session):
     token = login_resp.json().get("access_token")
     assert token is not None
 
-    delete_user = await client.delete(f"/users/{user['id']}")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    delete_user = await client.delete(f"/users/{user['id']}", headers=headers)
     assert delete_user.status_code == 204
 
-    delete_manager = await client.delete(f"/users/{manager['id']}")
+    delete_manager = await client.delete(f"/users/{manager['id']}", headers=headers)
     assert delete_manager.status_code == 204

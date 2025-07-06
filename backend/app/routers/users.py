@@ -5,6 +5,7 @@ from app.database import get_session
 from app.auth import hash_password, verify_password, create_access_token
 from app import models
 import re
+from app.auth import get_current_user
 
 router = APIRouter()
 
@@ -46,7 +47,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Update password
 @router.patch("/{user_id}/update-password")
-def update_password(user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session)):
+def update_password(user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -65,7 +66,7 @@ def read_all_users(db: Session = Depends(get_session)):
 
 # Get single user
 @router.get("/{user_id}", response_model=models.LibUserRead)
-def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
+def read_user_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -73,7 +74,7 @@ def read_user_by_id(user_id: int, db: Session = Depends(get_session)):
 
 # Get user by email
 @router.get("/email/{email}", response_model=models.LibUserRead)
-def read_user_by_email(email: str, db: Session = Depends(get_session)):
+def read_user_by_email(email: str, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.email == email)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -81,7 +82,7 @@ def read_user_by_email(email: str, db: Session = Depends(get_session)):
 
 # Add favorite book to user
 @router.post("/like", response_model=models.FavoriteBook)
-def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_session)):
+def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == favorite_book.user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -103,7 +104,7 @@ def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_se
 
 # Remove favorite book from user
 @router.delete("/like/{user_id}/{book_id}", status_code=204)
-def unlike_a_book(user_id: int, book_id: int, db: Session = Depends(get_session)):
+def unlike_a_book(user_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
         raise HTTPException(status_code=404, detail="Book is not liked by this user")
@@ -112,13 +113,13 @@ def unlike_a_book(user_id: int, book_id: int, db: Session = Depends(get_session)
 
 # Get user's favorite books
 @router.get("/likes/{user_id}", response_model=list[int])
-def get_user_liked_books_by_id(user_id: int, db: Session = Depends(get_session)):
+def get_user_liked_books_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     fav_books = db.exec(select(models.FavoriteBook.book_id).where(models.FavoriteBook.user_id == user_id)).all()
     return fav_books
 
 # Get user's specific favorite book
 @router.get("/likes/{user_id}/{book_id}", response_model=models.FavoriteBook)
-def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(get_session)):
+def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
         return Response(status_code=204)
@@ -126,7 +127,7 @@ def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(
 
 # Update user
 @router.patch("/{user_id}", response_model=models.LibUserRead)
-def update_user(user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session)):
+def update_user(user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -142,7 +143,7 @@ def update_user(user_id: int, user_update: models.LibUserUpdate, db: Session = D
 
 # Delete user
 @router.delete("/{user_id}", status_code=204)
-def delete_user(user_id: int, db: Session = Depends(get_session)):
+def delete_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")
