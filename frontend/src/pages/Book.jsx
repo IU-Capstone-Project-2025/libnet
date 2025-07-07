@@ -224,7 +224,7 @@ export default function BookDetails() {
                     {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
                   </button>
                 </div>
-                ) : (<div className="user__book-buttons"></div>)
+                ) : (<div className="user__book-buttons"><p>Войдите, чтобы забронировать или добавить книгу в избранное</p></div>)
               }
               
             
