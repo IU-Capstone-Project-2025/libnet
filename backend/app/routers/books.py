@@ -101,6 +101,25 @@ def get_unique_books(db: Session = Depends(get_session)):
     books = db.exec(select(models.Book).where(models.Book.id.in_(subquery))).all()
     return books
 
+# Get unique Books by user's city
+@router.get("/unique/city/", response_model=list[models.Book])
+def get_unique_books_by_city(db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    subquery = (
+        select(func.min(models.Book.id))
+        .join(models.LibraryBook, models.Book.id == models.LibraryBook.book_id)
+        .join(models.Library, models.LibraryBook.library_id == models.Library.id)
+        .where(models.Library.city == current_user.city)
+        .group_by(models.Book.isbn)
+        .subquery()
+    )
+    
+    books = db.exec(
+        select(models.Book)
+        .where(models.Book.id.in_(subquery))
+    ).all()
+    return books
+    
+
 # Get all Books
 @router.get("/", response_model=list[models.Book])
 def get_books(db: Session = Depends(get_session)):
