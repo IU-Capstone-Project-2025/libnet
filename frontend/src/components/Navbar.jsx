@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthPopupWrapper from './AuthPopupWrapper';
@@ -27,6 +27,20 @@ export default function Navbar() {
   const closeBurger = () => {
     setIsBurgerOpen(false);
   };
+
+  // Управление блокировкой скролла при открытии модальных окон
+  useEffect(() => {
+    if (isBurgerOpen || showLogin) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    // Очистка при размонтировании компонента
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isBurgerOpen, showLogin]);
 
   return (
     <>

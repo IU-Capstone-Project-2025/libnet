@@ -87,6 +87,7 @@
 .user__search-bar {
   width: 80%;
   border: 1px solid black;
+  border-radius: 0;
   border-top-left-radius: 20px;
   padding: 10px 20px;
   font-size: var(--font-size-subregular);
@@ -118,6 +119,8 @@
   font-size: var(--font-size-subregular);
   background-color: white;
   width: 100%;
+  height: 50px;
+  border-radius: 0;
 }
 
 .user__search-filter:first-child {
@@ -214,9 +217,14 @@
     gap: 20px;
     padding: 30px;
   }
+
 }
 
 @media (width < 768px) {
+
+  .user__heading {
+    padding: 10px 0;
+  }
   .user__catalog-books-list {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 15px;
@@ -261,6 +269,20 @@
 
   .user__sidebar .user__search-filter {
     margin: 0;
+    height: 30px;
+  }
+
+  .user__search-filter:first-child {
+    border-top-left-radius: 10px;
+  }
+
+  .user__search-filter:last-child {
+    border-bottom-right-radius: 10px;
+  }
+
+  select.user__search-filter {
+    height: 30px;
+    padding: 5px;
   }
 }
 
@@ -268,7 +290,9 @@
   .user__catalog-books-list {
     gap: 10px;
     padding: 15px;
+    justify-items: center;
   }
+
   .user__search-form {
     padding: 15px;
   }
