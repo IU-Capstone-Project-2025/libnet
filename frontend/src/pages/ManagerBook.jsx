@@ -5,6 +5,7 @@ import './Book.css';
 
 export default function ManagerBook() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const { id } = useParams();
   const [book, setBook] = useState(null);
@@ -33,7 +34,7 @@ export default function ManagerBook() {
         setAuthor(data.author);
         setDescription(data.description);
         setSrc(data.image_url);
-        setPages(data.pages);
+        setPages(data.pages_count);
         setIsbn(data.isbn);
         setGenre(data.genre);
         setYear(data.year);
@@ -53,13 +54,15 @@ export default function ManagerBook() {
     try {
       const res = await fetch(`/api/books/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({
           title: title,
           author: author,
           description: description,
           image_url: src,
-          pages: pages,
+          pages_count: pages,
           isbn: isbn,
           genre: genre,
           year: year,
@@ -120,7 +123,7 @@ export default function ManagerBook() {
             <input
               className="user__book-description manager__book-detail-input"
               placeholder="Описание"
-              value={description || 'Описание отсутствует.'}
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
             <div className="manager__book-details">
@@ -128,42 +131,42 @@ export default function ManagerBook() {
               <input
                 className="manager__book-detail-input"
                 placeholder="Ссылка на обложку"
-                value={src}
+                value={src || ''}
                 onChange={(e) => setSrc(e.target.value)}
               />
               <strong>Количество страниц:</strong>
               <input
                 className="manager__book-detail-input"
                 placeholder="Страницы"
-                value={pages || 'Нет информации.'}
+                value={pages || ''}
                 onChange={(e) => setPages(e.target.value)}
               />
               <strong>Жанры:</strong>
               <input
                 className="manager__book-detail-input"
                 placeholder="Жанры"
-                value={genre || 'Нет информации.'}
+                value={genre || ''}
                 onChange={(e) => setGenre(e.target.value)}
               />
               <strong>ISBN:</strong>
               <input
                 className="manager__book-detail-input"
                 placeholder="ISBN"
-                value={isbn || 'Нет информации.'}
+                value={isbn || ''}
                 onChange={(e) => setIsbn(e.target.value)}
               />
               <strong>Год выпуска:</strong>
               <input
                 className="manager__book-detail-input"
                 placeholder="Год"
-                value={year || 'Нет информации.'}
+                value={year || ''}
                 onChange={(e) => setYear(e.target.value)}
               />
               <strong>Рейтинг:</strong>
               <input
                 className="manager__book-detail-input"
                 placeholder="Рейтинг"
-                value={rating || 'Нет информации.'}
+                value={rating || ''}
                 onChange={(e) => setRating(e.target.value)}
               />
             </div>

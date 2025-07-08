@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function ManagerOrders() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,9 @@ export default function ManagerOrders() {
       if (user == null) return;
       try {
         console.log('trying');
-        const res = await fetch(`/api/libraries/${user.libraryId}/bookings`);
+        const res = await fetch(`/api/libraries/${user.libraryId}/bookings`,
+          {headers: {Authorization: `Bearer ${token}`,}}
+        );
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
@@ -60,7 +63,9 @@ export default function ManagerOrders() {
       try {
         const entries = await Promise.all(
           bookings.map(async (booking) => {
-            const res = await fetch(`/api/users/${booking.user_id}`);
+            const res = await fetch(`/api/users/${booking.user_id}`,
+              {headers: {Authorization: `Bearer ${token}`,}}
+            );
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             return [booking.id, data];
@@ -120,7 +125,7 @@ export default function ManagerOrders() {
   async function updateStatus(status, booking_id) {
     const res = await fetch(`/api/bookings/${booking_id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
       body: JSON.stringify({
         status: status,
       }),

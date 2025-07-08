@@ -5,6 +5,7 @@ import './Book.css';
 
 export default function ManagerLibrary() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,7 +56,7 @@ export default function ManagerLibrary() {
     try {
       const res = await fetch(`/api/libraries/${library.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
         body: JSON.stringify({
           name: title,
           phone: phone,

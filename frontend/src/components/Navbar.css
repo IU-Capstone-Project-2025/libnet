@@ -9,12 +9,16 @@
   font-weight: var(--weight-regular);
   font-size: var(--font-size-regular);
   background-color: var(--main-user-color);
+  position: relative;
 }
 
 .user__navbar {
   display: flex;
   gap: 33px;
   font-weight: var(--weight-regular);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .user__navbar-right {
