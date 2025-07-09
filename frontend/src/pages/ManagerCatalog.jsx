@@ -46,7 +46,7 @@ export default function ManagerCatalog() {
     <>
       <div className="user__catalog-content">
         <h1 className="user__heading">Каталог книг</h1>
-        <button className='user__search-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
+        <button className='user__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
         <div className="user__genre-section">
           <div className="user__sidebar">
             <h2 className="user__sidebar-heading">Жанры</h2>

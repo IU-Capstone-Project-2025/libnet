@@ -54,6 +54,16 @@
   background-color: var(--red-color);
 }
 
+.user__book-pleaselogin {
+  font-size: 16px;
+  width: 100%;
+  max-width: 316px;
+  text-align: start;
+  border: solid var(--red-color) 4px;
+  padding: 10px;
+  border-radius: 20px 0 20px 0;
+}
+
 .user__book-right-section {
   display: flex;
   flex-direction: column;
@@ -156,4 +166,8 @@
   .user__book-left-section {
     flex-direction: column;
   }
+
+  .user__book-pleaselogin {
+  font-size: 14px;
+}
 }

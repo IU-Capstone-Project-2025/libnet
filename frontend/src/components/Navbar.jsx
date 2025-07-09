@@ -46,7 +46,7 @@ export default function Navbar() {
     <>
       {user && user.role === 'manager' ? (
         <div className="manager__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/manager/')}>
             <img
               className="manager__navbar-logo"
               src="/manager-logo-2x.png"
@@ -160,7 +160,7 @@ export default function Navbar() {
         </div>
       ) : user && user.role === 'user' ? (
         <div className="user__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
             <img
               className="user__navbar-logo"
               src="/user-logo-2x.png"
@@ -256,7 +256,7 @@ export default function Navbar() {
         </div>
       ) : user && user.role === 'admin' ? (
         <div className="admin__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/admin/')}>
             <img
               className="admin__navbar-logo"
               src="/admin-logo-2x.png"
@@ -334,7 +334,7 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="user__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
             <img
               className="user__navbar-logo"
               src="/user-logo-2x.png"

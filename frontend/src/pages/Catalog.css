@@ -133,11 +133,13 @@
 }
 
 .filter-button  {
-  border: 2px solid black;
+  border: 1px solid black;
 }
+
 .filter-button:hover  {
   font-weight: var(--weight-bold);
 }
+
 .filter-button:active  {
   background-color: var(--grey-color);
 }
@@ -220,6 +222,12 @@
   width: 30px;
   height: 30px;
   margin: 5px 5px 0 0;
+}
+
+.manager__catalog-create-book-button {
+  border-radius: 20px 0 20px 0;
+  width: 25%;
+
 }
 
 @media (width < 1024px) {
