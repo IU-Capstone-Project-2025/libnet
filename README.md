@@ -41,6 +41,41 @@ For testing privileged access:
 
 *Access is restricted to prevent unauthorized system changes.*
 
+## Monitoring Setup
+
+### Loki Logs Configuration
+1. Install the Docker logging plugin:
+To launch our service. First download the plugin.:
+```bash
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+```
+Then do:
+```bash
+docker compose up --build -d
+```
+⚠️ **Note**: The system won't launch without the required `.env` file configuration.
+
+## Accessing Grafana
+
+To access the Grafana monitoring dashboard:
+
+1. Open in your browser:  
+   `http://<your-server-ip>:3000`
+
+2. Authentication:  
+   Credentials are restricted to team members only
+
+3. Request access:  
+   Contact project maintainers:  
+   - **Telegram**: [@alliumpro](https://t.me/alliumpro) (Ivan Murzin)  
+   - **Email**: [i.murzin@innopolis.university](mailto:i.murzin@innopolis.university)  
+
+⚠️ **Note**: Some dashboard features require environment variables and may not be fully accessible without proper configuration.
+
+
+
+
+
 ## Roadmap
 ### 🚀 Week 1 Foundation & Planning 
 
@@ -145,30 +180,39 @@ For testing privileged access:
   - Monitoring integration  
 
 
-### 🚀 Week 5 Priorities: Feedback & Refinement
+### 🚀 Week 5 Priorities: Refinement & Polish
 
-#### 📊 Feedback Collection
-- [ ] Conduct 3-5 user testing sessions
-- [ ] Deploy current version for public feedback
-- [ ] Compile feedback into categories (UX, Bugs, Features)
+#### Core Features
+- [x] Security enhancements  
+  - Token-based endpoint protection  
+  - Role-based access control  
+- [x] User management  
+  - Password update functionality  
+  - Unauthorized user flows  
 
+#### Frontend
+- [x] UI/UX improvements  
+  - Mobile responsiveness (width < 450px)  
+  - Search/filter styling  
+  - Scrollbar fixes  
+  - Navbar/book centering  
+- [x] Book management  
+  - Add/delete books interface  
+  - Image loading fixes  
 
-#### 🛠️ Implementation
-- [ ] Fix bugs (focus on stability)
-- [ ] Improve core UX flows
-- [ ] Optimize slow API calls/queries
+#### Backend
+- [x] Data operations  
+  - Cross-database migration tool  
+  - City-based book retrieval  
+- [x] Testing updates  
+  - Password update tests  
+  - Token validation tests  
 
-#### 📝 Documentation
-- [ ] Add troubleshooting guide to README
-- [ ] Record screencasts of key flows
-- [ ] Update API examples
-
-#### Deliverables
-- **Report**:
-  - User feedback summary
-- **Code**:
-  - Links to refinement PRs
-  - Updated deployment
+#### Infrastructure
+- [x] Security  
+  - HTTPS configuration  
+- [x] Monitoring  
+  - Grafana/Loki access setup 
 
 ### 🚀 Week 6 Priorities: Final Polish & Presentation Prep
 
