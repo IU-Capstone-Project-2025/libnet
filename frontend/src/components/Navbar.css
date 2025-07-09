@@ -28,6 +28,7 @@
 .user__navbar-logo-container {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .user__navbar-logo {
