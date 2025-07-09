@@ -82,8 +82,8 @@ services:
       NODE_OPTIONS: "--openssl-legacy-provider"
     ports:
       - "4173:4173"
-    volumes:
-      - ./frontend:/app
+    # volumes:
+    #   - ./frontend:/app
     depends_on:
       - backend
     logging:
