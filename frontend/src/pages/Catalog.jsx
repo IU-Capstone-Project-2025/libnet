@@ -17,7 +17,7 @@ export default function Catalog() {
     authors: '',
     genres: '',
     rating: '',
-    year: ''
+    // year: ''
   });
 
   useEffect(() => {
@@ -29,9 +29,9 @@ export default function Catalog() {
       setLoading(true);
       const query = { ...params };
 
-      if ((!yearFrom && yearTo) || yearFrom === '') query.year = `0-${yearTo}`;
-      else if (yearFrom && (!yearTo || yearTo === '')) query.year = `${yearFrom}-3000`;
-      else if (yearFrom || yearTo) query.year = `${yearFrom || ''}-${yearTo || ''}`;
+      // if ((!yearFrom && yearTo) || yearFrom == '') query.year = `0-${yearTo}`;
+      // else if (yearFrom && (!yearTo || yearTo == '')) query.year = `${yearFrom}-3000`;
+      // else if (yearFrom || yearTo) query.year = `${yearFrom || ''}-${yearTo || ''}`;
 
       const queryString = new URLSearchParams(
         Object.fromEntries(
@@ -135,7 +135,7 @@ export default function Catalog() {
               onChange={handleSearchChange}
               className="user__search-filter"
             />
-            <input
+            {/* <input
               type="text"
               placeholder="От года"
               value={yearFrom}
@@ -148,7 +148,7 @@ export default function Catalog() {
               value={yearTo}
               onChange={(e) => setYearTo(e.target.value)}
               className="user__search-filter"
-            />
+            /> */}
             <select
               name="rating"
               value={searchParams.rating}
