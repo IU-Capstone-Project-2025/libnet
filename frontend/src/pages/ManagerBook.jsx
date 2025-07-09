@@ -79,6 +79,23 @@ export default function ManagerBook() {
     }
   }
 
+  async function handleDelete() {
+    try {
+      const res = await fetch(`/api/books/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+         },
+      });
+      if (res.ok) {
+        console.log('deleted');
+        navigate("/manager/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   if (loading) return <p className="user__book-content">Загружаем…</p>;
   if (error)
     return (
@@ -104,6 +121,9 @@ export default function ManagerBook() {
             <div className="user__book-buttons">
               <button className="manager__book-button" onClick={() => navigate('/manager/')}>
                 Назад
+              </button>
+              <button className="manager__book-button" onClick={handleDelete}>
+                Удалить
               </button>
               <button className="manager__book-button" onClick={handleUpdate}>
                 Сохранить
