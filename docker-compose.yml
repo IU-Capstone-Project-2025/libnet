@@ -79,7 +79,6 @@ services:
       - "4173:4173"
     volumes:
       - ./frontend:/app
-      - ./frontend/dist:/usr/share/nginx/html
     depends_on:
       - backend
     logging:
