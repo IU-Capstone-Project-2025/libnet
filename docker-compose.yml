@@ -113,9 +113,10 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini
     environment:
-      - GF_SERVER_DOMAIN=libnet.site
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+      - GF_SERVER_ROOT_URL=https://libnet.site/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     ports:
       - "3000:3000"
