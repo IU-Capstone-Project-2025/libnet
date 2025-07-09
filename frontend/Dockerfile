@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 RUN apk add --no-cache curl
 
@@ -12,4 +12,4 @@ COPY . .
 RUN npm run build
 
 EXPOSE 4173
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

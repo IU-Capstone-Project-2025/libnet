@@ -1,13 +1,21 @@
-from sqlmodel import create_engine, Session, select
-from dotenv import load_dotenv
-import os
+from sqlmodel import SQLModel, create_engine, Session
 
-load_dotenv()
+engine = None
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL)
+def init_engine(custom_engine=None):
+    global engine
+    if custom_engine:
+        engine = custom_engine
+    else:
+        from os import getenv
+        engine = create_engine(getenv("DATABASE_URL"))
 
 def get_session():
-    with Session(engine) as db:
-        yield db
-        
+    if engine is None:
+        raise RuntimeError("Engine not initialized")
+    with Session(engine) as session:
+        yield session
+
+def create_all():
+    from app import models
+    SQLModel.metadata.create_all(engine)

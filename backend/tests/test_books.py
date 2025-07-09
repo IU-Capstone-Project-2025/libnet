@@ -6,27 +6,26 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.main import app
 from app import models
 import io
-from dotenv import load_dotenv
 import shutil
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
+from sqlmodel.pool import StaticPool
+from app.database import get_session, init_engine
 
 @pytest.fixture(name="session")
 def session_fixture():
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool
+    )
+    init_engine("sqlite://")
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
-        try:
-            yield session
-        finally:
-            session.rollback()
-            session.close()
+        yield session
 
 
 @pytest_asyncio.fixture(name="client")
 async def client_fixture(session):
+    app.dependency_overrides[get_session] = lambda: session
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac

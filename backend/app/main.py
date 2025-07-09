@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from app.routers.users import router as users_router
 from app.routers.managers import router as managers_router
@@ -7,8 +8,33 @@ from app.routers.bookings import router as bookings_router
 from app.routers.libraries import router as libraries_router
 from app.routers.books import router as books_router
 from app.routers.search import router as search_router
+import os
+from dotenv import load_dotenv
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_dotenv()
+
+    DATABASE_URL = os.getenv("DATABASE_URL")
+
+    from sqlmodel import create_engine
+    engine = create_engine(DATABASE_URL, echo=True)
+
+    from app.database import init_engine, create_all
+    init_engine(engine)
+    create_all()
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://libnet.site"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Instrumentator().instrument(app).expose(app)
 
