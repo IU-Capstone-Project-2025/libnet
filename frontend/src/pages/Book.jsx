@@ -124,7 +124,7 @@ export default function BookDetails() {
       const res = await fetch('/api/bookings/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-          headers: {Authorization: `Bearer ${token}`,}
+          Authorization: `Bearer ${token}`,
          },
         body: JSON.stringify({
           user_id: user.id,
