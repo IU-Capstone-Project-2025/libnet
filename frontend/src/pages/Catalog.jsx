@@ -17,7 +17,6 @@ export default function Catalog() {
     authors: '',
     genres: '',
     rating: '',
-    // year: ''
   });
 
   useEffect(() => {
@@ -27,15 +26,9 @@ export default function Catalog() {
   async function fetchBooks(params = {}) {
     try {
       setLoading(true);
-      const query = { ...params };
-
-      // if ((!yearFrom && yearTo) || yearFrom == '') query.year = `0-${yearTo}`;
-      // else if (yearFrom && (!yearTo || yearTo == '')) query.year = `${yearFrom}-3000`;
-      // else if (yearFrom || yearTo) query.year = `${yearFrom || ''}-${yearTo || ''}`;
-
       const queryString = new URLSearchParams(
         Object.fromEntries(
-          Object.entries(query).filter(([_, v]) => v !== undefined && v !== null && v !== '')
+          Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '')
         )
       ).toString();
 
@@ -63,6 +56,13 @@ export default function Catalog() {
     e.preventDefault();
     const { authors, genres, rating } = searchParams;
     const params = { authors, genres, rating };
+
+    if (yearFrom || yearTo) {
+      const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
+      const to = yearTo.trim() !== '' ? yearTo.trim() : '3000';
+      params.year = `${from}-${to}`;
+    }
+
     fetchBooks(params);
   }
 
@@ -86,7 +86,7 @@ export default function Catalog() {
         </div>
       </form>
 
-      {loading && <p >Загрузка...</p>}
+      {loading && <p>Загрузка...</p>}
       {error && <p className="red-error">Ошибка: {error}</p>}
 
       <div className="user__genre-section">
@@ -135,7 +135,7 @@ export default function Catalog() {
               onChange={handleSearchChange}
               className="user__search-filter"
             />
-            {/* <input
+            <input
               type="text"
               placeholder="От года"
               value={yearFrom}
@@ -148,7 +148,7 @@ export default function Catalog() {
               value={yearTo}
               onChange={(e) => setYearTo(e.target.value)}
               className="user__search-filter"
-            /> */}
+            />
             <select
               name="rating"
               value={searchParams.rating}
@@ -180,19 +180,14 @@ export default function Catalog() {
               <img
                 className="user__catalog-book-cover"
                 src={
-                  b.image_url ||
-                  'https://via.placeholder.com/150x220?text=Book+Cover'
+                  b.image_url || 'https://via.placeholder.com/150x220?text=Book+Cover'
                 }
                 alt={`${b.title} cover`}
               />
               <div className="user__catalog-book-info">
                 <div className="user__catalog-book-info-text-container">
-                  <strong className="user__catalog-book-info-title">
-                    {b.title}
-                  </strong>
-                  <span className="user__catalog-book-info-author">
-                    {b.author}
-                  </span>
+                  <strong className="user__catalog-book-info-title">{b.title}</strong>
+                  <span className="user__catalog-book-info-author">{b.author}</span>
                 </div>
               </div>
             </div>
