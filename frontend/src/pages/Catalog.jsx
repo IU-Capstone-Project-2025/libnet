@@ -23,6 +23,30 @@ export default function Catalog() {
     fetchBooks();
   }, []);
 
+  // Объединенный автоматический поиск с задержкой 1 секунда
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const { title, authors, genres, rating } = searchParams;
+      const params = {};
+
+      // Добавляем все параметры поиска
+      if (title.trim() !== '') params.title = title;
+      if (authors.trim() !== '') params.authors = authors;
+      if (genres.trim() !== '') params.genres = genres;
+      if (rating !== '') params.rating = rating;
+
+      if (yearFrom || yearTo) {
+        const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
+        const to = yearTo.trim() !== '' ? yearTo.trim() : '3000';
+        params.year = `${from}-${to}`;
+      }
+
+      fetchBooks(params);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [searchParams.title, searchParams.authors, searchParams.genres, searchParams.rating, yearFrom, yearTo]);
+
   async function fetchBooks(params = {}) {
     try {
       setLoading(true);
@@ -49,21 +73,14 @@ export default function Catalog() {
 
   function handleTitleSearch(e) {
     e.preventDefault();
-    fetchBooks({ title: searchParams.title });
+    // Поиск уже выполняется автоматически через useEffect
+    // Оставляем функцию для совместимости с формой
   }
 
   function handleFilterSearch(e) {
     e.preventDefault();
-    const { authors, genres, rating } = searchParams;
-    const params = { authors, genres, rating };
-
-    if (yearFrom || yearTo) {
-      const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
-      const to = yearTo.trim() !== '' ? yearTo.trim() : '3000';
-      params.year = `${from}-${to}`;
-    }
-
-    fetchBooks(params);
+    // Поиск уже выполняется автоматически через useEffect
+    // Оставляем функцию для совместимости с формой
   }
 
   return (
@@ -80,9 +97,6 @@ export default function Catalog() {
             onChange={handleSearchChange}
             className="user__search-bar"
           />
-          <button type="submit" className="user__search-button">
-            Поиск
-          </button>
         </div>
       </form>
 
@@ -163,10 +177,6 @@ export default function Catalog() {
               <option value="16">16+</option>
               <option value="18">18+</option>
             </select>
-
-            <button type="submit" className="user__search-filter filter-button">
-              Применить
-            </button>
           </div>
         </form>
 
