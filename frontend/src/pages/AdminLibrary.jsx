@@ -26,6 +26,23 @@ export default function AdminLibrary() {
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
 
+async function fetchManagers() {
+      if (user == null) return;
+      try {
+        const res = await fetch(`/api/libraries/${id}/managers`, {
+          headers: {Authorization: `Bearer ${token}`,}
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setManagers(data);
+      } catch (err) {
+        console.log('here');
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
   useEffect(() => {
     async function fetchLibrary() {
       if (user == null) return;
@@ -52,22 +69,7 @@ export default function AdminLibrary() {
       }
     }
 
-    async function fetchManagers() {
-      if (user == null) return;
-      try {
-        const res = await fetch(`/api/libraries/${id}/managers`, {
-          headers: {Authorization: `Bearer ${token}`,}
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setManagers(data);
-      } catch (err) {
-        console.log('here');
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
+    
 
     fetchLibrary();
     fetchManagers();
@@ -98,6 +100,36 @@ export default function AdminLibrary() {
       }
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  const [newManagerEmail, setNewManagerEmail] = useState('');
+
+  async function handleAssignManager() {
+    if (!newManagerEmail) return;
+    try {
+      const res = await fetch(`/api/managers/assign/${newManagerEmail}/${id}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Ошибка при назначении');
+      setNewManagerEmail('');
+      await fetchManagers(); // обновляем список
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function handleDismissManager(email) {
+    try {
+      const res = await fetch(`/api/managers/dismiss/${email}/${id}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Ошибка при удалении');
+      await fetchManagers(); // обновляем список
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -190,11 +222,48 @@ export default function AdminLibrary() {
           </div>
           <div className="user__book-left-section"></div>
         </div>
-        {/* <div>
+        
+        <div style={{ padding: '1rem' }}>
+        <h3>Назначить менеджера</h3>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input
+            type="email"
+            placeholder="Email пользователя"
+            value={newManagerEmail}
+            onChange={(e) => setNewManagerEmail(e.target.value)}
+          />
+          <button onClick={handleAssignManager}>Добавить</button>
+        </div>
+
+        <h3>Текущие менеджеры</h3>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
           {managers.map((m) => (
-            <div key={m.id}>{m.first_name} </div>
+            <li
+              key={m.id}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.5rem',
+              }}
+            >
+              <span>{m.first_name} ({m.email})</span>
+              <button
+                onClick={() => handleDismissManager(m.email)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'red',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </li>
           ))}
-        </div> */}
+        </ul>
+      </div>
       </div>
     </>
   );
