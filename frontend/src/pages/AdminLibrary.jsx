@@ -26,22 +26,22 @@ export default function AdminLibrary() {
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
 
-async function fetchManagers() {
-      if (user == null) return;
-      try {
-        const res = await fetch(`/api/libraries/${id}/managers`, {
-          headers: {Authorization: `Bearer ${token}`,}
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setManagers(data);
-      } catch (err) {
-        console.log('here');
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+  async function fetchManagers() {
+    if (user == null) return;
+    try {
+      const res = await fetch(`/api/libraries/${id}/managers`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setManagers(data);
+    } catch (err) {
+      console.log('here');
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  }
 
   useEffect(() => {
     async function fetchLibrary() {
@@ -69,8 +69,6 @@ async function fetchManagers() {
       }
     }
 
-    
-
     fetchLibrary();
     fetchManagers();
   }, [user]);
@@ -79,9 +77,10 @@ async function fetchManagers() {
     try {
       const res = await fetch(`/api/libraries/${library.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-         },
+        },
         body: JSON.stringify({
           name: title,
           phone: phone,
@@ -135,135 +134,117 @@ async function fetchManagers() {
 
   return (
     <>
-      <div className="user__book-content">
-        <div className="user__book">
-          <div className="user__book-left-section"></div>
-          <div className="user__book-right-section">
-            <div className="user__book-title-container">
-              <input
-                className="user__book-title manager__book-detail-input"
-                placeholder="Название библиотеки"
-                value={title || 'Название библиотеки'}
-                onChange={(e) => setTitle(e.target.value)}
-                style={{ marginBottom: 20 + 'px' }}
-              />
-              <input
-                className="user__book-author manager__book-detail-input"
-                placeholder="Номер телефона"
-                value={phone || 'Номер телефона'}
-                onChange={(e) => setPhone(e.target.value)}
-                style={{ marginBottom: 20 + 'px' }}
-              />
-              <input
-                className="user__book-author manager__book-detail-input"
-                placeholder="E-mail"
-                value={email || 'E-mail'}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{ marginBottom: 20 + 'px' }}
-              />
-              <input
-                className="user__book-author manager__book-detail-input"
-                placeholder="Адрес"
-                value={address || 'Адрес'}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            <input
-              className="user__book-description manager__book-detail-input"
-              placeholder="Описание"
-              value={description || 'Описание отсутствует.'}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <div className="manager__book-details">
-              <strong>Время открытия:</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder="ЧЧ:ММ"
-                value={open || 'ЧЧ:ММ'}
-                onChange={(e) => setOpen(e.target.value)}
-                style={{ maxWidth: 100 + 'px' }}
-              />
-              <strong>Время закрытия:</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder="ЧЧ:ММ"
-                value={close || 'ЧЧ:ММ'}
-                onChange={(e) => setClose(e.target.value)}
-                style={{ maxWidth: 100 + 'px' }}
-              />
-              <strong>Срок хранения заказов (дней):</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder="n"
-                value={waiting || 'n'}
-                onChange={(e) => setWaiting(e.target.value)}
-                style={{ maxWidth: 100 + 'px' }}
-              />
-              <strong>Период аренды книги (дней):</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder="n"
-                value={rent || 'n'}
-                onChange={(e) => setRent(e.target.value)}
-                style={{ maxWidth: 100 + 'px' }}
-              />
-              <strong>Город:</strong>
-              <input
-                className="manager__book-detail-input"
-                placeholder="Город"
-                value={city || 'Нет информации.'}
-                onChange={(e) => setCity(e.target.value)}
-              />
-              {/* TODO: дни работы */}
-            </div>
-            <button className="admin__book-button" onClick={handleUpdate}>
-              Сохранить
-            </button>
-          </div>
-          <div className="user__book-left-section"></div>
-        </div>
-        
-        <div style={{ padding: '1rem' }}>
-        <h3>Назначить менеджера</h3>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <div className="admin__library-content">
+        <h1 className="user__heading">Управление менеджерами</h1>
+        <div className="admin__library-details">
           <input
-            type="email"
-            placeholder="Email пользователя"
-            value={newManagerEmail}
-            onChange={(e) => setNewManagerEmail(e.target.value)}
+            className="user__book-title manager__book-detail-input"
+            placeholder="Название библиотеки"
+            value={title || 'Название библиотеки'}
+            onChange={(e) => setTitle(e.target.value)}
           />
-          <button onClick={handleAssignManager}>Добавить</button>
+          <input
+            className="user__book-author manager__book-detail-input"
+            placeholder="Номер телефона"
+            value={phone || 'Номер телефона'}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <input
+            className="user__book-author manager__book-detail-input"
+            placeholder="E-mail"
+            value={email || 'E-mail'}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            className="user__book-author manager__book-detail-input"
+            placeholder="Адрес"
+            value={address || 'Адрес'}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <input
+            className="user__book-description manager__book-detail-input"
+            placeholder="Описание"
+            value={description || 'Описание отсутствует.'}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <strong>Время открытия:</strong>
+          <input
+            className="manager__book-detail-input"
+            placeholder="ЧЧ:ММ"
+            value={open || 'ЧЧ:ММ'}
+            onChange={(e) => setOpen(e.target.value)}
+            style={{ maxWidth: 100 + 'px' }}
+          />
+          <strong>Время закрытия:</strong>
+          <input
+            className="manager__book-detail-input"
+            placeholder="ЧЧ:ММ"
+            value={close || 'ЧЧ:ММ'}
+            onChange={(e) => setClose(e.target.value)}
+            style={{ maxWidth: 100 + 'px' }}
+          />
+          <strong>Срок хранения заказов (дней):</strong>
+          <input
+            className="manager__book-detail-input"
+            placeholder="n"
+            value={waiting || 'n'}
+            onChange={(e) => setWaiting(e.target.value)}
+            style={{ maxWidth: 100 + 'px' }}
+          />
+          <strong>Период аренды книги (дней):</strong>
+          <input
+            className="manager__book-detail-input"
+            placeholder="n"
+            value={rent || 'n'}
+            onChange={(e) => setRent(e.target.value)}
+            style={{ maxWidth: 100 + 'px' }}
+          />
+          <strong>Город:</strong>
+          <input
+            className="manager__book-detail-input"
+            placeholder="Город"
+            value={city || 'Нет информации.'}
+            onChange={(e) => setCity(e.target.value)}
+          />
         </div>
 
-        <h3>Текущие менеджеры</h3>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        {/* TODO: дни работы */}
+
+        <button className="admin__book-button" onClick={handleUpdate}>
+          Сохранить
+        </button>
+        <h3 className="user__heading">Управление менеджерами</h3>
+        <div className="admin__assign-inputs">
+          <input
+            type="email"
+            placeholder="E-mail пользователя"
+            value={newManagerEmail}
+            onChange={(e) => setNewManagerEmail(e.target.value)}
+            className="admin__assign-input"
+          />
+          <button
+            className="admin__assign-button"
+            onClick={handleAssignManager}
+          >
+            Добавить
+          </button>
+        </div>
+
+        <ul className="admin__manager-list">
           {managers.map((m) => (
-            <li
-              key={m.id}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '0.5rem',
-              }}
-            >
-              <span>{m.first_name} ({m.email})</span>
+            <li key={m.id} className="admin__manager-list-item">
+              <span>
+                {m.first_name} | {m.email}
+              </span>
               <button
                 onClick={() => handleDismissManager(m.email)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'red',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                }}
+                className="admin__dismiss-button"
               >
-                ×
+                <img src="/bin.svg" alt="Удалить" />
               </button>
             </li>
           ))}
         </ul>
-      </div>
       </div>
     </>
   );
