@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Catalog.css';
 
 export default function Catalog() {
@@ -9,24 +9,37 @@ export default function Catalog() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [yearFrom, setYearFrom] = useState('');
+  const [yearTo, setYearTo] = useState('');
+
   const [searchParams, setSearchParams] = useState({
     title: '',
     authors: '',
     genres: '',
     rating: '',
-    year: '',
+    year: ''
   });
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   async function fetchBooks(params = {}) {
     try {
       setLoading(true);
+      const query = { ...params };
+
+      if ((!yearFrom && yearTo) || yearFrom === '') query.year = `0-${yearTo}`;
+      else if (yearFrom && (!yearTo || yearTo === '')) query.year = `${yearFrom}-3000`;
+      else if (yearFrom || yearTo) query.year = `${yearFrom || ''}-${yearTo || ''}`;
 
       const queryString = new URLSearchParams(
-        Object.fromEntries(Object.entries(params).filter(([_, v]) => v?.trim()))
+        Object.fromEntries(
+          Object.entries(query).filter(([_, v]) => v !== undefined && v !== null && v !== '')
+        )
       ).toString();
 
       const res = await fetch(`/api/search/?${queryString}`);
-
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setBooks(data);
@@ -37,23 +50,27 @@ export default function Catalog() {
     }
   }
 
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
   function handleSearchChange(e) {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
   }
 
-  function handleSearchSubmit(e) {
+  function handleTitleSearch(e) {
     e.preventDefault();
-    fetchBooks(searchParams);
+    fetchBooks({ title: searchParams.title });
+  }
+
+  function handleFilterSearch(e) {
+    e.preventDefault();
+    const { authors, genres, rating } = searchParams;
+    const params = { authors, genres, rating };
+    fetchBooks(params);
   }
 
   return (
     <div className="user__catalog-content">
       <h1 className="user__heading">Каталог книг</h1>
-      <form onSubmit={handleSearchSubmit} className="user__search-form">
+
+      <form onSubmit={handleTitleSearch} className="user__search-form">
         <div className="user__search-bar-container">
           <input
             type="text"
@@ -74,10 +91,8 @@ export default function Catalog() {
 
       <div className="user__genre-section">
         <form
-          onSubmit={handleSearchSubmit}
-          className={`user__sidebar ${
-            isSidebarOpen ? 'user__sidebar--open' : ''
-          }`}
+          onSubmit={handleFilterSearch}
+          className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}
         >
           <div
             className="user__sidebar-header"
@@ -102,6 +117,7 @@ export default function Catalog() {
               />
             </svg>
           </div>
+
           <div className="user__sidebar-content">
             <input
               type="text"
@@ -121,13 +137,19 @@ export default function Catalog() {
             />
             <input
               type="text"
-              name="year"
-              placeholder="Год"
-              value={searchParams.year}
-              onChange={handleSearchChange}
+              placeholder="От года"
+              value={yearFrom}
+              onChange={(e) => setYearFrom(e.target.value)}
               className="user__search-filter"
             />
-                        <select
+            <input
+              type="text"
+              placeholder="До года"
+              value={yearTo}
+              onChange={(e) => setYearTo(e.target.value)}
+              className="user__search-filter"
+            />
+            <select
               name="rating"
               value={searchParams.rating}
               onChange={handleSearchChange}
@@ -141,6 +163,10 @@ export default function Catalog() {
               <option value="16">16+</option>
               <option value="18">18+</option>
             </select>
+
+            <button type="submit" className="user__search-button">
+              Применить фильтры
+            </button>
           </div>
         </form>
 
