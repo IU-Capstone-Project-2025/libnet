@@ -261,9 +261,6 @@ export default function BookDetails() {
                 value={selectedPlace}
                 onChange={e => updateBook(e.target.value)}
               >
-                <option value="" disabled>
-                  {"Библиотека"}
-                </option>
                 {Array.isArray(libraries) && libraries.map(lib => (
                   <option key={lib.id} value={lib.name}>
                     {lib.name}
