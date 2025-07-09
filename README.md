@@ -31,7 +31,7 @@
 
 ### User Account
 The live demo is publicly available with **standard user access**:  
-🌐 [libnet.site](http://libnet.site)  
+🌐 [libnet.site](https://libnet.site)  
 
 ### Admin/Manager Accounts
 For testing privileged access:
