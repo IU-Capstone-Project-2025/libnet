@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Orders() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,9 @@ export default function Orders() {
       if (user == null) return;
       try {
         console.log('trying');
-        const res = await fetch(`/api/bookings/users/${user.id}`);
+        const res = await fetch(`/api/bookings/users/${user.id}`,
+          {headers: {Authorization: `Bearer ${token}`,}}
+        );
 
       let data = [];
         if (!res.ok) {
@@ -90,7 +93,7 @@ export default function Orders() {
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
     return (
-      <p className="user__catalog-content" style={{ color: 'red' }}>
+      <p className="user__catalog-content red-error">
         Ошибка: {error}
       </p>
     );
@@ -100,7 +103,7 @@ export default function Orders() {
     console.log(booking_id);
     const res = await fetch(`/api/bookings/${booking_id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
       body: JSON.stringify({
         status: 'cancelled',
       }),
@@ -122,7 +125,7 @@ export default function Orders() {
                 <img
                   className="user__orders-book-cover"
                   src={
-                    b.image_url ||
+                    books[b.id]?.image_url ||
                     'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
                   }
                   alt={`${books[b.id]?.title ?? '…'} cover`}

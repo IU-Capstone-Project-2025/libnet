@@ -27,14 +27,14 @@ class User {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // On mount: check localStorage and fetch user
   useEffect(() => {
-    const loadUser = async () => {
+    async function loadUser() {
       const token = localStorage.getItem(TOKEN_KEY);
       const userId = localStorage.getItem(USER_ID_KEY);
       const user_data = JSON.parse(localStorage.getItem(USER_DATA));
-      console.log("user_data: " + user_data)
       if (user_data && user_data.firstName) {
         setUser(new User(
           user_data.id,
@@ -46,6 +46,7 @@ export function AuthProvider({ children }) {
           user_data.phone,
           user_data.libraryId
         ));
+        setLoading(false);
       }
       else if (token && userId) {
         try {
@@ -56,7 +57,10 @@ export function AuthProvider({ children }) {
             },
           });
 
-          if (!res.ok) throw new Error('User fetch failed');
+          if (!res.ok){
+            setLoading(false);
+            throw new Error('User fetch failed');
+          }
 
           const data = await res.json();
           const loadedUser = new User(
@@ -70,13 +74,18 @@ export function AuthProvider({ children }) {
             data.libraryId
           );
           setUser(loadedUser);
+          setLoading(false);
           localStorage.setItem(USER_DATA, JSON.stringify(loadedUser));
         } catch (err) {
           console.error('Failed to load user:', err);
           localStorage.removeItem(TOKEN_KEY);
           localStorage.removeItem(USER_ID_KEY);
           localStorage.removeItem(USER_DATA)
+          throw new Error('User to load user');
         }
+      }
+      else{
+        setLoading(false);
       }
     };
 
@@ -106,6 +115,7 @@ export function AuthProvider({ children }) {
   if (!profileRes.ok) {
     console.log(profileRes.json)
     setUser(new User(user_id, email, '', '', '', '', '', ''));
+    setLoading(false);
     throw new Error('Could not load user profile');
   }
 
@@ -122,7 +132,7 @@ export function AuthProvider({ children }) {
     )
   console.log(data.library_id);
   setUser(a);
-
+  setLoading(false);
   localStorage.setItem(USER_DATA, JSON.stringify(a));
   return data.role;
 }
@@ -137,6 +147,7 @@ export function AuthProvider({ children }) {
 
     if (!res.ok) {
       const { detail } = await res.json().catch(() => ({}));
+      setLoading(false);
       throw new Error(detail ?? 'Registration failed');
     }
 
@@ -144,10 +155,12 @@ export function AuthProvider({ children }) {
   }
 
   async function update_user(payload) {
-    console.log(payload)
+    const token = localStorage.getItem(TOKEN_KEY);
     const res = await fetch(`/api/users/`+ user.id, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+       },
       body: JSON.stringify(payload),
     });
     let new_user = new User(
@@ -161,6 +174,7 @@ export function AuthProvider({ children }) {
       user.libraryId
     )
     setUser(new_user)
+    setLoading(false);
     if (!res.ok) {
       const { detail } = await res.json().catch(() => ({}));
       throw new Error(detail ?? 'Update failed');
@@ -175,11 +189,12 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ID_KEY);
     setUser(null);
+    setLoading(false);
     localStorage.removeItem(USER_DATA)
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, update_user }}>
+    <AuthContext.Provider value={{ user, login, logout, register, update_user, loading }}>
       {children}
     </AuthContext.Provider>
   );

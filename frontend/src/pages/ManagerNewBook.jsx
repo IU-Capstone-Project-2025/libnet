@@ -3,17 +3,13 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './Book.css';
 
-export default function ManagerBook() {
+export default function ManagerNewBook() {
   const { user } = useAuth();
   const token = localStorage.getItem('access_token');
 
-  const navigate = useNavigate();
-
-  const { id } = useParams();
-  const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedPlace, setSelectedPlace] = useState('');
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState(null);
   const [author, setAuthor] = useState(null);
@@ -24,86 +20,45 @@ export default function ManagerBook() {
   const [genre, setGenre] = useState(null);
   const [year, setYear] = useState(null);
   const [rating, setRating] = useState(null);
+  const [publisher, setPublisher] = useState(null);
+  const [quantity, setQuantity] = useState(null);
 
-  useEffect(() => {
-    async function fetchBook() {
-      try {
-        const res = await fetch(`/api/books/${id}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setBook(data);
-        setTitle(data.title);
-        setAuthor(data.author);
-        setDescription(data.description);
-        setSrc(data.image_url);
-        setPages(data.pages_count);
-        setIsbn(data.isbn);
-        setGenre(data.genre);
-        setYear(data.year);
-        setRating(data.rating);
-      } catch (err) {
-        console.log('here');
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+  async function handleSave() {
+    console.log("handleSave CALLED");
+    if (title && author && description && src && pages && isbn && genre && year && rating && publisher && quantity) {
+        try {
+            const res = await fetch(`/api/books/${quantity}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                title: title,
+                author: author,
+                description: description,
+                image_url: src,
+                pages_count: Number(pages),
+                isbn: isbn,
+                genre: genre,
+                year: Number(year),
+                rating: Number(rating),
+                publisher: publisher,
+                library_id: Number(user.libraryId),
+                }),
+            });
+            if (res.ok) {
+                navigate("/manager/");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    } else {
+        setError("Недостаточно данных");
     }
-
-    fetchBook();
-  }, [id]);
-
-  async function handleUpdate() {
-    try {
-      const res = await fetch(`/api/books/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-         },
-        body: JSON.stringify({
-          title: title,
-          author: author,
-          description: description,
-          image_url: src,
-          pages_count: pages,
-          isbn: isbn,
-          genre: genre,
-          year: year,
-          rating: rating,
-        }),
-      });
-      if (res.ok) {
-        console.log('updated');
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    
   }
 
-  async function handleDelete() {
-    try {
-      const res = await fetch(`/api/books/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-         },
-      });
-      if (res.ok) {
-        console.log('deleted');
-        navigate("/manager/");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
-  if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error)
-    return (
-      <p className="user__book-content red-error" >
-        Ошибка: {error}
-      </p>
-    );
-  if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   return (
     <>
@@ -119,13 +74,10 @@ export default function ManagerBook() {
               alt={`${title} cover`}
             />
             <div className="user__book-buttons">
-              <button className="manager__book-button" onClick={() => navigate('/manager/')}>
+            <button className="manager__book-button" onClick={() => navigate('/manager/')}>
                 Назад
               </button>
-              <button className="manager__book-button" onClick={handleDelete}>
-                Удалить
-              </button>
-              <button className="manager__book-button" onClick={handleUpdate}>
+              <button className="manager__book-button" onClick={handleSave}>
                 Сохранить
               </button>
             </div>
@@ -135,20 +87,20 @@ export default function ManagerBook() {
               <input
                 className="user__book-title manager__book-detail-input"
                 placeholder="Название"
-                value={title}
+                value={title || ''}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="Автор"
-                value={author}
+                value={author || ''}
                 onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
             <input
               className="user__book-description manager__book-detail-input"
               placeholder="Описание"
-              value={description}
+              value={description || ''}
               onChange={(e) => setDescription(e.target.value)}
             />
             <div className="manager__book-details">
@@ -194,9 +146,28 @@ export default function ManagerBook() {
                 value={rating || ''}
                 onChange={(e) => setRating(e.target.value)}
               />
+              <strong>Издатель:</strong>
+              <input
+                className="manager__book-detail-input"
+                placeholder="Издатель"
+                value={publisher || ''}
+                onChange={(e) => setPublisher(e.target.value)}
+              />
+              <strong>Количество:</strong>
+              <input
+                className="manager__book-detail-input"
+                placeholder="Количество"
+                value={quantity || ''}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
             </div>
           </div>
         </div>
+        {error ? (
+            <p className="user__book-content red-error">
+                Ошибка: {error}
+            </p>
+        ) : (<></>)}
       </div>
     </>
   );

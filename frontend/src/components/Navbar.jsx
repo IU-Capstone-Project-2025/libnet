@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthPopupWrapper from './AuthPopupWrapper';
@@ -28,11 +28,25 @@ export default function Navbar() {
     setIsBurgerOpen(false);
   };
 
+  // Управление блокировкой скролла при открытии модальных окон
+  useEffect(() => {
+    if (isBurgerOpen || showLogin) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    // Очистка при размонтировании компонента
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isBurgerOpen, showLogin]);
+
   return (
     <>
       {user && user.role === 'manager' ? (
         <div className="manager__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/manager/')}>
             <img
               className="manager__navbar-logo"
               src="/manager-logo-2x.png"
@@ -144,9 +158,9 @@ export default function Navbar() {
             <AuthPopupWrapper onClose={() => setShowLogin(false)} />
           )}
         </div>
-      ) : !user || user.role === 'user' ? (
+      ) : user && user.role === 'user' ? (
         <div className="user__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
             <img
               className="user__navbar-logo"
               src="/user-logo-2x.png"
@@ -240,9 +254,9 @@ export default function Navbar() {
             <AuthPopupWrapper onClose={() => setShowLogin(false)} />
           )}
         </div>
-      ) : (
+      ) : user && user.role === 'admin' ? (
         <div className="admin__header">
-          <div className="user__navbar-logo-container">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/admin/')}>
             <img
               className="admin__navbar-logo"
               src="/admin-logo-2x.png"
@@ -308,6 +322,90 @@ export default function Navbar() {
                   <div className="burger-divider"></div>
                   <Link to="/admin/" className="burger-link" onClick={closeBurger}>
                     Библиотеки
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showLogin && (
+            <AuthPopupWrapper onClose={() => setShowLogin(false)} />
+          )}
+        </div>
+      ) : (
+        <div className="user__header">
+          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
+            <img
+              className="user__navbar-logo"
+              src="/user-logo-2x.png"
+              alt="логотип"
+            />
+          </div>
+          <div className="user__navbar">
+            <Link to="/" className="user__navbar-link">
+              Каталог
+            </Link>
+            <Link to="/faq" className="user__navbar-link">
+              FAQ
+            </Link>
+          </div>
+          <div className="user__header-account">
+            {user ? (
+              <span
+                className="user__header-login-button"
+                onClick={() => navigate('/profile')}
+              >
+                {user.displayName}
+              </span>
+            ) : (
+              <span
+                className="user__header-login-button"
+                onClick={() => setShowLogin(true)}
+              >
+                Войти
+              </span>
+            )}
+          </div>
+
+          {/* Burger button for user */}
+          <button className="burger-button user-burger" onClick={toggleBurger}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          {/* Burger menu for user */}
+          {isBurgerOpen && (
+            <div className="burger-overlay" onClick={closeBurger}>
+              <div className="burger-menu user-burger-menu" onClick={(e) => e.stopPropagation()}>
+                <div className="burger-content">
+                  {user ? (
+                    <span
+                      className="burger-account-button"
+                      onClick={() => {
+                        navigate('/profile');
+                        closeBurger();
+                      }}
+                    >
+                      {user.displayName}
+                    </span>
+                  ) : (
+                    <span
+                      className="burger-account-button"
+                      onClick={() => {
+                        setShowLogin(true);
+                        closeBurger();
+                      }}
+                    >
+                      Войти
+                    </span>
+                  )}
+                  <div className="burger-divider"></div>
+                  <Link to="/" className="burger-link" onClick={closeBurger}>
+                    Каталог
+                  </Link>
+                  <Link to="/faq" className="burger-link" onClick={closeBurger}>
+                    FAQ
                   </Link>
                 </div>
               </div>
