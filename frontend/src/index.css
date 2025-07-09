@@ -73,6 +73,11 @@ button {
   font: inherit;
 }
 
+.red-error {
+  font-size: var(--font-size-catalog-title);
+  color: red;
+}
+
   @media (pointer: coarse) {
   button:hover {
     font-weight: initial;

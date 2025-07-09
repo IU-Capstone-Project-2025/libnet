@@ -86,7 +86,7 @@ export default function Favorites() {
   if (loading) return <p className="user__book-content">Загружаем…</p>;
   if (error)
     return (
-      <p className="user__book-content" style={{ color: 'red' }}>
+      <p className="user__book-content red-error">
         Ошибка: {error}
       </p>
     );

@@ -93,7 +93,7 @@ export default function Orders() {
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
     return (
-      <p className="user__catalog-content" style={{ color: 'red' }}>
+      <p className="user__catalog-content red-error">
         Ошибка: {error}
       </p>
     );
@@ -125,7 +125,7 @@ export default function Orders() {
                 <img
                   className="user__orders-book-cover"
                   src={
-                    b.image_url ||
+                    books[b.id]?.image_url ||
                     'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
                   }
                   alt={`${books[b.id]?.title ?? '…'} cover`}

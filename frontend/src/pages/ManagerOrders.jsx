@@ -159,7 +159,7 @@ export default function ManagerOrders() {
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
     return (
-      <p className="user__catalog-content" style={{ color: 'red' }}>
+      <p className="user__catalog-content red-error">
         Ошибка: {error}
       </p>
     );

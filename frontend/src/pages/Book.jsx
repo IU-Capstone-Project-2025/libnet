@@ -107,7 +107,7 @@ export default function BookDetails() {
   }, [user]);
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (error) return <p className="user__book-content red-error" >Ошибка: {error}</p>;
   if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   async function handleBooking() {
@@ -224,7 +224,7 @@ export default function BookDetails() {
                     {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
                   </button>
                 </div>
-                ) : (<div className="user__book-buttons"><p>Войдите, чтобы забронировать или добавить книгу в избранное</p></div>)
+                ) : (<div className="user__book-buttons"><p className="user__book-pleaselogin">Войдите, чтобы забронировать или добавить книгу в избранное</p></div>)
               }
               
             
