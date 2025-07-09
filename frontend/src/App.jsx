@@ -11,6 +11,7 @@ import ManagerCatalog from './pages/ManagerCatalog';
 import ManagerOrders from './pages/ManagerOrders';
 import ManagerLibrary from './pages/ManagerLibrary';
 import ManagerBook from './pages/ManagerBook';
+import ManagerNewBook from './pages/ManagerNewBook';
 import { AuthProvider } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -93,6 +94,14 @@ export default function App() {
             element={
               <PrivateRoute role='manager'>
                 <ManagerBook />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager/new"
+            element={
+              <PrivateRoute role='manager'>
+                <ManagerNewBook />
               </PrivateRoute>
             }
           />
