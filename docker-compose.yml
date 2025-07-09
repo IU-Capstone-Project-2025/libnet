@@ -73,6 +73,7 @@ services:
         loki-external-labels: "job=backend,service=api"
 
   frontend:
+    image: node:20-alpine
     container_name: frontend
     build: ./frontend
     ports:
