@@ -164,7 +164,7 @@ export default function ManagerNewBook() {
           </div>
         </div>
         {error ? (
-            <p className="user__book-content" style={{ color: 'red' }}>
+            <p className="user__book-content red-error">
                 Ошибка: {error}
             </p>
         ) : (<></>)}
