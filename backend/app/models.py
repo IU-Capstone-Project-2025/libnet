@@ -3,6 +3,7 @@ from typing import Optional, List
 from app.database import engine
 from datetime import date
 from enum import Enum
+from app.database import init_engine
 
 
 class BookingStatus(str, Enum):
@@ -59,6 +60,10 @@ class LibUserUpdate(SQLModel):
     city: Optional[str] = None
     role: Optional[UserRole] = None
 
+class LibUserUpdatePassword(SQLModel):
+    old_password: str
+    new_password: str
+
 class Library(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
@@ -104,6 +109,8 @@ class BookUpdate(SQLModel):
     image_url: Optional[str] = None
     isbn: Optional[str] = None
     genre: Optional[str] = None
+    pages_count: Optional[int] = None
+    publisher: Optional[str] = None
 
 class FavoriteBook(SQLModel, table=True):
     user_id: int = Field(foreign_key="libuser.id", primary_key=True)
@@ -136,6 +143,3 @@ class Booking(SQLModel, table=True):
 class BookingUpdate(SQLModel):
     status: Optional[BookingStatus] = None
     date_from: Optional[date] = None
-
-# SQLModel.metadata.drop_all(engine)
-SQLModel.metadata.create_all(engine)

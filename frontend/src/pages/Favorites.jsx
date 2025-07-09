@@ -5,6 +5,7 @@ import './Favorites.css';
 
 export default function Favorites() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,9 @@ export default function Favorites() {
 
     async function fetchFavorites() {
       try {
-        const res = await fetch(`/api/users/likes/${user.id}`);
+        const res = await fetch(`/api/users/likes/${user.id}`,
+          {headers: {Authorization: `Bearer ${token}`,}}
+        );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         // console.log(data);
@@ -81,7 +84,12 @@ export default function Favorites() {
   }, [books]);
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error) return <p className="user__book-content" style={{ color: 'red' }}>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__book-content red-error">
+        Ошибка: {error}
+      </p>
+    );
 
   // TODO: handle cancel
   async function handleCancel(booking_id) {
@@ -107,7 +115,11 @@ export default function Favorites() {
             }
 
             return (
-              <div className="user__favorites-book-section" key={f} onClick={() => navigate(`/books/${book.id}`)}>
+              <div
+                className="user__favorites-book-section"
+                key={f}
+                onClick={() => navigate(`/books/${book.id}`)}
+              >
                 <div className="user__favorites-book">
                   <img
                     className="user__favorites-book-cover"
@@ -132,18 +144,17 @@ export default function Favorites() {
                   </div>
                 </div>
                 <div className="user__favorites-buttons">
-                {/* <button
+                  {/* <button
                   className="user__favorites-bin-button"
                   onClick={() => handleCancel(b.id)}
                 ></button> */}
-                {/* <button
+                  {/* <button
                   className="user__orders-button"
                   // onClick={() => handleCancel(b.id)}
                 >
                   Забронировать
                 </button> */}
                 </div>
-
               </div>
             );
           })}

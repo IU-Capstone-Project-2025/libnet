@@ -1,0 +1,125 @@
+.admin__library-content {
+  min-height: 100vh;
+  padding: 0 90px;
+  font-size: var(--font-size-regular);
+}
+
+.admin__library-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.admin__book-button {
+  width: 100%;
+  height: 55px;
+  margin-top: 20px;
+  border: solid var(--main-admin-color) 4px;
+  border-radius: 20px 0 20px 0;
+  font-size: var(--font-size-subregular);
+  text-align: center;
+  background-color: white;
+}
+
+.admin__book-button:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.admin__book-button:active {
+  font-weight: bold;
+  background-color: var(--main-admin-color);
+}
+
+.admin__assign-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.admin__assign-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 20px 0 0 20px;
+  padding: 10px 20px;
+  font-size: var(--font-size-subregular);
+}
+
+.admin__assign-button {
+  width: 300px;
+  border: 1px solid black;
+  border-radius: 0 20px 20px 0;
+  padding: 10px 20px;
+  font-size: var(--font-size-subregular);
+  background-color: white;
+}
+
+.admin__assign-button:hover {
+  font-weight: var(--weight-bold);
+}
+.admin__assign-button:active {
+  background-color: var(--grey-color);
+}
+
+.admin__manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 0;
+  font-size: var(--font-size-regular);
+  list-style: none;
+}
+
+.admin__manager-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 0;
+  padding: 10px 20px;
+}
+
+.admin__manager-list-item:first-child {
+  border-radius: 20px 0 0 0;
+}
+
+.admin__manager-list-item:last-child {
+  border-radius: 0 0 20px 0;
+}
+
+.admin__dismiss-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.admin__dismiss-button img {
+  width: 35px;
+  height: 35px;
+}
+
+.admin__dismiss-button:hover img {
+  filter: saturate(60%) invert(50%) sepia(80%) saturate(1500%)
+    hue-rotate(320deg) brightness(110%) contrast(90%);
+}
+
+.admin__dismiss-button:active {
+  filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(7500%)
+    hue-rotate(350deg) brightness(90%) contrast(100%);
+}
+
+@media (width < 768px) {
+  .admin__library-content {
+    padding: 0 20px;
+  }
+}

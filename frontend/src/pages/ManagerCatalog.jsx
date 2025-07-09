@@ -15,7 +15,7 @@ export default function ManagerCatalog() {
     if (!user) {
       return;
     }
-    
+
     async function fetchBooks() {
       try {
         const res = await fetch(`/api/libraries/${user.libraryId}/books`);
@@ -35,12 +35,18 @@ export default function ManagerCatalog() {
   }, []);
 
   if (loading) return <p className="user__catalog-content"></p>;
-  if (error) return <p className="user__catalog-content" style={{ color: 'red' } }>Ошибка: {error}</p>;
+  if (error)
+    return (
+      <p className="user__catalog-content red-error">
+        Ошибка: {error}
+      </p>
+    );
 
   return (
     <>
       <div className="user__catalog-content">
         <h1 className="user__heading">Каталог книг</h1>
+        <button className='user__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
         <div className="user__genre-section">
           <div className="user__sidebar">
             <h2 className="user__sidebar-heading">Жанры</h2>
@@ -84,21 +90,22 @@ export default function ManagerCatalog() {
               >
                 <img
                   className="user__catalog-book-cover"
-                  src={b.image_url ||"https://via.placeholder.com/150x220?text=Book+Cover"}
+                  src={
+                    b.image_url ||
+                    'https://via.placeholder.com/150x220?text=Book+Cover'
+                  }
                   alt={`${b.title} cover`}
                 />
                 <div className="user__catalog-book-info">
                   <div className="user__catalog-book-info-text-container">
-                    <strong className="user__catalog-book-info-title">{b.title}</strong>
-                    <span className="user__catalog-book-info-author">{b.author}</span>
+                    <strong className="user__catalog-book-info-title">
+                      {b.title}
+                    </strong>
+                    <span className="user__catalog-book-info-author">
+                      {b.author}
+                    </span>
                   </div>
-                  <div className="user__catalog-book-like-button">
-                    {/* <img
-                      className="user__catalog-book-like-icon"
-                      src="/like-2.svg"
-                      alt="Лайк"
-                    ></img> */}
-                  </div>
+
                 </div>
               </div>
             ))}

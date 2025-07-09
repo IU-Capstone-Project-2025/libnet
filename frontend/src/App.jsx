@@ -11,15 +11,24 @@ import ManagerCatalog from './pages/ManagerCatalog';
 import ManagerOrders from './pages/ManagerOrders';
 import ManagerLibrary from './pages/ManagerLibrary';
 import ManagerBook from './pages/ManagerBook';
+import ManagerNewBook from './pages/ManagerNewBook';
 import { AuthProvider } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Footer from './components/Footer';
+import AdminLibraries from './pages/AdminLibraries';
+import AdminLibrary from './pages/AdminLibrary';
 
-export function PrivateRoute({ children }) {
-  const { user } = useAuth();
+export function PrivateRoute({ children, role='user'}) {
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>; 
+  if (!user){
+    return <Navigate to="/" replace />
+  }
+  if (role != 'user' && (user.role == 'user' || (role != 'manager' && user.role == 'manager'))) return <Navigate to="/" replace />; 
   return user ? children : <Navigate to="/" replace />;
 }
+
 
 export default function App() {
   return (
@@ -59,7 +68,7 @@ export default function App() {
           <Route
             path="/manager/"
             element={
-              <PrivateRoute>
+              <PrivateRoute role='manager'>
                 <ManagerCatalog />
               </PrivateRoute>
             }
@@ -67,7 +76,7 @@ export default function App() {
           <Route
             path="/manager/orders"
             element={
-              <PrivateRoute>
+              <PrivateRoute role='manager'>
                 <ManagerOrders />
               </PrivateRoute>
             }
@@ -75,7 +84,7 @@ export default function App() {
           <Route
             path="/manager/library"
             element={
-              <PrivateRoute>
+              <PrivateRoute role='manager'>
                 <ManagerLibrary />
               </PrivateRoute>
             }
@@ -83,8 +92,33 @@ export default function App() {
           <Route
             path="/manager/books/:id"
             element={
-              <PrivateRoute>
+              <PrivateRoute role='manager'>
                 <ManagerBook />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager/new"
+            element={
+              <PrivateRoute role='manager'>
+                <ManagerNewBook />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/admin/"
+            element={
+              <PrivateRoute role='admin'>
+                <AdminLibraries />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/libraries/:id"
+            element={
+              <PrivateRoute role='admin'>
+                <AdminLibrary />
               </PrivateRoute>
             }
           />
