@@ -11,8 +11,5 @@ COPY . .
 
 RUN npm run build
 
-# Создаем volume для собранных файлов
-VOLUME ["/app/dist"]
-
 EXPOSE 4173
 CMD ["npm", "run", "preview"]

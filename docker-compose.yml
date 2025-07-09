@@ -13,7 +13,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/certs:/etc/nginx/certs
-      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend:/usr/share/nginx/html
     logging:
       driver: loki
       options:
@@ -75,8 +75,11 @@ services:
   frontend:
     container_name: frontend
     build: ./frontend
+    ports:
+      - "4173:4173"
     volumes:
       - ./frontend:/app
+      - ./frontend/dist:/usr/share/nginx/html
     depends_on:
       - backend
     environment:
