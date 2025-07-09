@@ -11,6 +11,7 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState("");
   const [cities, setCities] = useState([]);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const { register } = useAuth();
   const [error, setError] = useState(null);
   
@@ -20,6 +21,11 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
   }
 
   async function handleRegister() {
+    if (!termsAccepted) {
+      setError('Необходимо согласиться с условиями пользования');
+      return;
+    }
+    
     try {
       await register({
        first_name: firstName,
@@ -32,7 +38,7 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
      });
       onClose();
     } catch (err) {
-      setError(err.message);      // show “incorrect email/password”
+      setError(err.message);      // show "incorrect email/password"
     }
   }
 
@@ -111,10 +117,16 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
       </select>
     </div>
 
-    {error && <p style={{ color: 'red' }}>{error}</p>}
+    {error && <p class="red-error">{error}</p>}
 
     <div className="user__login-checkbox-container">
-      <input type="checkbox" className="user__login-checkbox" name="terms" required />
+      <input 
+        type="checkbox" 
+        className="user__login-checkbox" 
+        name="terms" 
+        checked={termsAccepted}
+        onChange={(e) => setTermsAccepted(e.target.checked)}
+      />
       <h3 className="user__login-terms-text">Я согласен с условиями пользования сервиса</h3>
     </div>
     

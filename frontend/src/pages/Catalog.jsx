@@ -70,7 +70,7 @@ export default function Catalog() {
       </form>
 
       {loading && <p>Загрузка...</p>}
-      {error && <p style={{ color: 'red' }}>Ошибка: {error}</p>}
+      {error && <p class="red-error">Ошибка: {error}</p>}
 
       <div className="user__genre-section">
         <form

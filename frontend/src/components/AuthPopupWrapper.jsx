@@ -9,11 +9,9 @@ export default function AuthPopupWrapper({ onClose }) {
     setIsRegister(prev => !prev);
   };
 
-  // Блокировка скролла при открытии попапа
   useEffect(() => {
     document.body.classList.add('modal-open');
     
-    // Очистка при размонтировании
     return () => {
       document.body.classList.remove('modal-open');
     };
