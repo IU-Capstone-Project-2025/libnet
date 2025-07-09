@@ -53,7 +53,6 @@ Example output: {{"author_name": "author", "title": "title"}}
     )
     content = response["message"]["content"]
 
-    # Extract dictionary safely from response text
     try:
         dict_start = content.find("{")
         dict_end = content.rfind("}") + 1
