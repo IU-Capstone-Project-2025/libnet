@@ -182,7 +182,7 @@ export default function Profile() {
           )}
         {msg != null ? (
           <p>{msg}</p>) : error != null ? (
-          <p class="red-error">Ошибка: {error}</p>
+          <p className="red-error">Ошибка: {error}</p>
           ) : (<></>)}
         </div>
       </div>

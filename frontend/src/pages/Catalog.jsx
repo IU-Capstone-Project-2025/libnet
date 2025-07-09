@@ -86,8 +86,8 @@ export default function Catalog() {
         </div>
       </form>
 
-      {loading && <p>Загрузка...</p>}
-      {error && <p class="red-error">Ошибка: {error}</p>}
+      {loading && <p >Загрузка...</p>}
+      {error && <p className="red-error">Ошибка: {error}</p>}
 
       <div className="user__genre-section">
         <form
@@ -164,8 +164,8 @@ export default function Catalog() {
               <option value="18">18+</option>
             </select>
 
-            <button type="submit" className="user__search-button">
-              Применить фильтры
+            <button type="submit" className="user__search-filter filter-button">
+              Применить
             </button>
           </div>
         </form>

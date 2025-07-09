@@ -117,7 +117,7 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
       </select>
     </div>
 
-    {error && <p class="red-error">{error}</p>}
+    {error && <p className="red-error">{error}</p>}
 
     <div className="user__login-checkbox-container">
       <input 
