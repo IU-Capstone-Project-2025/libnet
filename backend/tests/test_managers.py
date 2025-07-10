@@ -1,11 +1,12 @@
 import pytest, pytest_asyncio
 from httpx import AsyncClient, ASGITransport
-from sqlmodel import create_engine, Session, SQLModel
+from sqlmodel import create_engine, Session, SQLModel, select
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app.main import app
 from sqlmodel.pool import StaticPool
 from app.database import get_session, init_engine
+from app import models
 
 @pytest.fixture(name="session")
 def session_fixture():
@@ -57,11 +58,13 @@ async def test_login_manager(client: AsyncClient, session: Session):
         "password": "testing123",
         "phone": "1234567890",
         "city": "Test City",
-        "role": "manager"
     }
     create_resp = await client.post("/users/register", json=manager_payload)
     assert create_resp.status_code == 200, create_resp.text
     manager = create_resp.json()
+    user_m = session.exec(select(models.LibUser).where(models.LibUser.email == manager_payload["email"])).first()
+    user_m.role = "manager"
+    session.commit()
     
     manager_login_payload = {
         "username": "manager_test_reg@test.lol",
