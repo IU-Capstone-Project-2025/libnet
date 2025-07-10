@@ -205,8 +205,8 @@
 
 .manager__catalog-create-book-button {
   border-radius: 20px 0 20px 0;
-  width: 25%;
-
+  width: 20%;
+  padding: 5px;
 }
 
 @media (width < 1024px) {
@@ -299,4 +299,7 @@
     width: 100%;
     padding: 10px;
   }
+
+  .manager__catalog-create-book-button {
+  width: 40%;}
 }

@@ -73,6 +73,7 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="email"
         placeholder="E-Mail"
         value={email}
+        autoComplete="off"
         onChange={e => setEmail(e.target.value)}
       />
       <input
@@ -80,18 +81,21 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="password"
         placeholder="Пароль"
         value={password}
+        autoComplete="off"
         onChange={e => setPassword(e.target.value)}
       />
       <input
         className="user__login-input"
         placeholder="Имя"
         value={firstName}
+        autoComplete="off"
         onChange={e => setFirstName(e.target.value)}
       />
       <input
         className="user__login-input"
         placeholder="Фамилия"
         value={lastName}
+        autoComplete="off"
         onChange={e => setLastName(e.target.value)}
       />
       <input
@@ -99,6 +103,7 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="tel"
         placeholder="Телефон"
         value={phone}
+        autoComplete="off"
         onChange={e => setPhone(e.target.value)}
       />
       <select
