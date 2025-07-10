@@ -41,7 +41,6 @@ class LibUserCreate(SQLModel):
     password: str
     phone: str
     city: str
-    role: UserRole = Field(default=UserRole.USER)
 
 class LibUserRead(SQLModel):
     id: int
