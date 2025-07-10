@@ -5,6 +5,7 @@ import './Favorites.css';
 
 export default function Favorites() {
   const { user } = useAuth();
+  const token = localStorage.getItem('access_token');
 
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,9 @@ export default function Favorites() {
 
     async function fetchFavorites() {
       try {
-        const res = await fetch(`/api/users/likes/${user.id}`);
+        const res = await fetch(`/api/users/likes/${user.id}`,
+          {headers: {Authorization: `Bearer ${token}`,}}
+        );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         // console.log(data);
@@ -83,7 +86,7 @@ export default function Favorites() {
   if (loading) return <p className="user__book-content">Загружаем…</p>;
   if (error)
     return (
-      <p className="user__book-content" style={{ color: 'red' }}>
+      <p className="user__book-content red-error">
         Ошибка: {error}
       </p>
     );

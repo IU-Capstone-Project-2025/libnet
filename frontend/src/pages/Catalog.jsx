@@ -1,33 +1,62 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Catalog.css';
 
 export default function Catalog() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [yearFrom, setYearFrom] = useState('');
+  const [yearTo, setYearTo] = useState('');
 
   const [searchParams, setSearchParams] = useState({
     title: '',
     authors: '',
     genres: '',
     rating: '',
-    year: ''
   });
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  // Объединенный автоматический поиск с задержкой 1 секунда
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const { title, authors, genres, rating } = searchParams;
+      const params = {};
+
+      // Добавляем все параметры поиска
+      if (title.trim() !== '') params.title = title;
+      if (authors.trim() !== '') params.authors = authors;
+      if (genres.trim() !== '') params.genres = genres;
+      if (rating !== '') params.rating = rating;
+
+      if (yearFrom || yearTo) {
+        const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
+        const to = yearTo.trim() !== '' ? yearTo.trim() : '3000';
+        params.year = `${from}-${to}`;
+      }
+
+      fetchBooks(params);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [searchParams.title, searchParams.authors, searchParams.genres, searchParams.rating, yearFrom, yearTo]);
 
   async function fetchBooks(params = {}) {
     try {
       setLoading(true);
-
       const queryString = new URLSearchParams(
         Object.fromEntries(
-          Object.entries(params).filter(([_, v]) => v?.trim())
+          Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '')
         )
       ).toString();
 
       const res = await fetch(`/api/search/?${queryString}`);
-
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setBooks(data);
@@ -38,79 +67,118 @@ export default function Catalog() {
     }
   }
 
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
   function handleSearchChange(e) {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
   }
 
-  function handleSearchSubmit(e) {
+  function handleTitleSearch(e) {
     e.preventDefault();
-    fetchBooks(searchParams);
+    // Поиск уже выполняется автоматически через useEffect
+    // Оставляем функцию для совместимости с формой
+  }
+
+  function handleFilterSearch(e) {
+    e.preventDefault();
+    // Поиск уже выполняется автоматически через useEffect
+    // Оставляем функцию для совместимости с формой
   }
 
   return (
     <div className="user__catalog-content">
       <h1 className="user__heading">Каталог книг</h1>
 
-      {/* 🔍 Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="user__search-form">
-        <input
-          type="text"
-          name="title"
-          placeholder="Название"
-          value={searchParams.title}
-          onChange={handleSearchChange}
-          className="user__search-input"
-        />
-        <input
-          type="text"
-          name="authors"
-          placeholder="Авторы (через ;)"
-          value={searchParams.authors}
-          onChange={handleSearchChange}
-          className="user__search-input"
-        />
-        <input
-          type="text"
-          name="genres"
-          placeholder="Жанры (через ;)"
-          value={searchParams.genres}
-          onChange={handleSearchChange}
-          className="user__search-input"
-        />
-        <input
-          type="number"
-          name="rating"
-          placeholder="Рейтинг до"
-          value={searchParams.rating}
-          onChange={handleSearchChange}
-          className="user__search-input"
-        />
-        <input
-          type="text"
-          name="year"
-          placeholder="Год (например 2000-2020)"
-          value={searchParams.year}
-          onChange={handleSearchChange}
-          className="user__search-input"
-        />
-        <button type="submit" className="user__search-button">Поиск</button>
+      <form onSubmit={handleTitleSearch} className="user__search-form">
+        <div className="user__search-bar-container">
+          <input
+            type="text"
+            name="title"
+            placeholder="Введите название материала"
+            value={searchParams.title}
+            onChange={handleSearchChange}
+            className="user__search-bar"
+          />
+        </div>
       </form>
 
-      {/* ⚠️ Loading/Error */}
       {loading && <p>Загрузка...</p>}
-      {error && <p style={{ color: 'red' }}>Ошибка: {error}</p>}
+      {error && <p className="red-error">Ошибка: {error}</p>}
 
       <div className="user__genre-section">
-        {/* <div className="user__sidebar">
-          <h2 className="user__sidebar-heading">Жанры</h2>
-          <ul className="user__genre-list">
-            
-          </ul>
-        </div> */}
+        <form
+          onSubmit={handleFilterSearch}
+          className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}
+        >
+          <div
+            className="user__sidebar-header"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <h2 className="user__sidebar-heading">Фильтры</h2>
+            <svg
+              className={`user__sidebar-arrow ${
+                isSidebarOpen ? 'user__sidebar-arrow--up' : ''
+              }`}
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M7 10L12 15L17 10"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div className="user__sidebar-content">
+            <input
+              type="text"
+              name="authors"
+              placeholder="Авторы (через ;)"
+              value={searchParams.authors}
+              onChange={handleSearchChange}
+              className="user__search-filter"
+            />
+            <input
+              type="text"
+              name="genres"
+              placeholder="Жанры (через ;)"
+              value={searchParams.genres}
+              onChange={handleSearchChange}
+              className="user__search-filter"
+            />
+            <input
+              type="text"
+              placeholder="От года"
+              value={yearFrom}
+              onChange={(e) => setYearFrom(e.target.value)}
+              className="user__search-filter"
+            />
+            <input
+              type="text"
+              placeholder="До года"
+              value={yearTo}
+              onChange={(e) => setYearTo(e.target.value)}
+              className="user__search-filter"
+            />
+            <select
+              name="rating"
+              value={searchParams.rating}
+              onChange={handleSearchChange}
+              className="user__search-filter"
+            >
+              <option value="">Все возрасты</option>
+              <option value="0">0+</option>
+              <option value="3">3+</option>
+              <option value="6">6+</option>
+              <option value="12">12+</option>
+              <option value="16">16+</option>
+              <option value="18">18+</option>
+            </select>
+          </div>
+        </form>
 
         <div className="user__catalog-books-list">
           {books.map((b) => (
@@ -121,7 +189,9 @@ export default function Catalog() {
             >
               <img
                 className="user__catalog-book-cover"
-                src={b.image_url || "https://via.placeholder.com/150x220?text=Book+Cover"}
+                src={
+                  b.image_url || 'https://via.placeholder.com/150x220?text=Book+Cover'
+                }
                 alt={`${b.title} cover`}
               />
               <div className="user__catalog-book-info">
