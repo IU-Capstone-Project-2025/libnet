@@ -13,14 +13,11 @@ router = APIRouter()
 @router.post("/register", response_model=models.LibUserRead)
 def register(user: models.LibUserCreate, db: Session = Depends(get_session)):
     existing_user = db.exec(select(models.LibUser).where(models.LibUser.email == user.email)).first()
-    roles = ["user", "manager", "admin"]
     email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
     data = [user.first_name, user.last_name, user.email, user.phone, user.city]
 
     if existing_user:
         raise HTTPException(status_code=400, detail="User with this email already exists")
-    if user.role not in roles:
-        raise HTTPException(status_code=400, detail="User role is invalid")
     if None in data:
         raise HTTPException(status_code=400, detail="Some fields are missing")
     if not bool(re.match(email_pattern, user.email)):
