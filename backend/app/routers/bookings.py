@@ -10,6 +10,9 @@ router = APIRouter()
 # Create a Booking
 @router.post("/", response_model=models.Booking)
 def create_booking(booking: models.Booking, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if not current_user.is_verified:
+        raise HTTPException(status_code=400, detail="User is not verified")
+    
     library = db.get(models.Library, booking.library_id)
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
@@ -88,6 +91,8 @@ def update_booking_status(booking_id: int, booking_update: models.BookingUpdate,
 # Delete a Booking
 @router.delete("/{booking_id}", status_code=204)
 def delete_booking(booking_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if not current_user.is_verified:
+        raise HTTPException(status_code=400, detail="User is not verified")
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code = 404, detail="Booking does not exist")

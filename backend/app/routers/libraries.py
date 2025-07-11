@@ -78,6 +78,8 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
 # Get list of managers in a Library
 @router.get("/{library_id}/managers", response_model=list[models.LibUser])
 def get_managers_in_library(library_id: int, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")

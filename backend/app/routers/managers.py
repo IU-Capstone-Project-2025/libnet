@@ -23,6 +23,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 # Assign manager to a library
 @router.post("/assign/{manager_email}/{library_id}")
 def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -41,6 +43,8 @@ def assign_manager(manager_email: str, library_id: int, db: Session = Depends(ge
 # Dismiss manager from a library
 @router.post("/dismiss/{manager_email}/{library_id}")
 def dismiss_manager(manager_email: str, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
