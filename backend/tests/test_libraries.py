@@ -233,6 +233,7 @@ async def test_get_all_libraries(client: AsyncClient):
     get_resp = await client.get("/libraries/")
     assert get_resp.status_code == 200
     libraries = get_resp.json()
+    print(libraries)
     assert any(lib["id"] == 101 for lib in libraries)
     assert any(lib["id"] == 102 for lib in libraries)
 

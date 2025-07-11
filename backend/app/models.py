@@ -1,9 +1,8 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from app.database import engine
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
-from app.database import init_engine
 
 
 class BookingStatus(str, Enum):
@@ -28,6 +27,9 @@ class LibUser(SQLModel, table=True):
     city: str
     role: UserRole = Field(default=UserRole.USER)
     library_id: Optional[int] = Field(foreign_key="library.id")
+    email_verification_code: Optional[str] = Field(default=None)
+    code_expires_at: Optional[datetime] = Field(default=None)
+    is_verified: Optional[bool] = None
 
     favorite_books: List["FavoriteBook"] = Relationship(back_populates="user")
     library: Optional["Library"] = Relationship(back_populates="managers")
