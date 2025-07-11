@@ -54,7 +54,7 @@ async def register(user: models.LibUserCreate, db: Session = Depends(get_session
     user_dict["hashed_password"] = hash_password(user_dict.pop("password"))
     if user.email != "loltotallytest@girl.yes" and "_test_reg@test.lol" not in user.email:
         verification_code = generate_verification_code()
-        expires_at = datetime.now() + timedelta(seconds=10)
+        expires_at = datetime.now() + timedelta(minutes=10)
         user_dict["email_verification_code"] = verification_code
         user_dict["code_expires_at"] = expires_at
         user_dict["is_verified"] = False
