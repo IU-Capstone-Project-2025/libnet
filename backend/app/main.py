@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     DATABASE_URL = os.getenv("DATABASE_URL")
 
     from sqlmodel import create_engine
-    engine = create_engine(DATABASE_URL, echo=True)
+    engine = create_engine(DATABASE_URL, echo=False)
 
     from app.database import init_engine, create_all
     init_engine(engine)
