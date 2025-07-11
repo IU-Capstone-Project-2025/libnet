@@ -58,6 +58,8 @@ async def register(user: models.LibUserCreate, db: Session = Depends(get_session
         user_dict["email_verification_code"] = verification_code
         user_dict["code_expires_at"] = expires_at
         user_dict["is_verified"] = False
+    else:
+        user_dict["is_verified"] = True
 
     new_user = models.LibUser(**user_dict)
     db.add(new_user)
