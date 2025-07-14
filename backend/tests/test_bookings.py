@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.main import app
 from sqlmodel.pool import StaticPool
 from app.database import init_engine, get_session
-from datetime import datetime
+from app import models
 
 @pytest.fixture(name="session")
 def session_fixture():
@@ -46,6 +46,10 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     user_resp = await client.post("/users/register", json=user_payload)
     assert user_resp.status_code in (200, 201), user_resp.text
     created.append("user")
+
+    user = session.get(models.LibUser, user_resp.json()['id'])
+    user.role = "manager"
+    session.commit()
 
     login_payload = {
         "username": "loltotallytest@girl.yes",
