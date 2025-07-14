@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.database import get_session
 from app.auth import verify_password, create_access_token
 from app import models
+from app.auth import get_current_user
+from app.limiter import limiter
 
 router = APIRouter()
 
 # Login a Manager
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
+@limiter.limit("10/minute")
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.email == form_data.username)).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
@@ -21,7 +24,9 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Assign manager to a library
 @router.post("/assign/{manager_email}/{library_id}")
-def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session)):
+def assign_manager(manager_email: str, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -39,7 +44,9 @@ def assign_manager(manager_email: str, library_id: int, db: Session = Depends(ge
 
 # Dismiss manager from a library
 @router.post("/dismiss/{manager_email}/{library_id}")
-def dismiss_manager(manager_email: int, library_id: int, db: Session = Depends(get_session)):
+def dismiss_manager(manager_email: str, library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")

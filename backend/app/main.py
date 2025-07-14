@@ -11,6 +11,9 @@ from app.routers.search import router as search_router
 import os
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.limiter import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,7 +22,7 @@ async def lifespan(app: FastAPI):
     DATABASE_URL = os.getenv("DATABASE_URL")
 
     from sqlmodel import create_engine
-    engine = create_engine(DATABASE_URL, echo=True)
+    engine = create_engine(DATABASE_URL, echo=False)
 
     from app.database import init_engine, create_all
     init_engine(engine)
@@ -27,6 +30,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

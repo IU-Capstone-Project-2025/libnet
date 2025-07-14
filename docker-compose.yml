@@ -60,6 +60,7 @@ services:
       - backend
     restart: always
 
+
   loki:
     image: grafana/loki:latest
     container_name: loki

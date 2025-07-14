@@ -2,11 +2,12 @@ import pytest, pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlmodel import create_engine, Session, SQLModel
 import os, sys
+os.environ["TESTING"] = "1"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app.main import app
 from sqlmodel.pool import StaticPool
 from app.database import init_engine, get_session
-from datetime import datetime
+from app import models
 
 @pytest.fixture(name="session")
 def session_fixture():
@@ -32,6 +33,33 @@ async def client_fixture(session):
 @pytest.mark.asyncio
 async def test_crud_booking(client: AsyncClient, session: Session):
     created = []
+
+    user_payload = {
+        "first_name": "string",
+        "last_name": "string",
+        "email": "loltotallytest@girl.yes",
+        "password": "string",
+        "phone": "string",
+        "city": "string",
+        "role": "user"
+    }
+    user_resp = await client.post("/users/register", json=user_payload)
+    assert user_resp.status_code in (200, 201), user_resp.text
+    created.append("user")
+
+    user = session.get(models.LibUser, user_resp.json()['id'])
+    user.role = "manager"
+    session.commit()
+
+    login_payload = {
+        "username": "loltotallytest@girl.yes",
+        "password": "string"
+    }
+    resp = await client.post("users/login", data=login_payload)
+    access_token = resp.json()["access_token"]
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+
     if (await client.get("/libraries/1")).status_code == 404:
         lib_payload = {
             "id": 1,
@@ -47,26 +75,14 @@ async def test_crud_booking(client: AsyncClient, session: Session):
             "booking_duration": 7,
             "rent_duration": 14
         }
-        lib_resp = await client.post("/libraries/", json=lib_payload)
+        lib_resp = await client.post("/libraries/", json=lib_payload, headers=headers)
         assert lib_resp.status_code in (200, 201), lib_resp.text
         created.append("library")
 
-    if (await client.get("/users/email/lol@girl.yes")).status_code == 404:
-        user_payload = {
-            "first_name": "string",
-            "last_name": "string",
-            "email": "lol@girl.yes",
-            "password": "string",
-            "phone": "string",
-            "city": "string",
-            "role": "user"
-        }
-        user_resp = await client.post("/users/register", json=user_payload)
-        assert user_resp.status_code in (200, 201), user_resp.text
-        created.append("user")
-    user_id = (await client.get("/users/email/lol@girl.yes")).json()["id"]
+    
+    user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
 
-    if (await client.get("/books/1")).status_code == 404:
+    if (await client.get("/books/1", headers=headers)).status_code == 404:
         book_payload = {
             "id": 1,
             "title": "Book",
@@ -78,7 +94,7 @@ async def test_crud_booking(client: AsyncClient, session: Session):
             "image_url": "",
             "genre": "Test"
         }
-        book_resp = await client.post("/books/1", json=book_payload)
+        book_resp = await client.post("/books/1", json=book_payload, headers=headers)
         assert book_resp.status_code in (200, 201), book_resp.text
         created.append("book")
 
@@ -92,33 +108,32 @@ async def test_crud_booking(client: AsyncClient, session: Session):
         "status": "pending"
     }
 
-    response = await client.post("/bookings/", json=payload)
+    response = await client.post("/bookings/", json=payload, headers=headers)
     assert response.status_code == 200, response.text
     booking = response.json()
     assert booking["user_id"] == user_id
     assert booking["book_id"] == 1
     assert booking["library_id"] == 1
 
-    get_resp = await client.get(f"/bookings/{booking['id']}")
+    get_resp = await client.get(f"/bookings/{booking['id']}", headers=headers)
     assert get_resp.status_code == 200
     data = get_resp.json()
     assert data["status"] == "pending"
 
     update_payload = {"status": "cancelled"}
-    update_resp = await client.patch(f"/bookings/{booking['id']}", json=update_payload)
+    update_resp = await client.patch(f"/bookings/{booking['id']}", json=update_payload, headers=headers)
     assert update_resp.status_code == 200
     updated = update_resp.json()
     assert updated["status"] == "cancelled"
 
-    delete = await client.delete(f"/bookings/{booking['id']}")
+    delete = await client.delete(f"/bookings/{booking['id']}", headers=headers)
     assert delete.status_code == 204
 
     if "book" in created:
-        await client.delete("/books/1")
-        assert (await client.get("/books/1")).status_code == 404
-    if "user" in created:
-        await client.delete("/users/1")
-        assert (await client.get("/users/1")).status_code == 404
+        await client.delete("/books/1", headers=headers)
+        assert (await client.get("/books/1", headers=headers)).status_code == 404
     if "library" in created:
-        await client.delete("/libraries/1")
-        assert (await client.get("/libraries/1")).status_code == 404
+        await client.delete("/libraries/1", headers=headers)
+        assert (await client.get("/libraries/1", headers=headers)).status_code == 404
+    if "user" in created:
+        await client.delete(f"/users/{user_id}", headers=headers)
