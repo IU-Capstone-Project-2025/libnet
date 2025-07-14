@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, Request
 from sqlmodel import Session, select, and_, func
 from app.database import get_session
 from app import models
@@ -6,6 +6,7 @@ import os
 from typing import Optional
 from fastapi.responses import FileResponse
 from app.auth import get_current_user
+from app.limiter import limiter
 
 router = APIRouter()
 
@@ -14,7 +15,8 @@ os.makedirs(COVERS_DIR, exist_ok=True)
 
 # Create a Book
 @router.post("/{quantity}", response_model=models.Book, status_code=201)
-async def create_book(book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("10/minute")
+async def create_book(request: Request, book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     db.add(book)
     db.commit()
     db.refresh(book)
@@ -148,7 +150,8 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
 
 # Update a Book
 @router.patch("/{book_id}", response_model=models.Book)
-def update_book(book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("5/minute")
+def update_book(request: Request, book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
