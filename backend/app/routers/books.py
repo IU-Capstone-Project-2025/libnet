@@ -15,7 +15,7 @@ os.makedirs(COVERS_DIR, exist_ok=True)
 
 # Create a Book
 @router.post("/{quantity}", response_model=models.Book, status_code=201)
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 async def create_book(request: Request, book: models.Book, quantity: int, cover_url: Optional[str] = None, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     db.add(book)
     db.commit()
@@ -142,7 +142,7 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
 
 # Update a Book
 @router.patch("/{book_id}", response_model=models.Book)
-@limiter.limit("5/minute")
+@limiter.limit("50/minute")
 def update_book(request: Request, book_id: int, book_update: models.BookUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
