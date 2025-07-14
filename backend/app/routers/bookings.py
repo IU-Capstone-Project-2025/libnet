@@ -5,6 +5,7 @@ from app import models
 from datetime import timedelta, date, datetime
 from app.auth import get_current_user
 from app.limiter import limiter
+from sqlalchemy import desc
 
 router = APIRouter()
 
@@ -52,8 +53,9 @@ def get_booking(booking_id: int, db: Session = Depends(get_session)):
     return booking
 
 # Get Bookings of a certain User
-@router.get("/users/{user_id}", response_model=list[models.Booking])
-def get_bookings_of_a_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@router.get("/users/", response_model=list[models.Booking])
+def get_bookings_of_a_user(db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    user_id = current_user.id
     booking = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
     if not booking:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -79,6 +81,8 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 @router.patch("/{booking_id}", response_model=models.Booking)
 @limiter.limit("20/minute")
 def update_booking_status(request: Request, booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
@@ -104,6 +108,27 @@ def update_booking_status(request: Request, booking_id: int, booking_update: mod
     db.commit()
     db.refresh(booking)
     return booking
+
+# Search for booking
+@router.get("/search")
+def search_books(booking_id: int, user_phone: str, email: str, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
+
+    query = select(models.Booking)
+
+    if booking_id:
+        query = query.where(models.Booking.id == booking_id)
+    if user_phone:
+        query = query.where(models.Booking.user.phone == user_phone)
+    if email:
+        query = query.where(models.Booking.user.email == email)
+
+    query = query.order_by(desc(models.Booking.date_to))
+
+    books = db.exec(query).all()
+    return books
+
 
 # Delete a Booking
 @router.delete("/{booking_id}", status_code=204)
