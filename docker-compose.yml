@@ -36,6 +36,8 @@ services:
       - WAIT_HOSTS_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=5
       - FORWARDED_ALLOW_IPS=*
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
     expose:
       - "8000"
     logging:
