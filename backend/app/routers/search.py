@@ -7,7 +7,7 @@ from app.limiter import limiter
 router = APIRouter()
 
 @router.get("/", response_model=list[models.Book])
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 def search_books(request: Request, title: str = Query(default=None), authors: str = Query(default=None),
                  genres: str = Query(default=None), rating: int = Query(default=None), year: str = Query(default=None),
                  library_id: int = Query(default=None), city: str = Query(default=None),
