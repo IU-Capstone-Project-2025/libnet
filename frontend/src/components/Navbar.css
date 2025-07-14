@@ -273,7 +273,6 @@
   transition: all 0.3s ease;
 }
 
-/* Burger Overlay */
 .burger-overlay {
   position: fixed;
   top: 0;
@@ -286,7 +285,6 @@
   justify-content: flex-end;
 }
 
-/* Burger Menu */
 .burger-menu {
   width: 300px;
   height: 100%;
@@ -304,7 +302,6 @@
   }
 }
 
-/* Role-specific burger menu colors */
 .user-burger-menu {
   background-color: var(--main-user-color);
 }
@@ -317,7 +314,6 @@
   background-color: var(--main-admin-color);
 }
 
-/* Burger Content */
 .burger-content {
   display: flex;
   flex-direction: column;
@@ -365,7 +361,28 @@
   opacity: 0.8;
 }
 
-@media (width < 1240px) {
+@media (width <= 1100px) {
+  .user__navbar {
+    display: none;
+  }
+
+  .admin__navbar {
+    display: none;
+  }
+
+  .user__header-account {
+    display: none;
+  }
+
+  .admin__header-account {
+    display: none;
+  }
+
+  .user-burger,
+  .admin-burger {
+    display: flex;
+  }
+
   .manager__navbar {
     display: none;
   }
@@ -398,27 +415,6 @@
 }
 
 @media (width < 768px) {
-  .user__navbar {
-    display: none;
-  }
-
-  .admin__navbar {
-    display: none;
-  }
-
-  .user__header-account {
-    display: none;
-  }
-
-  .admin__header-account {
-    display: none;
-  }
-
-  .user-burger,
-  .admin-burger {
-    display: flex;
-  }
-
   .user__navbar-logo {
     width: 120px;
   }

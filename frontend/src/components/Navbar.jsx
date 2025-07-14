@@ -171,6 +171,9 @@ export default function Navbar() {
             <Link to="/" className="user__navbar-link">
               Каталог
             </Link>
+            <Link to="/libraries" className="user__navbar-link">
+              Библиотеки
+            </Link>
             <Link to="/orders" className="user__navbar-link">
               Заказы
             </Link>
@@ -235,6 +238,9 @@ export default function Navbar() {
                   <div className="burger-divider"></div>
                   <Link to="/" className="burger-link" onClick={closeBurger}>
                     Каталог
+                  </Link>
+                  <Link to="/libraries" className="burger-link" onClick={closeBurger}>
+                    Библиотеки
                   </Link>
                   <Link to="/orders" className="burger-link" onClick={closeBurger}>
                     Заказы
@@ -345,6 +351,9 @@ export default function Navbar() {
             <Link to="/" className="user__navbar-link">
               Каталог
             </Link>
+            <Link to="/libraries" className="user__navbar-link">
+              Библиотеки
+            </Link>
             <Link to="/faq" className="user__navbar-link">
               FAQ
             </Link>
@@ -403,6 +412,9 @@ export default function Navbar() {
                   <div className="burger-divider"></div>
                   <Link to="/" className="burger-link" onClick={closeBurger}>
                     Каталог
+                  </Link>
+                  <Link to="/libraries" className="burger-link" onClick={closeBurger}>
+                    Библиотеки
                   </Link>
                   <Link to="/faq" className="burger-link" onClick={closeBurger}>
                     FAQ

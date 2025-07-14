@@ -160,14 +160,14 @@ export default function Orders() {
                   </p>
                 </div>
               </div>
-              {/* {b.status == 'pending' && (
+              {b.status == 'pending' && (
                 <button
                   className="user__orders-button user__orders-button--red"
                   onClick={() => handleCancel(b.id)}
                 >
                   Отменить бронь
                 </button>
-              )} */}
+              )}
             </div>
           ))}
         </div>
