@@ -13,7 +13,11 @@ def search_books(request: Request, title: str = Query(default=None), authors: st
                  library_id: int = Query(default=None), city: str = Query(default=None),
                  db: Session = Depends(get_session)):
     
-    query = select(models.Book)
+    query = (
+        select(models.Book)
+        .join(models.LibraryBook, models.Book.id == models.LibraryBook.book_id)
+        .where(models.LibraryBook.quantity > 0)
+    )
 
     if title:
         query = query.where(models.Book.title.ilike(f"%{title}%"))
@@ -39,11 +43,14 @@ def search_books(request: Request, title: str = Query(default=None), authors: st
         query = query.where(models.Book.library_id == library_id)
     if city:
         subquery = (
-            select(func.min(models.Book.id))
+            select(models.Book.id)
             .join(models.LibraryBook, models.Book.id == models.LibraryBook.book_id)
             .join(models.Library, models.LibraryBook.library_id == models.Library.id)
-            .where(models.Library.city == city)
-            .group_by(models.Book.isbn)
+            .where(
+                models.Library.city == city,
+                models.LibraryBook.quantity > 0
+            )
+            .group_by(models.Book.id)
             .subquery()
         )
         
