@@ -102,6 +102,13 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
         return user
     else:
         raise HTTPException(status_code=400, detail="Code is incorrect")
+    
+# Send code again
+@router.post("/send-code/")
+@limiter.limit("1/minute")
+async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user)):
+    verification_code = generate_verification_code()
+    await send_verification_code_email(current_user.email, verification_code)
 
 # Login a User
 @router.post("/login")
