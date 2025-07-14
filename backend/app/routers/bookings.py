@@ -16,6 +16,15 @@ def create_booking(request: Request, booking: models.Booking, db: Session = Depe
         raise HTTPException(status_code=400, detail="User is not verified")
     
     library = db.get(models.Library, booking.library_id)
+
+    library_book = db.get(models.LibraryBook, (booking.library_id, booking.book_id))
+    if not library_book:
+        raise HTTPException(status_code=404, detail="LibraryBook not found")
+    if library_book.quantity <= 0:
+        raise HTTPException(status_code=400, detail="No available copies left")
+    library_book.quantity -= 1
+    db.commit()
+
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     
@@ -81,6 +90,11 @@ def update_booking_status(request: Request, booking_id: int, booking_update: mod
             booking.date_from = date.today()
             if booking.status == models.BookingStatus.RETURNED:
                 booking.date_to = None
+                library_book = db.get(models.LibraryBook, (booking.library_id, booking.book_id))
+                if not library_book:
+                    raise HTTPException(status_code=404, detail="LibraryBook not found")
+                library_book.quantity += 1
+                db.commit()
             else:
                 booking.date_to = booking.date_from + timedelta(days=booking.library.rent_duration)
         elif booking.status == models.BookingStatus.CANCELLED:

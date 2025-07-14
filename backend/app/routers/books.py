@@ -90,7 +90,9 @@ def get_book_cover(book_id: int, db: Session = Depends(get_session)):
 # Get quantity of books in a library
 @router.get("/quantity/{library_id}/{book_id}", response_model=int)
 def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_session)):
-    book = db.exec(select(models.LibraryBook).where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))).first()
+    book = db.exec(select(models.LibraryBook)
+                   .where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))
+                   ).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
@@ -98,26 +100,16 @@ def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_s
 # Get unique Books
 @router.get("/unique/", response_model=list[models.Book])
 def get_unique_books(db: Session = Depends(get_session)):
-    subquery = (select(func.min(models.Book.id)).group_by(models.Book.isbn).subquery())
+    subquery = (select(func.min(models.Book.id))
+                .group_by(models.Book.isbn).subquery())
 
-    books = db.exec(select(models.Book).where(models.Book.id.in_(subquery))).all()
-    return books
-
-# Get unique Books by user's city
-@router.get("/unique/city/", response_model=list[models.Book])
-def get_unique_books_by_city(db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    subquery = (
-        select(func.min(models.Book.id))
-        .join(models.LibraryBook, models.Book.id == models.LibraryBook.book_id)
-        .join(models.Library, models.LibraryBook.library_id == models.Library.id)
-        .where(models.Library.city == current_user.city)
-        .group_by(models.Book.isbn)
-        .subquery()
-    )
-    
     books = db.exec(
         select(models.Book)
-        .where(models.Book.id.in_(subquery))
+        .join(models.LibraryBook, models.Book.id == models.LibraryBook.book_id)
+        .where(
+            models.Book.id.in_(subquery),
+            models.LibraryBook.quantity > 0
+        )
     ).all()
     return books
     
