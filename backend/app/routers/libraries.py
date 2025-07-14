@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 from app.auth import get_current_user
+from app.limiter import limiter
 
 router = APIRouter()
 
 # Create a Library
 @router.post("/", response_model=models.Library)
-def create_library(library: models.Library, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("10/minute")
+def create_library(request: Request, library: models.Library, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     db.add(library)
     db.commit()
     db.refresh(library)

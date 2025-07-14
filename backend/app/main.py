@@ -10,6 +10,9 @@ from app.routers.search import router as search_router
 import os
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.limiter import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,6 +29,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 Instrumentator().instrument(app).expose(app)
 

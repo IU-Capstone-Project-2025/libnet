@@ -1,15 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 from datetime import timedelta, date, datetime
 from app.auth import get_current_user
+from app.limiter import limiter
 
 router = APIRouter()
 
 # Create a Booking
 @router.post("/", response_model=models.Booking)
-def create_booking(booking: models.Booking, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("10/minute")
+def create_booking(request: Request, booking: models.Booking, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if not current_user.is_verified:
         raise HTTPException(status_code=400, detail="User is not verified")
     
@@ -66,7 +68,8 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 
 # Update Booking's status
 @router.patch("/{booking_id}", response_model=models.Booking)
-def update_booking_status(booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("20/minute")
+def update_booking_status(request: Request, booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
@@ -90,7 +93,8 @@ def update_booking_status(booking_id: int, booking_update: models.BookingUpdate,
 
 # Delete a Booking
 @router.delete("/{booking_id}", status_code=204)
-def delete_booking(booking_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("20/minute")
+def delete_booking(request: Request, booking_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if not current_user.is_verified:
         raise HTTPException(status_code=400, detail="User is not verified")
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()

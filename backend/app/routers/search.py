@@ -1,12 +1,14 @@
-from fastapi import Query, APIRouter, Depends
+from fastapi import Query, APIRouter, Depends, Request
 from sqlmodel import Session, select, or_, func
 from app.database import get_session
 from app import models
+from app.limiter import limiter
 
 router = APIRouter()
 
 @router.get("/", response_model=list[models.Book])
-def search_books(title: str = Query(default=None), authors: str = Query(default=None),
+@limiter.limit("10/minute")
+def search_books(request: Request, title: str = Query(default=None), authors: str = Query(default=None),
                  genres: str = Query(default=None), rating: int = Query(default=None), year: str = Query(default=None),
                  library_id: int = Query(default=None), city: str = Query(default=None),
                  db: Session = Depends(get_session)):
