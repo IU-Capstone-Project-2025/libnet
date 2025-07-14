@@ -1,28 +1,4 @@
 services:
-  nginx:
-    container_name: nginx
-    build: 
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - backend
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/certs:/etc/nginx/certs
-      - ./frontend/dist:/usr/share/nginx/html
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
-        loki-retries: "5"
-        loki-batch-size: "400"
-        loki-batch-wait: "1s"
-        loki-external-labels: "job=nginx,service=proxy"
-    restart: always
-
   postgres:
     image: postgres:14
     container_name: postgres
@@ -71,28 +47,19 @@ services:
         loki-batch-wait: "1s"
         loki-external-labels: "job=backend,service=api"
 
-  # frontend:
-  #   image: node:20-alpine
-  #   container_name: frontend
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     NODE_OPTIONS: "--openssl-legacy-provider"
-  #   ports:
-  #     - "4173:4173"
-  #   depends_on:
-  #     - backend
-  #   volumes:
-  #     - ./frontend/dist:/app/dist
-  #   logging:
-  #     driver: loki
-  #     options:
-  #       loki-url: "http://loki:3100/loki/api/v1/push"
-  #       loki-retries: "5"
-  #       loki-batch-size: "400"
-  #       loki-batch-wait: "1s"
-  #       loki-external-labels: "job=frontend,service=web"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    environment:
+      NODE_OPTIONS: "--openssl-legacy-provider"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
 
   loki:
     image: grafana/loki:latest
@@ -116,11 +83,9 @@ services:
     container_name: grafana
     volumes:
       - grafana-storage:/var/lib/grafana
-      - ./grafana.ini:/etc/grafana/grafana.ini
     environment:
       - GF_SERVER_ROOT_URL=https://libnet.site/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SERVER_DOMAIN=libnet.site
     ports:
       - "3000:3000"
 
