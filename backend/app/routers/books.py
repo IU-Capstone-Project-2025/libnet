@@ -140,6 +140,20 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Book does not exist")
     return book
 
+# Get authors of books
+@router.get("/authors/", response_model=list[str])
+def get_authors(db: Session = Depends(get_session)):
+    books = db.exec(select(models.Book)).all()
+    authors = set([book.author for book in books])
+    return authors
+
+# Get genres of books
+@router.get("/genres/", response_model=list[str])
+def get_genres(db: Session = Depends(get_session)):
+    books = db.exec(select(models.Book)).all()
+    genres = set([book.genre for book in books])
+    return genres
+
 # Update a Book
 @router.patch("/{book_id}", response_model=models.Book)
 @limiter.limit("50/minute")
