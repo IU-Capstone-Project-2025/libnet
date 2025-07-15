@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Catalog.css';
+import './ManagerCatalog.css';
 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -125,37 +125,37 @@ export default function ManagerCatalog() {
   }
 
   return (
-    <div className="user__catalog-content">
+    <div className="manager__catalog-content">
       
-      <h1 className="user__heading">Каталог книг</h1>
-      <button className='user__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
-      <form onSubmit={(e) => e.preventDefault()} className="user__search-form">
-        <div className="user__search-bar-container">
+      <h1 className="manager__heading">Каталог книг</h1>
+      <button className='manager__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
+      <form onSubmit={(e) => e.preventDefault()} className="manager__search-form">
+        <div className="manager__search-bar-container">
           <input
             type="text"
             name="title"
             placeholder="Введите название материала"
             value={searchParams.title}
             onChange={handleSearchChange}
-            className="user__search-bar"
+            className="manager__search-bar"
           />
         </div>
       </form>
 
-      <div className="user__genre-section">
+      <div className="manager__genre-section">
         <form
-          className={`user__sidebar ${
-            isSidebarOpen ? 'user__sidebar--open' : ''
+          className={`manager__sidebar ${
+            isSidebarOpen ? 'manager__sidebar--open' : ''
           }`}
         >
           <div
-            className="user__sidebar-header"
+            className="manager__sidebar-header"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
-            <h2 className="user__sidebar-heading">Фильтры</h2>
+            <h2 className="manager__sidebar-heading">Фильтры</h2>
             <svg
-              className={`user__sidebar-arrow ${
-                isSidebarOpen ? 'user__sidebar-arrow--up' : ''
+              className={`manager__sidebar-arrow ${
+                isSidebarOpen ? 'manager__sidebar-arrow--up' : ''
               }`}
               width="30"
               height="30"
@@ -172,8 +172,7 @@ export default function ManagerCatalog() {
             </svg>
           </div>
 
-          <div className="user__sidebar-content">
-            <label className="user__search-label">Авторы</label>
+          <div className="manager__sidebar-content">
             <Select
               isMulti
               isSearchable
@@ -181,10 +180,13 @@ export default function ManagerCatalog() {
               value={selectedAuthors}
               onChange={setSelectedAuthors}
               placeholder="Выберите авторов..."
-              className="user__react-select"
+              className="manager__react-select"
+              menuPortalTarget={document.body}
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 99999 }),
+                menu: (base) => ({ ...base, zIndex: 99999 })
+              }}
             />
-
-            <label className="user__search-label">Жанры</label>
             <Select
               isMulti
               isSearchable
@@ -192,10 +194,15 @@ export default function ManagerCatalog() {
               value={selectedGenres}
               onChange={setSelectedGenres}
               placeholder="Выберите жанры..."
-              className="user__react-select"
+              className="manager__react-select"
+              menuPortalTarget={document.body}
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 99999 }),
+                menu: (base) => ({ ...base, zIndex: 99999 })
+              }}
             />
-            <div className="user__slider-container">
-              <label className="user__search-label">Год издания</label>
+            <div className="manager__slider-container">
+              <label className="manager__search-label">Год издания</label>
               <Range
                 min={1700}
                 max={2025}
@@ -205,9 +212,9 @@ export default function ManagerCatalog() {
                   setYearFrom(from.toString());
                   setYearTo(to.toString());
                 }}
-                className="user__search-slider"
+                className="manager__search-slider"
               />
-              <div className="user__search-slider-values">
+              <div className="manager__search-slider-values">
                 <span>{yearFrom || '1700'}</span> —{' '}
                 <span>{yearTo || '2025'}</span>
               </div>
@@ -231,30 +238,30 @@ export default function ManagerCatalog() {
           </div>
         </form>
 
-        <div className="user__catalog-books-list">
+        <div className="manager__catalog-books-list">
           {loading && books.length === 0 && !error && <p>Загрузка...</p>}
           {error && <p className="red-error">Ошибка: {error}</p>}
           {!loading && books.length === 0 && !error && <p>Ничего не найдено</p>}
           {books.map((b) => (
             <div
               key={b.id}
-              className="user__catalog-book-card"
+              className="manager__catalog-book-card"
               onClick={() => navigate(`/manager/books/${b.id}`)}
             >
               <img
-                className="user__catalog-book-cover"
+                className="manager__catalog-book-cover"
                 src={
                   b.image_url ||
                   'https://via.placeholder.com/150x220?text=Book+Cover'
                 }
                 alt={`${b.title} cover`}
               />
-              <div className="user__catalog-book-info">
-                <div className="user__catalog-book-info-text-container">
-                  <strong className="user__catalog-book-info-title">
+              <div className="manager__catalog-book-info">
+                <div className="manager__catalog-book-info-text-container">
+                  <strong className="manager__catalog-book-info-title">
                     {b.title}
                   </strong>
-                  <span className="user__catalog-book-info-author">
+                  <span className="manager__catalog-book-info-author">
                     {b.author}
                   </span>
                 </div>

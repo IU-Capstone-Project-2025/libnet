@@ -1,9 +1,9 @@
-.user__catalog-content {
+.manager__catalog-content {
   min-height: 100vh;
   padding: 0 20px;
 }
 
-.user__heading {
+.manager__heading {
   padding: 20px 0;
   color: black;
   font-weight: var(--weight-bold);
@@ -12,14 +12,14 @@
   text-transform: uppercase;
 }
 
-.user__genre-section {
+.manager__genre-section {
   display: flex;
   gap: 20px;
   width: 100%;
   padding: 10px 0;
 }
 
-.user__sidebar {
+.manager__sidebar {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,7 +33,7 @@
   transition: all 0.3s ease;
 }
 
-.user__sidebar-header {
+.manager__sidebar-header {
   display: none;
   justify-content: space-between;
   align-items: center;
@@ -42,25 +42,25 @@
   user-select: none;
 }
 
-.user__sidebar-arrow {
+.manager__sidebar-arrow {
   flex-shrink: 0;
   transition: transform 0.3s ease;
 }
 
-.user__sidebar-arrow--up {
+.manager__sidebar-arrow--up {
   transform: rotate(180deg);
 }
 
-.user__sidebar-content {
+.manager__sidebar-content {
   display: contents;
   transition: all 0.3s ease;
 }
 
-.user__sidebar-heading {
+.manager__sidebar-heading {
   font-size: var(--font-size-regular);
 }
 
-.user__genre-list {
+.manager__genre-list {
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -70,7 +70,7 @@
   list-style: none;
 }
 
-.user__search-form {
+.manager__search-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -79,12 +79,12 @@
   background-color: var(--grey-color);
 }
 
-.user__search-bar-container {
+.manager__search-bar-container {
   display: flex;
   gap: 4px;
 }
 
-.user__search-bar {
+.manager__search-bar {
   width: 100%;
   border: 1px solid black;
   border-radius: 20px 0 20px 0;
@@ -93,7 +93,7 @@
   background-color: white;
 }
 
-.user__search-filter {
+.manager__search-filter {
   width: 100%;
   height: 50px;
   border: 1px solid black;
@@ -103,15 +103,15 @@
   background-color: white;
 }
 
-.user__search-filter:first-child {
+.manager__search-filter:first-child {
   border-top-left-radius: 20px;
 }
 
-.user__search-filter:last-child {
+.manager__search-filter:last-child {
   border-bottom-right-radius: 20px;
 }
 
-.user__react-select {
+.manager__react-select {
   width: 100%;
   border: 1px solid black;
   padding: 5px 10px;
@@ -119,19 +119,19 @@
   background-color: white;
 }
 
-.user__react-select:first-child {
+.manager__react-select:first-child {
   border-radius: 20px 0 0 0;
 }
 
-.user__react-select:last-child {
+.manager__react-select:last-child {
   border-radius: 0 0 20px 0;
 }
 
-.user__react-select:only-child {
+.manager__react-select:only-child {
   border-radius: 20px 0 20px 0;
 }
 
-.user__slider-container {
+.manager__slider-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -147,25 +147,25 @@
   z-index: 1;
 }
 
-.user__search-label {
+.manager__search-label {
   display: block;
   color: black;
   font-size: var(--font-size-subregular);
 }
 
-.user__search-slider {
+.manager__search-slider {
   margin: 5px 30px;
   position: relative;
   z-index: 1;
 }
 
-.user__search-slider .rc-slider-rail {
+.manager__search-slider .rc-slider-rail {
   height: 6px;
   border-radius: 3px;
   background-color: #e0e0e0;
 }
 
-.user__search-slider .rc-slider-track {
+.manager__search-slider .rc-slider-track {
   width: 90%;
   height: 6px;
   border: 1px solid black;
@@ -173,7 +173,7 @@
   background-color: black;
 }
 
-.user__search-slider .rc-slider-handle {
+.manager__search-slider .rc-slider-handle {
   width: 15px;
   height: 15px;
   border: 1px solid black;
@@ -182,31 +182,31 @@
   cursor: pointer;
 }
 
-.user__search-slider .rc-slider-handle:hover {
+.manager__search-slider .rc-slider-handle:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   background-color: black;
   transform: scale(1.15);
 }
 
-.user__search-slider .rc-slider-handle:active {
+.manager__search-slider .rc-slider-handle:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.user__search-slider .rc-slider-handle:focus {
+.manager__search-slider .rc-slider-handle:focus {
   outline: none;
 }
 
-.user__search-slider .rc-slider-handle:focus-visible {
+.manager__search-slider .rc-slider-handle:focus-visible {
   outline: none;
 }
 
-.user__search-slider .rc-slider-handle-dragging {
+.manager__search-slider .rc-slider-handle-dragging {
   border-color: black !important;
   box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) !important;
   background-color: white !important;
 }
 
-.user__search-slider-values {
+.manager__search-slider-values {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -217,7 +217,7 @@
   font-size: var(--font-size-subregular);
 }
 
-.user__search-slider-values span {
+.manager__search-slider-values span {
   min-width: 45px;
   border: 1px solid black;
   border-radius: 10px 0 10px 0;
@@ -226,7 +226,7 @@
   background-color: #f5f5f5;
 }
 
-.user__catalog-books-list {
+.manager__catalog-books-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 30px;
@@ -236,7 +236,7 @@
   background-color: var(--grey-color);
 }
 
-.user__catalog-book-card {
+.manager__catalog-book-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -246,7 +246,7 @@
   cursor: pointer;
 }
 
-.user__catalog-book-cover {
+.manager__catalog-book-cover {
   width: 100%;
   max-width: 240px;
   border: solid black 1px;
@@ -257,7 +257,7 @@
   aspect-ratio: 240 / 310;
 }
 
-.user__catalog-book-info {
+.manager__catalog-book-info {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -275,13 +275,13 @@
   background-color: white;
 }
 
-.user__catalog-book-info-text-container {
+.manager__catalog-book-info-text-container {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.user__catalog-book-info-title {
+.manager__catalog-book-info-title {
   max-width: 100%;
   overflow: hidden;
   font-weight: var(--weight-bold);
@@ -291,7 +291,7 @@
   white-space: nowrap;
 }
 
-.user__catalog-book-info-author {
+.manager__catalog-book-info-author {
   max-width: 100%;
   overflow: hidden;
   font-weight: var(--weight-regular);
@@ -300,7 +300,7 @@
   white-space: nowrap;
 }
 
-.user__catalog-book-like-icon {
+.manager__catalog-book-like-icon {
   width: 30px;
   height: 30px;
   margin: 5px 5px 0 0;
@@ -312,18 +312,19 @@
   border-radius: 20px 0 20px 0;
   padding: 10px 5px;
   background-color: white;
-  margin-bottom: 10px;;
+  margin-bottom: 10px;
 }
 
 .manager__catalog-create-book-button:hover {
   font-weight: var(--weight-bold);
 }
+
 .manager__catalog-create-book-button:active {
   background-color: var(--main-manager-color);
 }
 
 @media (width < 1024px) {
-  .user__catalog-books-list {
+  .manager__catalog-books-list {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     padding: 30px;
@@ -331,35 +332,36 @@
 }
 
 @media (width < 768px) {
-  .user__heading {
+  .manager__heading {
     padding: 10px 0;
   }
-  .user__catalog-books-list {
+  
+  .manager__catalog-books-list {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 15px;
     padding: 20px;
   }
 
-  .user__genre-section {
+  .manager__genre-section {
     flex-direction: column;
     gap: 10px;
   }
 
-  .user__genre-list {
+  .manager__genre-list {
     padding: 0 10px;
   }
 
-  .user__sidebar {
+  .manager__sidebar {
     gap: 0;
     padding: 10px 20px;
     overflow: hidden;
   }
 
-  .user__sidebar-header {
+  .manager__sidebar-header {
     display: flex;
   }
 
-  .user__sidebar-content {
+  .manager__sidebar-content {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -370,75 +372,74 @@
     transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
   }
 
-  .user__sidebar--open .user__sidebar-content {
+  .manager__sidebar--open .manager__sidebar-content {
     max-height: 1000px;
     padding-top: 15px;
     opacity: 1;
   }
 
-  .user__sidebar .user__search-filter {
+  .manager__sidebar .manager__search-filter {
     height: 40px;
     margin: 0;
   }
 
-  .user__search-filter:first-child {
+  .manager__search-filter:first-child {
     border-top-left-radius: 10px;
   }
 
-  .user__search-filter:last-child {
+  .manager__search-filter:last-child {
     border-bottom-right-radius: 10px;
   }
 
-  select.user__search-filter {
+  select.manager__search-filter {
     height: 30px;
     padding: 5px;
   }
 
-  .user__slider-container {
-      padding: 15px 15px;
-
+  .manager__slider-container {
+    padding: 15px 15px;
   }
 
-  .user__search-slider .rc-slider-handle {
+  .manager__search-slider .rc-slider-handle {
     width: 15px;
     height: 15px;
   }
 
-  .user__search-slider-values {
+  .manager__search-slider-values {
     margin-top: 6px;
   }
 
-  .user__search-slider-values span {
+  .manager__search-slider-values span {
     padding: 1px 6px;
   }
 
-  .user__sidebar-content .react-select__container {
+  .manager__sidebar-content .react-select__container {
     width: 100%;
     position: relative;
     z-index: 1000;
   }
 
-  .user__sidebar-content .react-select__control {
+  .manager__sidebar-content .react-select__control {
     min-height: 30px;
   }
 
-  .user__sidebar-content .react-select__menu {
+  .manager__sidebar-content .react-select__menu {
     z-index: 99999 !important;
   }
 }
 
 @media (width < 479px) {
-  .user__catalog-books-list {
+  .manager__catalog-books-list {
     justify-items: center;
     gap: 10px;
     padding: 15px;
   }
 
-  .user__search-form {
+  .manager__search-form {
     padding: 15px;
   }
 
-  .user__search-bar {
+  .manager__search-bar {
     width: 100%;
     padding: 10px;
   }
@@ -449,13 +450,13 @@
 }
 
 /* Стили для react-select компонента */
-.user__sidebar-content .react-select__container {
+.manager__sidebar-content .react-select__container {
   width: 100%;
   position: relative;
   z-index: 1000;
 }
 
-.user__sidebar-content .react-select__control {
+.manager__sidebar-content .react-select__control {
   width: 100%;
   border: 1px solid black;
   border-radius: 0;
@@ -464,16 +465,16 @@
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__control:hover {
+.manager__sidebar-content .react-select__control:hover {
   border: 1px solid black;
 }
 
-.user__sidebar-content .react-select__control--is-focused {
+.manager__sidebar-content .react-select__control--is-focused {
   border: 1px solid black;
   box-shadow: none;
 }
 
-.user__sidebar-content .react-select__menu {
+.manager__sidebar-content .react-select__menu {
   border: none;
   border-radius: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -481,13 +482,13 @@
   position: absolute !important;
 }
 
-.user__sidebar-content .react-select__menu-list {
+.manager__sidebar-content .react-select__menu-list {
   border: none;
   border-radius: 0;
   padding: 0;
 }
 
-.user__sidebar-content .react-select__option {
+.manager__sidebar-content .react-select__option {
   background-color: white;
   color: black;
   border: none;
@@ -495,63 +496,63 @@
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__option:hover {
+.manager__sidebar-content .react-select__option:hover {
   background-color: var(--grey-color);
 }
 
-.user__sidebar-content .react-select__option--is-selected {
-  background-color: var(--main-user-color);
+.manager__sidebar-content .react-select__option--is-selected {
+  background-color: var(--main-manager-color);
   color: black;
 }
 
-.user__sidebar-content .react-select__option--is-focused {
+.manager__sidebar-content .react-select__option--is-focused {
   background-color: var(--grey-color);
 }
 
-.user__sidebar-content .react-select__multi-value {
+.manager__sidebar-content .react-select__multi-value {
   background-color: var(--grey-color);
   border: 1px solid black;
   border-radius: 3px;
 }
 
-.user__sidebar-content .react-select__multi-value__label {
+.manager__sidebar-content .react-select__multi-value__label {
   color: black;
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__multi-value__remove {
+.manager__sidebar-content .react-select__multi-value__remove {
   color: black;
   cursor: pointer;
 }
 
-.user__sidebar-content .react-select__multi-value__remove:hover {
+.manager__sidebar-content .react-select__multi-value__remove:hover {
   background-color: #ff6b6b;
   color: white;
 }
 
-.user__sidebar-content .react-select__placeholder {
+.manager__sidebar-content .react-select__placeholder {
   color: #666;
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__single-value {
+.manager__sidebar-content .react-select__single-value {
   color: black;
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__input-container {
+.manager__sidebar-content .react-select__input-container {
   color: black;
   font-size: var(--font-size-subregular);
 }
 
-.user__sidebar-content .react-select__indicator-separator {
+.manager__sidebar-content .react-select__indicator-separator {
   display: none;
 }
 
-.user__sidebar-content .react-select__dropdown-indicator {
+.manager__sidebar-content .react-select__dropdown-indicator {
   color: black;
 }
 
-.user__sidebar-content .react-select__dropdown-indicator:hover {
+.manager__sidebar-content .react-select__dropdown-indicator:hover {
   color: black;
 }

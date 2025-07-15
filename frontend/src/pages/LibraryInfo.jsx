@@ -79,14 +79,20 @@ export default function LibraryInfo() {
           {library.open_at} - {library.close_at}
         </h2>
 
-        {daysOpen.length > 0 && (
-          <>
-            <strong className="user__library-with-divider">Рабочие дни:</strong>
-            <h2>
-              {daysOpen.map(day => dayLabels[day]).join(', ')}
-            </h2>
-          </>
-        )}
+        <strong className="user__library-with-divider">Рабочие дни:</strong>
+        <div className="user__library-days">
+          {Object.entries(dayLabels).map(([dayKey, dayLabel]) => (
+            <button
+              key={dayKey}
+              className={`user__library-day-button ${
+                daysOpen.includes(dayKey) ? 'active' : 'inactive'
+              }`}
+              disabled
+            >
+              {dayLabel}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

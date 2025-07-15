@@ -47,24 +47,23 @@ export default function Catalog() {
 
   useEffect(() => {
     fetch('/api/books/genres/')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Genres data:', data);
-        const options = data.map(g => ({ value: g, label: g }));
+        const options = data.map((g) => ({ value: g, label: g }));
         setAllGenres(options);
       })
-      .catch(err => setError(err.message));
+      .catch((err) => setError(err.message));
 
     fetch('/api/books/authors/')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Authors data:', data);
-        const options = data.map(a => ({ value: a, label: a }));
+        const options = data.map((a) => ({ value: a, label: a }));
         setAllAuthors(options);
       })
-      .catch(err => setError(err.message));
+      .catch((err) => setError(err.message));
   }, []);
-
 
   useEffect(() => {
     fetchCities();
@@ -109,7 +108,6 @@ export default function Catalog() {
     selectedAuthors,
     selectedGenres,
   ]);
-
 
   async function fetchBooks(params = {}) {
     try {
@@ -207,26 +205,47 @@ export default function Catalog() {
           </div>
 
           <div className="user__sidebar-content">
-            <label className="user__search-label">Авторы</label>
             <Select
               isMulti
               isSearchable
               options={allAuthors}
               value={selectedAuthors}
               onChange={setSelectedAuthors}
-              placeholder="Выберите авторов..."
+              placeholder="Выберите авторов"
               className="user__react-select"
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  zIndex: 99999,
+                  position: 'absolute',
+                }),
+                menuPortal: (provided) => ({
+                  ...provided,
+                  zIndex: 99999,
+                }),
+              }}
+              menuPortalTarget={document.body}
             />
-
-            <label className="user__search-label">Жанры</label>
             <Select
               isMulti
               isSearchable
               options={allGenres}
               value={selectedGenres}
               onChange={setSelectedGenres}
-              placeholder="Выберите жанры..."
+              placeholder="Выберите жанры"
               className="user__react-select"
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  zIndex: 99999,
+                  position: 'absolute',
+                }),
+                menuPortal: (provided) => ({
+                  ...provided,
+                  zIndex: 99999,
+                }),
+              }}
+              menuPortalTarget={document.body}
             />
 
             <div className="user__slider-container">
