@@ -176,7 +176,7 @@ export default function ManagerOrders() {
                   className="user__orders-book-cover"
                   loading='lazy'
                   src={
-                    b.image_url ||
+                    books[b.id]?.image_url ||
                     'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
                   }
                   alt={`${books[b.id]?.title ?? '…'} cover`}
@@ -255,9 +255,9 @@ export default function ManagerOrders() {
                   <option key={'returned'} value={'returned'}>
                     Возвращена
                   </option>
-                  {/* <option key={"cancelled"} value={"cancelled"}>
-                    Отменён
-                  </option> */}
+                  <option key={"cancelled"} value={"cancelled"}>
+                    Отменить
+                  </option>
                 </select>
               ) : (
                 <></>
