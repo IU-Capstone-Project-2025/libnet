@@ -113,7 +113,6 @@ async def send_code(request: Request, current_user: models.LibUser = Depends(get
         current_user.email_verification_code = verification_code
         current_user.code_expires_at = expires_at
 
-        db.add(current_user)
         db.commit()
         db.refresh(current_user)
 
