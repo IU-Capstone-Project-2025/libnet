@@ -93,25 +93,25 @@ export default function Favorites() {
 
   // Handle removing book from favorites
   async function handleRemoveFavorite(bookId) {
-    // try {
-    //   const res = await fetch(`/api/users/likes/${user.id}/${bookId}`, {
-    //     method: 'DELETE',
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   });
-    //   if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    try {
+      const res = await fetch(`/api/users/like/${user.id}/${bookId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       
-    //   // Remove from local state
-    //   setFavorites(prev => prev.filter(id => id !== bookId));
+      // Remove from local state
+      setFavorites(prev => prev.filter(id => id !== bookId));
       
-    //   // Also remove from books state
-    //   setBooks(prev => {
-    //     const newBooks = { ...prev };
-    //     delete newBooks[bookId];
-    //     return newBooks;
-    //   });
-    // } catch (err) {
-    //   console.error('Error removing favorite:', err);
-    // }
+      // Also remove from books state
+      setBooks(prev => {
+        const newBooks = { ...prev };
+        delete newBooks[bookId];
+        return newBooks;
+      });
+    } catch (err) {
+      console.error('Error removing favorite:', err);
+    }
   }
 
   return (
