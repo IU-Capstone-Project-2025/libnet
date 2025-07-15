@@ -5,6 +5,7 @@ import './Catalog.css';
 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import Select from 'react-select';
 
 export default function ManagerCatalog() {
   const Range = Slider.Range;
@@ -20,6 +21,12 @@ export default function ManagerCatalog() {
   const [yearTo, setYearTo] = useState('');
 
   const [selectedLibrary, setSelectedLibrary] = useState('');
+  
+  const [allGenres, setAllGenres] = useState([]);
+  const [allAuthors, setAllAuthors] = useState([]);
+
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedAuthors, setSelectedAuthors] = useState([]);
   const [searchParams, setSearchParams] = useState({
     title: '',
     authors: '',
@@ -35,15 +42,41 @@ export default function ManagerCatalog() {
   }, [user]);
 
   useEffect(() => {
+    fetch('/api/books/genres/')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Genres data:', data);
+        const options = data.map(g => ({ value: g, label: g }));
+        setAllGenres(options);
+      })
+      .catch(err => setError(err.message));
+
+    fetch('/api/books/authors/')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Authors data:', data);
+        const options = data.map(a => ({ value: a, label: a }));
+        setAllAuthors(options);
+      })
+      .catch(err => setError(err.message));
+  }, []);
+
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      const { title, authors, genres, rating } = searchParams;
+      const { title, rating } = searchParams;
       const params = {};
 
       if (title.trim() !== '') params.title = title;
-      if (authors.trim() !== '') params.authors = authors;
-      if (genres.trim() !== '') params.genres = genres;
       if (rating !== '') params.rating = rating;
       if (selectedLibrary !== '') params.library_id = selectedLibrary;
+      if (selectedAuthors.length > 0) {
+        params.authors = selectedAuthors.map((a) => a.value).join(';');
+      }
+
+      if (selectedGenres.length > 0) {
+        params.genres = selectedGenres.map((g) => g.value).join(';');
+      }
 
       if (yearFrom || yearTo) {
         const from = yearFrom.trim() !== '' ? yearFrom.trim() : '1700';
@@ -57,8 +90,8 @@ export default function ManagerCatalog() {
     return () => clearTimeout(timer);
   }, [
     searchParams.title,
-    searchParams.authors,
-    searchParams.genres,
+    selectedAuthors,
+    selectedGenres,
     searchParams.rating,
     yearFrom,
     yearTo,
@@ -140,21 +173,26 @@ export default function ManagerCatalog() {
           </div>
 
           <div className="user__sidebar-content">
-            <input
-              type="text"
-              name="authors"
-              placeholder="Авторы (через ;)"
-              value={searchParams.authors}
-              onChange={handleSearchChange}
-              className="user__search-filter"
+            <label className="user__search-label">Авторы</label>
+            <Select
+              isMulti
+              isSearchable
+              options={allAuthors}
+              value={selectedAuthors}
+              onChange={setSelectedAuthors}
+              placeholder="Выберите авторов..."
+              className="user__react-select"
             />
-            <input
-              type="text"
-              name="genres"
-              placeholder="Жанры (через ;)"
-              value={searchParams.genres}
-              onChange={handleSearchChange}
-              className="user__search-filter"
+
+            <label className="user__search-label">Жанры</label>
+            <Select
+              isMulti
+              isSearchable
+              options={allGenres}
+              value={selectedGenres}
+              onChange={setSelectedGenres}
+              placeholder="Выберите жанры..."
+              className="user__react-select"
             />
             <div className="user__slider-container">
               <label className="user__search-label">Год издания</label>
