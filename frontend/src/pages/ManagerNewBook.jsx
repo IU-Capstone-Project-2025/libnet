@@ -146,10 +146,10 @@ export default function ManagerNewBook() {
                 value={rating || ''}
                 onChange={(e) => setRating(e.target.value)}
               />
-              <strong>Издатель:</strong>
+              <strong>Издательство:</strong>
               <input
                 className="manager__book-detail-input"
-                placeholder="Издатель"
+                placeholder="Издательство"
                 value={publisher || ''}
                 onChange={(e) => setPublisher(e.target.value)}
               />

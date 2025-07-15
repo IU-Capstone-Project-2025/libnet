@@ -20,7 +20,7 @@ export default function Orders() {
       if (user == null) return;
       try {
         console.log('trying');
-        const res = await fetch(`/api/bookings/users/${user.id}`,
+        const res = await fetch(`/api/bookings/users/`,
           {headers: {Authorization: `Bearer ${token}`,}}
         );
 
@@ -160,14 +160,14 @@ export default function Orders() {
                   </p>
                 </div>
               </div>
-              {/* {b.status == 'pending' && (
+              {b.status == 'pending' && (
                 <button
                   className="user__orders-button user__orders-button--red"
                   onClick={() => handleCancel(b.id)}
                 >
                   Отменить бронь
                 </button>
-              )} */}
+              )}
             </div>
           ))}
         </div>
