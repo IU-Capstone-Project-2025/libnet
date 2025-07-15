@@ -98,7 +98,7 @@ class LibraryCreate(SQLModel):
     rent_duration: int
 
 class Book(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
     library_id: int = Field(foreign_key="library.id")
     title: str
     author: str
