@@ -6,7 +6,6 @@ import './Catalog.css';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-
 export default function Catalog() {
   const Range = Slider.Range;
 
@@ -15,7 +14,7 @@ export default function Catalog() {
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
@@ -82,7 +81,9 @@ export default function Catalog() {
       setLoading(true);
       const queryString = new URLSearchParams(
         Object.fromEntries(
-          Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '')
+          Object.entries(params).filter(
+            ([_, v]) => v !== undefined && v !== null && v !== ''
+          )
         )
       ).toString();
 
@@ -140,17 +141,21 @@ export default function Catalog() {
         </div>
       </form>
 
-      
-
       <div className="user__genre-section">
-        <form className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}>
+        <form
+          className={`user__sidebar ${
+            isSidebarOpen ? 'user__sidebar--open' : ''
+          }`}
+        >
           <div
             className="user__sidebar-header"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <h2 className="user__sidebar-heading">Фильтры</h2>
             <svg
-              className={`user__sidebar-arrow ${isSidebarOpen ? 'user__sidebar-arrow--up' : ''}`}
+              className={`user__sidebar-arrow ${
+                isSidebarOpen ? 'user__sidebar-arrow--up' : ''
+              }`}
               width="30"
               height="30"
               viewBox="0 0 24 24"
@@ -183,20 +188,23 @@ export default function Catalog() {
               onChange={handleSearchChange}
               className="user__search-filter"
             />
-            <label className="user__search-label">Год издания</label>
-            <Range
-              min={1800}
-              max={2025}
-              defaultValue={[1800, 2025]}
-              allowCross={false}
-              onChange={([from, to]) => {
-                setYearFrom(from.toString());
-                setYearTo(to.toString());
-              }}
-              className="user__search-slider"
-            />
-            <div className="user__search-slider-values">
-              <span>{yearFrom || '1800'}</span> — <span>{yearTo || '2025'}</span>
+            <div className="user__slider-container">
+              <label className="user__search-label">Год издания</label>
+              <Range
+                min={0}
+                max={2025}
+                defaultValue={[0, 2025]}
+                allowCross={false}
+                onChange={([from, to]) => {
+                  setYearFrom(from.toString());
+                  setYearTo(to.toString());
+                }}
+                className="user__search-slider"
+              />
+              <div className="user__search-slider-values">
+                <span>{yearFrom || '0'}</span> —{' '}
+                <span>{yearTo || '2025'}</span>
+              </div>
             </div>
 
             <select
@@ -214,7 +222,6 @@ export default function Catalog() {
               <option value="18">18+</option>
             </select>
 
-            
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
@@ -246,9 +253,7 @@ export default function Catalog() {
         <div className="user__catalog-books-list">
           {loading && books.length === 0 && !error && <p>Загрузка...</p>}
           {error && <p className="red-error">Ошибка: {error}</p>}
-          {!loading && books.length === 0 && !error && (
-            <p>Ничего не найдено</p>
-          )}
+          {!loading && books.length === 0 && !error && <p>Ничего не найдено</p>}
           {books.map((b) => (
             <div
               key={b.id}
@@ -258,14 +263,19 @@ export default function Catalog() {
               <img
                 className="user__catalog-book-cover"
                 src={
-                  b.image_url || 'https://via.placeholder.com/150x220?text=Book+Cover'
+                  b.image_url ||
+                  'https://via.placeholder.com/150x220?text=Book+Cover'
                 }
                 alt={`${b.title} cover`}
               />
               <div className="user__catalog-book-info">
                 <div className="user__catalog-book-info-text-container">
-                  <strong className="user__catalog-book-info-title">{b.title}</strong>
-                  <span className="user__catalog-book-info-author">{b.author}</span>
+                  <strong className="user__catalog-book-info-title">
+                    {b.title}
+                  </strong>
+                  <span className="user__catalog-book-info-author">
+                    {b.author}
+                  </span>
                 </div>
               </div>
             </div>
