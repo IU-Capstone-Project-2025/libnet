@@ -126,12 +126,12 @@ export default function AdminLibraries() {
               <span>
                 {m.first_name} | {m.email}
               </span>
-              <button
+              {(user && (Number(m.id) != Number(user.id))) ?  (<button
                 onClick={() => handleDismissAdmin(m.email)}
                 className="admin__dismiss-button"
               >
                 <img src="/bin.svg" alt="Удалить" />
-              </button>
+              </button>):(<></>)}
             </li>
           ))}
         </ul>
