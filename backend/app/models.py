@@ -83,6 +83,19 @@ class Library(SQLModel, table=True):
     managers: List["LibUser"] = Relationship(back_populates="library")
     bookings: List["Booking"] = Relationship(back_populates="library")
 
+class LibraryCreate(SQLModel):
+    name: str
+    city: str
+    phone: str
+    email: str
+    address: str
+    description: str
+    open_at: str
+    close_at: str
+    days_open: str
+    booking_duration: int
+    rent_duration: int
+
 class Book(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     library_id: int = Field(foreign_key="library.id")
