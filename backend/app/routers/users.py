@@ -106,8 +106,12 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
 # Send code again
 @router.post("/send-code/")
 @limiter.limit("1/minute")
-async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user)):
+async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user), db: Session = Depends(get_session)):
     verification_code = generate_verification_code()
+    current_user.email_verification_code = verification_code
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
     await send_verification_code_email(current_user.email, verification_code)
 
 # Login a User
@@ -144,9 +148,7 @@ def read_all_users(db: Session = Depends(get_session)):
 # Get single user
 @router.get("/{user_id}", response_model=models.LibUserRead)
 def read_user_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User does not exist")
+    user = db.get(models.LibUser, user_id)
     return user
 
 # Get user by email

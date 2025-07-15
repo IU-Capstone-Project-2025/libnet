@@ -9,13 +9,14 @@ router = APIRouter()
 
 # Create a Library
 @router.post("/", response_model=models.Library)
-@limiter.limit("10/minute")
-def create_library(request: Request, library: models.Library, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    db.add(library)
+@limiter.limit("100/minute")
+def create_library(request: Request, library: models.LibraryCreate, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    new_library = models.Library(**library.model_dump())
+    db.add(new_library)
     db.commit()
-    db.refresh(library)
+    db.refresh(new_library)
 
-    return library
+    return new_library
 
 # Get all Libraries
 @router.get("/", response_model=list[models.Library])

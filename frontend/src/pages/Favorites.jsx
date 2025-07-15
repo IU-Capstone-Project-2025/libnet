@@ -91,9 +91,27 @@ export default function Favorites() {
       </p>
     );
 
-  // TODO: handle cancel
-  async function handleCancel(booking_id) {
-    console.log('Cancelled ' + booking_id);
+  // Handle removing book from favorites
+  async function handleRemoveFavorite(bookId) {
+    // try {
+    //   const res = await fetch(`/api/users/likes/${user.id}/${bookId}`, {
+    //     method: 'DELETE',
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   });
+    //   if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      
+    //   // Remove from local state
+    //   setFavorites(prev => prev.filter(id => id !== bookId));
+      
+    //   // Also remove from books state
+    //   setBooks(prev => {
+    //     const newBooks = { ...prev };
+    //     delete newBooks[bookId];
+    //     return newBooks;
+    //   });
+    // } catch (err) {
+    //   console.error('Error removing favorite:', err);
+    // }
   }
 
   return (
@@ -115,12 +133,11 @@ export default function Favorites() {
             }
 
             return (
-              <div
-                className="user__favorites-book-section"
-                key={f}
-                onClick={() => navigate(`/books/${book.id}`)}
-              >
-                <div className="user__favorites-book">
+              <div className="user__favorites-book-section" key={f}>
+                <div 
+                  className="user__favorites-book"
+                  onClick={() => navigate(`/books/${book.id}`)}
+                >
                   <img
                     className="user__favorites-book-cover"
                     src={book.image_url}
@@ -143,18 +160,15 @@ export default function Favorites() {
                     </p>
                   </div>
                 </div>
-                <div className="user__favorites-buttons">
-                  {/* <button
-                  className="user__favorites-bin-button"
-                  onClick={() => handleCancel(b.id)}
-                ></button> */}
-                  {/* <button
-                  className="user__orders-button"
-                  // onClick={() => handleCancel(b.id)}
+                <button
+                  className="user__favorites-button user__favorites-button--red"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveFavorite(book.id);
+                  }}
                 >
-                  Забронировать
-                </button> */}
-                </div>
+                  Удалить
+                </button>
               </div>
             );
           })}

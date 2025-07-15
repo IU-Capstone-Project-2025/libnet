@@ -77,7 +77,7 @@ export default function ManagerOrders() {
       }
     }
 
-    fetchUsers();
+    // fetchUsers();
     fetchBooks();
   }, [bookings]);
 
@@ -174,8 +174,9 @@ export default function ManagerOrders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
+                  loading='lazy'
                   src={
-                    b.image_url ||
+                    books[b.id]?.image_url ||
                     'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
                   }
                   alt={`${books[b.id]?.title ?? '…'} cover`}
@@ -199,6 +200,26 @@ export default function ManagerOrders() {
                       <>
                         <strong>Заказчик:</strong>{' '}
                         {users[b.id].first_name + ' ' + users[b.id].last_name}
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </p>
+                  <p className="user__orders-book-detail">
+                    {users[b.id] ? (
+                      <>
+                        <strong>Email:</strong>{' '}
+                        <a href={`mailto:${users[b.id].email}`}>{users[b.id].email}</a>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </p>
+                  <p className="user__orders-book-detail">
+                    {users[b.id] ? (
+                      <>
+                        <strong>Телефон:</strong>{' '}
+                        <a href={`tel:${users[b.id].phone_number}`}>{users[b.id].phone_number}</a>
                       </>
                     ) : (
                       <></>
@@ -234,9 +255,9 @@ export default function ManagerOrders() {
                   <option key={'returned'} value={'returned'}>
                     Возвращена
                   </option>
-                  {/* <option key={"cancelled"} value={"cancelled"}>
-                    Отменён
-                  </option> */}
+                  <option key={"cancelled"} value={"cancelled"}>
+                    Отменить
+                  </option>
                 </select>
               ) : (
                 <></>

@@ -7,6 +7,8 @@ import Book from './pages/Book';
 import FAQ from './pages/FAQ';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
+import Libraries from './pages/Libraries';
+import LibraryInfo from './pages/LibraryInfo';
 import ManagerCatalog from './pages/ManagerCatalog';
 import ManagerOrders from './pages/ManagerOrders';
 import ManagerLibrary from './pages/ManagerLibrary';
@@ -18,6 +20,7 @@ import { useAuth } from './context/AuthContext';
 import Footer from './components/Footer';
 import AdminLibraries from './pages/AdminLibraries';
 import AdminLibrary from './pages/AdminLibrary';
+import AdminNewLibrary from './pages/AdminNewLibrary';
 
 export function PrivateRoute({ children, role='user'}) {
   const { user, loading } = useAuth();
@@ -39,6 +42,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Catalog />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/libraries" element={<Libraries />} />
+          <Route path="/libraries/:id" element={<LibraryInfo />} />
           <Route path="/books/:id" element={<Book/>} />
           <Route
             path="/orders"
@@ -111,6 +116,14 @@ export default function App() {
             element={
               <PrivateRoute role='admin'>
                 <AdminLibraries />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/new"
+            element={
+              <PrivateRoute role='admin'>
+                <AdminNewLibrary />
               </PrivateRoute>
             }
           />

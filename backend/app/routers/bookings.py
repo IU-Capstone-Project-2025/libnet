@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
@@ -11,7 +11,7 @@ router = APIRouter()
 
 # Create a Booking
 @router.post("/", response_model=models.Booking)
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 def create_booking(request: Request, booking: models.Booking, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if not current_user.is_verified:
         raise HTTPException(status_code=400, detail="User is not verified")
@@ -79,7 +79,7 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 
 # Update Booking's status
 @router.patch("/{booking_id}", response_model=models.Booking)
-@limiter.limit("20/minute")
+@limiter.limit("100/minute")
 def update_booking_status(request: Request, booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if current_user.role != "manager":
         raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
@@ -111,7 +111,7 @@ def update_booking_status(request: Request, booking_id: int, booking_update: mod
 
 # Search for booking
 @router.get("/search")
-def search_books(booking_id: int, user_phone: str, email: str, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+def search_bookings(booking_id: int = Query(default=None), user_phone: str = Query(default=None), email: str = Query(default=None), db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if current_user.role != "manager":
         raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
 
@@ -132,7 +132,7 @@ def search_books(booking_id: int, user_phone: str, email: str, db: Session = Dep
 
 # Delete a Booking
 @router.delete("/{booking_id}", status_code=204)
-@limiter.limit("20/minute")
+@limiter.limit("100/minute")
 def delete_booking(request: Request, booking_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if not current_user.is_verified:
         raise HTTPException(status_code=400, detail="User is not verified")

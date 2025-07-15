@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Catalog.css';
 
 export default function Catalog() {
@@ -8,9 +9,16 @@ export default function Catalog() {
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const {user} = useAuth();
 
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
+
+  const [cities, setCities] = useState([]);
+  const [libraries, setLibraries] = useState([]);
+
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedLibrary, setSelectedLibrary] = useState('');
 
   const [searchParams, setSearchParams] = useState({
     title: '',
@@ -20,20 +28,27 @@ export default function Catalog() {
   });
 
   useEffect(() => {
-    fetchBooks();
+    if (user) {
+      setSelectedCity(user.city);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchCities();
+    fetchLibraries();
   }, []);
 
-  // Объединенный автоматический поиск с задержкой 1 секунда
   useEffect(() => {
     const timer = setTimeout(() => {
       const { title, authors, genres, rating } = searchParams;
       const params = {};
 
-      // Добавляем все параметры поиска
       if (title.trim() !== '') params.title = title;
       if (authors.trim() !== '') params.authors = authors;
       if (genres.trim() !== '') params.genres = genres;
       if (rating !== '') params.rating = rating;
+      if (selectedCity !== '') params.city = selectedCity;
+      if (selectedLibrary !== '') params.library_id = selectedLibrary;
 
       if (yearFrom || yearTo) {
         const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
@@ -45,7 +60,16 @@ export default function Catalog() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [searchParams.title, searchParams.authors, searchParams.genres, searchParams.rating, yearFrom, yearTo]);
+  }, [
+    searchParams.title,
+    searchParams.authors,
+    searchParams.genres,
+    searchParams.rating,
+    yearFrom,
+    yearTo,
+    selectedCity,
+    selectedLibrary,
+  ]);
 
   async function fetchBooks(params = {}) {
     try {
@@ -67,27 +91,37 @@ export default function Catalog() {
     }
   }
 
+  async function fetchCities() {
+    try {
+      const res = await fetch('/api/libraries/cities');
+      if (!res.ok) throw new Error('Ошибка загрузки городов');
+      const data = await res.json();
+      setCities(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function fetchLibraries() {
+    try {
+      const res = await fetch('/api/libraries/');
+      if (!res.ok) throw new Error('Ошибка загрузки библиотек');
+      const data = await res.json();
+      setLibraries(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   function handleSearchChange(e) {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
-  }
-
-  function handleTitleSearch(e) {
-    e.preventDefault();
-    // Поиск уже выполняется автоматически через useEffect
-    // Оставляем функцию для совместимости с формой
-  }
-
-  function handleFilterSearch(e) {
-    e.preventDefault();
-    // Поиск уже выполняется автоматически через useEffect
-    // Оставляем функцию для совместимости с формой
   }
 
   return (
     <div className="user__catalog-content">
       <h1 className="user__heading">Каталог книг</h1>
 
-      <form onSubmit={handleTitleSearch} className="user__search-form">
+      <form onSubmit={(e) => e.preventDefault()} className="user__search-form">
         <div className="user__search-bar-container">
           <input
             type="text"
@@ -104,19 +138,14 @@ export default function Catalog() {
       {error && <p className="red-error">Ошибка: {error}</p>}
 
       <div className="user__genre-section">
-        <form
-          onSubmit={handleFilterSearch}
-          className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}
-        >
+        <form className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}>
           <div
             className="user__sidebar-header"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <h2 className="user__sidebar-heading">Фильтры</h2>
             <svg
-              className={`user__sidebar-arrow ${
-                isSidebarOpen ? 'user__sidebar-arrow--up' : ''
-              }`}
+              className={`user__sidebar-arrow ${isSidebarOpen ? 'user__sidebar-arrow--up' : ''}`}
               width="30"
               height="30"
               viewBox="0 0 24 24"
@@ -176,6 +205,33 @@ export default function Catalog() {
               <option value="12">12+</option>
               <option value="16">16+</option>
               <option value="18">18+</option>
+            </select>
+
+            
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="user__search-filter"
+            >
+              <option value="">Все города</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedLibrary}
+              onChange={(e) => setSelectedLibrary(e.target.value)}
+              className="user__search-filter"
+            >
+              <option value="">Все библиотеки</option>
+              {libraries.map((lib) => (
+                <option key={lib.id} value={lib.id}>
+                  {lib.name}
+                </option>
+              ))}
             </select>
           </div>
         </form>

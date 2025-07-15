@@ -24,6 +24,7 @@ export default function ManagerBook() {
   const [genre, setGenre] = useState(null);
   const [year, setYear] = useState(null);
   const [rating, setRating] = useState(null);
+  const [publisher, setPublisher] = useState(null);
 
   useEffect(() => {
     async function fetchBook() {
@@ -41,6 +42,7 @@ export default function ManagerBook() {
         setGenre(data.genre);
         setYear(data.year);
         setRating(data.rating);
+        setPublisher(data.publisher);
       } catch (err) {
         console.log('here');
         setError(err.message);
@@ -69,6 +71,7 @@ export default function ManagerBook() {
           genre: genre,
           year: year,
           rating: rating,
+          publisher: publisher,
         }),
       });
       if (res.ok) {
@@ -193,6 +196,13 @@ export default function ManagerBook() {
                 placeholder="Рейтинг"
                 value={rating || ''}
                 onChange={(e) => setRating(e.target.value)}
+              />
+              <strong>Издательство:</strong>
+              <input
+                className="manager__book-detail-input"
+                placeholder="Издательство"
+                value={publisher || ''}
+                onChange={(e) => setPublisher(e.target.value)}
               />
             </div>
           </div>
