@@ -77,7 +77,7 @@ export default function ManagerOrders() {
       }
     }
 
-    // fetchUsers();
+    fetchUsers();
     fetchBooks();
   }, [bookings]);
 
@@ -219,7 +219,7 @@ export default function ManagerOrders() {
                     {users[b.id] ? (
                       <>
                         <strong>Телефон:</strong>{' '}
-                        <a href={`tel:${users[b.id].phone_number}`}>{users[b.id].phone_number}</a>
+                        <a href={`tel:${users[b.id].phone_number}`}>{users[b.id].phone}</a>
                       </>
                     ) : (
                       <></>

@@ -198,3 +198,20 @@
   font-size: 14px;
 }
 }
+
+
+.day-button {
+  padding: 6px 12px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+}
+.day-button.active {
+  background-color: var(--main-manager-color);
+  color: white;
+  border-color: var(--main-manager-color);
+}
