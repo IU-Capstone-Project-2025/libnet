@@ -8,7 +8,7 @@ const USER_DATA = "user_data"
 const AuthContext = createContext(null);
 
 class User {
-  constructor(id, email, firstName, lastName, role, city, phone, lib) {
+  constructor(id, email, firstName, lastName, role, city, phone, lib, verif) {
     this.id = id;
     this.email = email;
     this.firstName = firstName;
@@ -17,6 +17,7 @@ class User {
     this.city = city;
     this.phone = phone;
     this.libraryId = lib;
+    this.verification = verif;
   }
 
   get displayName() {
@@ -44,7 +45,8 @@ export function AuthProvider({ children }) {
           user_data.role,
           user_data.city,
           user_data.phone,
-          user_data.libraryId
+          user_data.libraryId,
+          user_data.is_verified
         ));
         setLoading(false);
       }
@@ -61,8 +63,9 @@ export function AuthProvider({ children }) {
             setLoading(false);
             throw new Error('User fetch failed');
           }
-
+          
           const data = await res.json();
+          console.log(data);
           const loadedUser = new User(
             data.id,
             data.email,
@@ -71,7 +74,8 @@ export function AuthProvider({ children }) {
             data.role,
             data.city,
             data.phone,
-            data.libraryId
+            data.library_id,
+            data.is_verified
           );
           setUser(loadedUser);
           setLoading(false);
@@ -114,12 +118,13 @@ export function AuthProvider({ children }) {
 
   if (!profileRes.ok) {
     console.log(profileRes.json)
-    setUser(new User(user_id, email, '', '', '', '', '', ''));
+    setUser(new User(user_id, email, '', '', '', '', '', '', false));
     setLoading(false);
     throw new Error('Could not load user profile');
   }
 
   const data = await profileRes.json();
+  console.log(data);
   let a = new User(
       data.id,
       data.email,
@@ -128,7 +133,8 @@ export function AuthProvider({ children }) {
       data.role,
       data.city,
       data.phone,
-      data.library_id
+      data.library_id,
+      data.is_verified
     )
   console.log(data.library_id);
   setUser(a);
@@ -138,7 +144,6 @@ export function AuthProvider({ children }) {
 }
 
   async function register(payload) {
-    // payload["role"] = "manager";
     const res = await fetch(`/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -163,26 +168,66 @@ export function AuthProvider({ children }) {
        },
       body: JSON.stringify(payload),
     });
-    let new_user = new User(
-      user.id,
-      payload.email,
-      payload.first_name,
-      payload.last_name,
-      user.role,
-      payload.city,
-      payload.phone,
-      user.libraryId
-    )
-    setUser(new_user)
+
     setLoading(false);
     if (!res.ok) {
       const { detail } = await res.json().catch(() => ({}));
       throw new Error(detail ?? 'Update failed');
     }
     else{
+        let new_user = new User(
+        user.id,
+        payload.email,
+        payload.first_name,
+        payload.last_name,
+        user.role,
+        payload.city,
+        payload.phone,
+        user.libraryId
+      )
+      setUser(new_user)
       localStorage.setItem(USER_DATA, JSON.stringify(new_user));
     }
 
+  }
+
+    async function verify(payload) {
+      const token = localStorage.getItem(TOKEN_KEY);
+      console.log(payload.code);
+      const res = await fetch(`/api/users/verify/` + user.id + `?code=`+payload.code, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        // body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const { detail } = await res.json().catch(() => ({}));
+        setLoading(false);
+        throw new Error(detail ?? 'Verification failed');
+      }
+      console.log(res.status);
+      console.log("Vse srabotalo");
+      user.verification = true;
+      // await login(payload.email, payload.password);
+  }
+
+  async function sendCode() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      const res = await fetch(`/api/users/send-code/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+      });
+
+      if (!res.ok) {
+        const { detail } = await res.json().catch(() => ({}));
+        setLoading(false);
+        throw new Error(detail ?? 'Sending code failed');
+      }
+      console.log("Otpravili " + res.status);
   }
 
   function logout() {
@@ -194,7 +239,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, update_user, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, register, update_user, loading, verify, sendCode }}>
       {children}
     </AuthContext.Provider>
   );
