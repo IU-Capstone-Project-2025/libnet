@@ -56,8 +56,8 @@ export default function Catalog() {
       if (selectedLibrary !== '') params.library_id = selectedLibrary;
 
       if (yearFrom || yearTo) {
-        const from = yearFrom.trim() !== '' ? yearFrom.trim() : '0';
-        const to = yearTo.trim() !== '' ? yearTo.trim() : '3000';
+        const from = yearFrom.trim() !== '' ? yearFrom.trim() : '1700';
+        const to = yearTo.trim() !== '' ? yearTo.trim() : '2025';
         params.year = `${from}-${to}`;
       }
 
@@ -191,9 +191,9 @@ export default function Catalog() {
             <div className="user__slider-container">
               <label className="user__search-label">Год издания</label>
               <Range
-                min={0}
+                min={1700}
                 max={2025}
-                defaultValue={[0, 2025]}
+                defaultValue={[1700, 2025]}
                 allowCross={false}
                 onChange={([from, to]) => {
                   setYearFrom(from.toString());
@@ -202,7 +202,7 @@ export default function Catalog() {
                 className="user__search-slider"
               />
               <div className="user__search-slider-values">
-                <span>{yearFrom || '0'}</span> —{' '}
+                <span>{yearFrom || '1700'}</span> —{' '}
                 <span>{yearTo || '2025'}</span>
               </div>
             </div>
