@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Catalog.css';
 
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
+
 export default function Catalog() {
+  const Range = Slider.Range;
+
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,8 +140,7 @@ export default function Catalog() {
         </div>
       </form>
 
-      {loading && <p>Загрузка...</p>}
-      {error && <p className="red-error">Ошибка: {error}</p>}
+      
 
       <div className="user__genre-section">
         <form className={`user__sidebar ${isSidebarOpen ? 'user__sidebar--open' : ''}`}>
@@ -178,20 +183,22 @@ export default function Catalog() {
               onChange={handleSearchChange}
               className="user__search-filter"
             />
-            <input
-              type="text"
-              placeholder="От года"
-              value={yearFrom}
-              onChange={(e) => setYearFrom(e.target.value)}
-              className="user__search-filter"
+            <label className="user__search-label">Год издания</label>
+            <Range
+              min={1800}
+              max={2025}
+              defaultValue={[1800, 2025]}
+              allowCross={false}
+              onChange={([from, to]) => {
+                setYearFrom(from.toString());
+                setYearTo(to.toString());
+              }}
+              className="user__search-slider"
             />
-            <input
-              type="text"
-              placeholder="До года"
-              value={yearTo}
-              onChange={(e) => setYearTo(e.target.value)}
-              className="user__search-filter"
-            />
+            <div className="user__search-slider-values">
+              <span>{yearFrom || '1800'}</span> — <span>{yearTo || '2025'}</span>
+            </div>
+
             <select
               name="rating"
               value={searchParams.rating}
@@ -237,6 +244,11 @@ export default function Catalog() {
         </form>
 
         <div className="user__catalog-books-list">
+          {loading && books.length === 0 && !error && <p>Загрузка...</p>}
+          {error && <p className="red-error">Ошибка: {error}</p>}
+          {!loading && books.length === 0 && !error && (
+            <p>Ничего не найдено</p>
+          )}
           {books.map((b) => (
             <div
               key={b.id}
