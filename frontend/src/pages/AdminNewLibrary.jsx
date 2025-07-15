@@ -26,7 +26,25 @@ export default function AdminNewLibrary() {
   const [waiting, setWaiting] = useState(null);
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
-  const [days, setDays] = useState("");
+  const [daysOpen, setDaysOpen] = useState([]); // Новое состояние
+  
+  const allDays = [
+    { key: 'mon', label: 'Пн' },
+    { key: 'tue', label: 'Вт' },
+    { key: 'wed', label: 'Ср' },
+    { key: 'thu', label: 'Чт' },
+    { key: 'fri', label: 'Пт' },
+    { key: 'sat', label: 'Сб' },
+    { key: 'sun', label: 'Вс' },
+  ];
+
+  function toggleDay(dayKey) {
+    setDaysOpen(prev =>
+      prev.includes(dayKey)
+        ? prev.filter(d => d !== dayKey)
+        : [...prev, dayKey]
+    );
+  }
 
   async function handleSave() {
     if (title && phone && email && address && description && open && close && waiting && rent && city) {
@@ -48,7 +66,7 @@ export default function AdminNewLibrary() {
             city: city,
             booking_duration: waiting,
             rent_duration: rent,
-            days_open: days,
+            days_open: daysOpen.join(';'),
             }),
         });
         if (res.ok) {
@@ -135,9 +153,22 @@ export default function AdminNewLibrary() {
             value={city || ''}
             onChange={(e) => setCity(e.target.value)}
           />
+          {/* Дни работы */}
+          <div style={{ marginTop: '15px' }}>
+            <strong>Дни работы:</strong>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '5px' }}>
+              {allDays.map(({ key, label }) => (
+                <div
+                  key={key}
+                  className={`day-button ${daysOpen.includes(key) ? 'active' : ''}`}
+                  onClick={() => toggleDay(key)}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* TODO: дни работы */}
         <button className="admin__book-button" onClick={() => navigate('/admin/')}>
                 Назад
               </button>

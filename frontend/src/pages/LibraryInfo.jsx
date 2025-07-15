@@ -9,6 +9,18 @@ export default function LibraryInfo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [daysOpen, setDaysOpen] = useState([]);
+
+  const dayLabels = {
+    mon: 'Пн',
+    tue: 'Вт',
+    wed: 'Ср',
+    thu: 'Чт',
+    fri: 'Пт',
+    sat: 'Сб',
+    sun: 'Вс',
+  };
+
   useEffect(() => {
     async function fetchLibrary() {
       try {
@@ -16,6 +28,12 @@ export default function LibraryInfo() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setLibrary(data);
+
+        // Обработка дней
+        const parsedDays = data.days_open
+          ? data.days_open.split(';').filter(Boolean)
+          : [];
+        setDaysOpen(parsedDays);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -47,6 +65,7 @@ export default function LibraryInfo() {
           {library.city}, {library.address}
         </h2>
         <h2>{library.description || 'Описание отсутствует.'}</h2>
+
         <strong className="user__library-with-divider">Контакты:</strong>
         <h2>
           <a href={`tel:${library.phone}`}>{library.phone}</a>
@@ -54,10 +73,20 @@ export default function LibraryInfo() {
         <h2>
           <a href={`mailto:${library.email}`}>{library.email}</a>
         </h2>
-        <strong className="user__library-with-divider">Время Работы:</strong>
+
+        <strong className="user__library-with-divider">Время работы:</strong>
         <h2>
           {library.open_at} - {library.close_at}
         </h2>
+
+        {daysOpen.length > 0 && (
+          <>
+            <strong className="user__library-with-divider">Рабочие дни:</strong>
+            <h2>
+              {daysOpen.map(day => dayLabels[day]).join(', ')}
+            </h2>
+          </>
+        )}
       </div>
     </div>
   );
