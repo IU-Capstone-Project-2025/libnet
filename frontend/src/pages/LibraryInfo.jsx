@@ -47,14 +47,14 @@ export default function LibraryInfo() {
           {library.city}, {library.address}
         </h2>
         <h2>{library.description || 'Описание отсутствует.'}</h2>
-        <strong>Контакты:</strong>
+        <strong className="user__library-with-divider">Контакты:</strong>
         <h2>
           <a href={`tel:${library.phone}`}>{library.phone}</a>
         </h2>
         <h2>
           <a href={`mailto:${library.email}`}>{library.email}</a>
         </h2>
-        <strong>Время Работы:</strong>
+        <strong className="user__library-with-divider">Время Работы:</strong>
         <h2>
           {library.open_at} - {library.close_at}
         </h2>

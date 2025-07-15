@@ -30,7 +30,7 @@
 .user__library-info-details {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   padding: 20px 0;
 }
@@ -57,7 +57,11 @@
   color: black;
   font-weight: var(--weight-bold);
   font-size: var(--font-size-regular);
-  margin-top: 20px;
+}
+
+.user__library-with-divider {
+  border-top: 1px solid black;
+  padding-top: 15px;
 }
 
 @media (width < 1024px) {
