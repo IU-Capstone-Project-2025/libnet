@@ -64,7 +64,9 @@ async def test_create_and_get_library(client: AsyncClient):
         "description": "Test library",
         "open_at": "09:00",
         "close_at": "17:00",
-        "days_open": "Mon-Fri"
+        "days_open": "Mon-Fri",
+        "booking_duration": 7,
+        "rent_duration": 14
     }
     create_resp = await client.post("/libraries/", json=payload, headers=headers)
     assert create_resp.status_code == 200, create_resp.text
@@ -114,7 +116,9 @@ async def test_get_library_cities(client: AsyncClient):
         "description": "A fabulous library",
         "open_at": "10:00",
         "close_at": "18:00",
-        "days_open": "Tue-Sat"
+        "days_open": "Tue-Sat",
+        "booking_duration": 7,
+        "rent_duration": 14
     }
     library = await client.post("/libraries/", json=payload, headers=headers)
     lib_id = library.json()["id"]
@@ -162,7 +166,9 @@ async def test_update_library(client: AsyncClient):
         "description": "Old description",
         "open_at": "08:00",
         "close_at": "16:00",
-        "days_open": "Mon-Sun"
+        "days_open": "Mon-Sun",
+        "booking_duration": 7,
+        "rent_duration": 14
     }
     library = await client.post("/libraries/", json=payload, headers=headers)
     lib_id = library.json()["id"]
@@ -205,7 +211,6 @@ async def test_get_all_libraries(client: AsyncClient):
     user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
 
     payload1 = {
-        "id": 101,
         "name": "Alpha Library",
         "city": "City A",
         "address": "Alpha St",
@@ -214,10 +219,11 @@ async def test_get_all_libraries(client: AsyncClient):
         "description": "Library Alpha",
         "open_at": "08:00",
         "close_at": "17:00",
-        "days_open": "Mon-Fri"
+        "days_open": "Mon-Fri",
+        "booking_duration": 7,
+        "rent_duration": 14
     }
     payload2 = {
-        "id": 102,
         "name": "Beta Library",
         "city": "City B",
         "address": "Beta Blvd",
@@ -226,21 +232,20 @@ async def test_get_all_libraries(client: AsyncClient):
         "description": "Library Beta",
         "open_at": "09:00",
         "close_at": "18:00",
-        "days_open": "Mon-Fri"
+        "days_open": "Mon-Fri",
+        "booking_duration": 7,
+        "rent_duration": 14
     }
-    await client.post("/libraries/", json=payload1, headers=headers)
-    await client.post("/libraries/", json=payload2, headers=headers)
+    lib1_resp = await client.post("/libraries/", json=payload1, headers=headers)
+    lib2_resp = await client.post("/libraries/", json=payload2, headers=headers)
+    lib1_id = lib1_resp.json()["id"]
+    lib2_id = lib2_resp.json()["id"]
 
     get_resp = await client.get("/libraries/")
     assert get_resp.status_code == 200
     libraries = get_resp.json()
     print(libraries)
-    assert any(lib["id"] == 101 for lib in libraries)
-    assert any(lib["id"] == 102 for lib in libraries)
-
-    delete1 = await client.delete("/libraries/101", headers=headers)
-    delete2 = await client.delete("/libraries/102", headers=headers)
-    assert delete1.status_code == 204
-    assert delete2.status_code == 204
+    assert any(lib["id"] == lib1_id for lib in libraries)
+    assert any(lib["id"] == lib2_id for lib in libraries)
 
     await client.delete(f"/users/{user_id}", headers=headers)
