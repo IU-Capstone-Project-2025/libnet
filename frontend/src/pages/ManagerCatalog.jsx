@@ -93,8 +93,9 @@ export default function ManagerCatalog() {
 
   return (
     <div className="user__catalog-content">
+      
       <h1 className="user__heading">Каталог книг</h1>
-
+      <button className='user__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
       <form onSubmit={(e) => e.preventDefault()} className="user__search-form">
         <div className="user__search-bar-container">
           <input
