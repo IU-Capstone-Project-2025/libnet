@@ -73,7 +73,10 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="email"
         placeholder="E-Mail"
         value={email}
-        autoComplete="off"
+        autoComplete="new-email"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
         onChange={e => setEmail(e.target.value)}
       />
       <input
@@ -81,21 +84,30 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="password"
         placeholder="Пароль"
         value={password}
-        autoComplete="off"
+        autoComplete="new-password"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
         onChange={e => setPassword(e.target.value)}
       />
       <input
         className="user__login-input"
         placeholder="Имя"
         value={firstName}
-        autoComplete="off"
+        autoComplete="given-name"
+        autoCorrect="off"
+        autoCapitalize="words"
+        spellCheck="false"
         onChange={e => setFirstName(e.target.value)}
       />
       <input
         className="user__login-input"
         placeholder="Фамилия"
         value={lastName}
-        autoComplete="off"
+        autoComplete="family-name"
+        autoCorrect="off"
+        autoCapitalize="words"
+        spellCheck="false"
         onChange={e => setLastName(e.target.value)}
       />
       <input
@@ -103,12 +115,16 @@ export default function RegisterPopup({ onClose, switchToLogin }) {
         type="tel"
         placeholder="Телефон"
         value={phone}
-        autoComplete="off"
+        autoComplete="tel"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
         onChange={e => setPhone(e.target.value)}
       />
       <select
         className="user__login-input"
         value={city}
+        autoComplete="address-level2"
         onChange={e => setCity(e.target.value)}
       >
         <option value="" disabled>
