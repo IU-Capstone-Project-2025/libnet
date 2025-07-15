@@ -144,18 +144,16 @@ def read_all_users(db: Session = Depends(get_session)):
 # Get single user
 @router.get("/{user_id}", response_model=models.LibUserRead)
 def read_user_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User does not exist")
-    return user
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return current_user
 
 # Get user by email
 @router.get("/email/{email}", response_model=models.LibUserRead)
 def read_user_by_email(email: str, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.email == email)).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User does not exist")
-    return user
+    if current_user.email != email:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return current_user
 
 # Add favorite book to user
 @router.post("/like", response_model=models.FavoriteBook)
