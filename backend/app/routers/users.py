@@ -105,14 +105,25 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
     
 # Send code again
 @router.post("/send-code/")
-@limiter.limit("1/minute")
+@limiter.limit("3/minute")
 async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user), db: Session = Depends(get_session)):
-    verification_code = generate_verification_code()
-    current_user.email_verification_code = verification_code
-    db.add(current_user)
-    db.commit()
-    db.refresh(current_user)
-    await send_verification_code_email(current_user.email, verification_code)
+    if current_user.code_expires_at <= datetime.now():
+        verification_code = generate_verification_code()
+        expires_at = datetime.now() + timedelta(minutes=10)
+        current_user.email_verification_code = verification_code
+        current_user.code_expires_at = expires_at
+
+        db.add(current_user)
+        db.commit()
+        db.refresh(current_user)
+
+        await send_verification_code_email(current_user.email, verification_code)
+        return {
+            "status": "expired",
+            "message": "Verification code expired. New code sent"
+            }
+    else:
+        await send_verification_code_email(current_user.email, current_user.email_verification_code)
 
 # Login a User
 @router.post("/login")
