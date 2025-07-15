@@ -81,9 +81,9 @@ def get_dismissed_bookings_of_a_user(user_id: int, db: Session = Depends(get_ses
 @router.patch("/{booking_id}", response_model=models.Booking)
 @limiter.limit("100/minute")
 def update_booking_status(request: Request, booking_id: int, booking_update: models.BookingUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    if current_user.role != "manager":
-        raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
     booking = db.exec(select(models.Booking).where(models.Booking.id == booking_id)).first()
+    if current_user.role != "manager" and booking.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Access forbidden")
     if not booking:
         raise HTTPException(status_code=404, detail="Booking does not exist")
     
