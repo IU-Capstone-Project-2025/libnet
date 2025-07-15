@@ -158,7 +158,7 @@ export default function BookDetails() {
           },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
@@ -180,7 +180,7 @@ export default function BookDetails() {
           },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
