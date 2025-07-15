@@ -20,7 +20,7 @@ export default function Orders() {
       if (user == null) return;
       try {
         console.log('trying');
-        const res = await fetch(`/api/bookings/users/${user.id}`,
+        const res = await fetch(`/api/bookings/users/`,
           {headers: {Authorization: `Bearer ${token}`,}}
         );
 
