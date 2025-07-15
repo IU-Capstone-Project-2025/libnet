@@ -29,7 +29,7 @@ class LibUser(SQLModel, table=True):
     library_id: Optional[int] = Field(foreign_key="library.id")
     email_verification_code: Optional[str] = Field(default=None)
     code_expires_at: Optional[datetime] = Field(default=None)
-    is_verified: Optional[bool] = None
+    is_verified: Optional[bool] = Field(default=False)
 
     favorite_books: List["FavoriteBook"] = Relationship(back_populates="user")
     library: Optional["Library"] = Relationship(back_populates="managers")
@@ -53,7 +53,7 @@ class LibUserRead(SQLModel):
     city: str
     role: UserRole
     library_id: Optional[int]
-    is_verified: bool
+    is_verified: Optional[bool]
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
