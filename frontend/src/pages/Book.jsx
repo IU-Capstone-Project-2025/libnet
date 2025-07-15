@@ -158,7 +158,7 @@ export default function BookDetails() {
           },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
@@ -180,7 +180,7 @@ export default function BookDetails() {
           },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
@@ -224,7 +224,7 @@ export default function BookDetails() {
               alt={`${title} cover`}
             />
 
-            {user ? (
+            {(user && user.verification) ? (
               <div className="user__book-buttons">
                 <button className="user__book-button" onClick={handleBooking}>
                   Забронировать
@@ -239,7 +239,7 @@ export default function BookDetails() {
                   Назад
                 </button>
               </div>
-            ) : (
+            ) : (!user) ? (
               <div className="user__book-buttons">
                 <p className="user__book-pleaselogin">
                   Войдите, чтобы забронировать или добавить книгу в избранное
@@ -251,6 +251,24 @@ export default function BookDetails() {
                   Назад
                 </button>
               </div>
+            ) : (
+              <>
+              <p className="user__book-pleaselogin">
+                  Пройдите верификацию e-mail в профиле, чтобы забронировать или добавить книгу в избранное
+                </p>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate('/profile')}
+                >
+                  Профиль
+                </button>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate(-1)}
+                >
+                  Назад
+                </button>
+              </>
             )}
           </div>
           <div className="user__book-right-section">

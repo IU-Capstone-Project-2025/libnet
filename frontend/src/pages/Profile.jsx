@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 export default function Profile() {
-  const { user, logout, update_user } = useAuth();
+  const { user, logout, update_user, verify, sendCode } = useAuth();
   const [error, setError] = useState(null);
   const [msg, setMsg] = useState(null);
   const [cities, setCities] = useState([]);
@@ -20,6 +20,9 @@ export default function Profile() {
   const [library, setLibrary] = useState(user.library_id);
 
   const [passwordChange, setPasswordChange] = useState(false);
+  const [verification, setVerification] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+  const [code, setCode] = useState('');
 
   async function handleUpdate() {
       try {
@@ -62,6 +65,26 @@ export default function Profile() {
     }
   }
 
+
+
+  async function handleVerify(){
+    if (!codeSent){
+      await sendCode();
+      setCodeSent(true);
+    }
+    else{
+      // const enteredVerificationCode = prompt('Please enter your verification code from email ^-^');
+      // console.log(enteredVerificationCode);
+      try {
+        await verify({code: code});
+        setVerification(false);
+      } catch (err) {
+        setVerification(false);
+        setError("Verification failed: " + err.message);
+      }
+    }
+  }
+
   useEffect(() => {
     async function fetchCities() {
       try {
@@ -83,31 +106,37 @@ export default function Profile() {
   return (
     <>
       <div className="user__profile-content">
-        <div className="user__profile-city">
-          <label className="user__profile-city-label" for="user__profile-city">
-            Выберите город:
-          </label>
-          <select
-            className="user__profile-city-select"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          >
-            <option value="" disabled>
-              {'Город'}
-            </option>
-            {Array.isArray(cities) &&
-              cities.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-          </select>
-        </div>
+        
 
         <div className="user__profile-inputs">
           
-          {passwordChange ? (
+          {verification ? (
+          <div>
+            
+            {codeSent && 
             <>
+              <h2>Код подтверждения был отправлен вам на почту</h2>
+              <input
+                className="user__profile-input"
+                placeholder="Код подтверждения"
+                autoComplete="off"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              /> 
+            </>
+            }
+            <div className="user__profile-buttons">
+            <button className="user__profile-button" onClick={handleVerify}>{!codeSent ? "Отправить код" : "Подтвердить"}</button>
+            <button
+              className="user__profile-button user__profile-button--red"
+              onClick={() => setVerification(false)}
+            >
+              Отмена
+            </button>
+            </div>
+          </div>
+        ) : passwordChange ? (
+          <>
             <input
               className="user__profile-input"
               type="password"
@@ -135,9 +164,29 @@ export default function Profile() {
                 Отмена
               </button>
             </div>
-            </>
-          ) : (
-            <>
+          </>
+        ) : (
+          <>
+          <div className="user__profile-city">
+          <label className="user__profile-city-label" for="user__profile-city">
+            Выберите город:
+          </label>
+          <select
+            className="user__profile-city-select"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          >
+            <option value="" disabled>
+              {'Город'}
+            </option>
+            {Array.isArray(cities) &&
+              cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+          </select>
+        </div>
             <input
               className="user__profile-input"
               placeholder="Имя"
@@ -177,9 +226,15 @@ export default function Profile() {
               >
                 Выйти из аккаунта
               </button>
+              {!user.verification && (
+                <button className="user__profile-button" onClick={() => setVerification(true)}>
+                  Подтвердить аккаунт
+                </button>
+              )}
             </div>
-            </>
-          )}
+          </>
+        )}
+
         {msg != null ? (
           <p>{msg}</p>) : error != null ? (
           <p className="red-error">Ошибка: {error}</p>
