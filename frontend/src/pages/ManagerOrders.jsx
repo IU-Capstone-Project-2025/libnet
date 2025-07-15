@@ -77,7 +77,7 @@ export default function ManagerOrders() {
       }
     }
 
-    fetchUsers();
+    // fetchUsers();
     fetchBooks();
   }, [bookings]);
 
