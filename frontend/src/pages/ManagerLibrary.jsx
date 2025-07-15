@@ -184,13 +184,13 @@ export default function ManagerLibrary() {
               />
 
               {/* Дни работы */}
-              <div style={{ marginTop: '15px' }}>
+              <div className="manager__working-days-section">
                 <strong>Дни работы:</strong>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '5px' }}>
+                <div className="manager__working-days-container">
                   {allDays.map(({ key, label }) => (
                     <div
                       key={key}
-                      className={`day-button ${daysOpen.includes(key) ? 'active' : ''}`}
+                      className={`manager-day-button ${daysOpen.includes(key) ? 'active' : ''}`}
                       onClick={() => toggleDay(key)}
                     >
                       {label}

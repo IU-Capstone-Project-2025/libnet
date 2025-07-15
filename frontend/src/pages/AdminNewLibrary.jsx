@@ -27,7 +27,7 @@ export default function AdminNewLibrary() {
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
   const [daysOpen, setDaysOpen] = useState([]); // Новое состояние
-  
+
   const allDays = [
     { key: 'mon', label: 'Пн' },
     { key: 'tue', label: 'Вт' },
@@ -39,23 +39,34 @@ export default function AdminNewLibrary() {
   ];
 
   function toggleDay(dayKey) {
-    setDaysOpen(prev =>
+    setDaysOpen((prev) =>
       prev.includes(dayKey)
-        ? prev.filter(d => d !== dayKey)
+        ? prev.filter((d) => d !== dayKey)
         : [...prev, dayKey]
     );
   }
 
   async function handleSave() {
-    if (title && phone && email && address && description && open && close && waiting && rent && city) {
-        try {
+    if (
+      title &&
+      phone &&
+      email &&
+      address &&
+      description &&
+      open &&
+      close &&
+      waiting &&
+      rent &&
+      city
+    ) {
+      try {
         const res = await fetch(`/api/libraries/`, {
-            method: 'POST',
-            headers: {
+          method: 'POST',
+          headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
+          },
+          body: JSON.stringify({
             name: title,
             phone: phone,
             description: description,
@@ -67,16 +78,16 @@ export default function AdminNewLibrary() {
             booking_duration: waiting,
             rent_duration: rent,
             days_open: daysOpen.join(';'),
-            }),
+          }),
         });
         if (res.ok) {
-            navigate('/admin/');
+          window.scrollTo(0, 0);
+          navigate('/admin/');
         }
-        } catch (e) {
+      } catch (e) {
         console.log(e);
-        }
+      }
     }
-    
   }
 
   return (
@@ -116,35 +127,31 @@ export default function AdminNewLibrary() {
           />
           <strong>Время открытия:</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__time-input"
             placeholder="ЧЧ:ММ"
             value={open || ''}
             onChange={(e) => setOpen(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Время закрытия:</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__time-input"
             placeholder="ЧЧ:ММ"
             value={close || ''}
             onChange={(e) => setClose(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Срок хранения заказов (дней):</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__duration-input"
             placeholder="n"
             value={waiting || ''}
             onChange={(e) => setWaiting(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Период аренды книги (дней):</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__duration-input"
             placeholder="n"
             value={rent || ''}
             onChange={(e) => setRent(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Город:</strong>
           <input
@@ -154,13 +161,15 @@ export default function AdminNewLibrary() {
             onChange={(e) => setCity(e.target.value)}
           />
           {/* Дни работы */}
-          <div style={{ marginTop: '15px' }}>
+          <div className="admin__working-days-section">
             <strong>Дни работы:</strong>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '5px' }}>
+            <div className="admin__working-days-container">
               {allDays.map(({ key, label }) => (
                 <div
                   key={key}
-                  className={`day-button ${daysOpen.includes(key) ? 'active' : ''}`}
+                  className={`day-button ${
+                    daysOpen.includes(key) ? 'active' : ''
+                  }`}
                   onClick={() => toggleDay(key)}
                 >
                   {label}
@@ -169,12 +178,20 @@ export default function AdminNewLibrary() {
             </div>
           </div>
         </div>
-        <button className="admin__book-button" onClick={() => navigate('/admin/')}>
-                Назад
-              </button>
-        <button className="admin__book-button" onClick={handleSave}>
-          Сохранить
-        </button>
+        <div className="admin__library-buttons">
+          <button
+            className="admin__book-button"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              navigate('/admin/');
+            }}
+          >
+            Назад
+          </button>
+          <button className="admin__book-button" onClick={handleSave}>
+            Сохранить
+          </button>
+        </div>
       </div>
     </>
   );

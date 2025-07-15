@@ -290,6 +290,7 @@
   border-radius: 20px 0 20px 0;
   padding: 10px 5px;
   background-color: white;
+  margin-bottom: 10px;;
 }
 
 .manager__catalog-create-book-button:hover {

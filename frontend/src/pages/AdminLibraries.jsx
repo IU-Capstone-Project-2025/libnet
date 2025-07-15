@@ -32,7 +32,7 @@ export default function AdminLibraries() {
     fetchLibraries();
     fetchAdmins();
   }, []);
-  
+
   async function fetchAdmins() {
     if (user == null) return;
     try {
@@ -82,30 +82,39 @@ export default function AdminLibraries() {
 
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
-    return (
-      <p className="user__catalog-content red-error" >
-        Ошибка: {error}
-      </p>
-    );
+    return <p className="user__catalog-content red-error">Ошибка: {error}</p>;
 
   return (
     <>
       <h1 className="user__heading">Управление библиотеками</h1>
-      <button className='admin__book-button' onClick={() => navigate('/admin/new')}>Добавить библиотеку</button>
       <div className="admin__libraries-content">
+        <div className="admin__libraries-buttons">
+          <button
+            className="admin__book-button small-button"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              navigate('/admin/new');
+            }}
+          >
+            Создать библиотеку
+          </button>
+        </div>
         <div className="admin__libraries-list">
           {libraries.map((l) => (
             <button
               className="admin__libraries-list-item"
               key={l.id}
-              onClick={() => navigate(`/admin/libraries/${l.id}`)}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate(`/admin/libraries/${l.id}`);
+              }}
             >
               {l.name}
             </button>
           ))}
         </div>
-      
-      <h3 className="user__heading">Управление администраторами</h3>
+
+        <h3 className="user__heading">Управление администраторами</h3>
         <div className="admin__assign-inputs">
           <input
             type="email"
@@ -114,30 +123,31 @@ export default function AdminLibraries() {
             onChange={(e) => setNewManagerEmail(e.target.value)}
             className="admin__assign-input"
           />
-          <button
-            className="admin__assign-button"
-            onClick={handleAssignAdmin}
-          >
+          <button className="admin__assign-button" onClick={handleAssignAdmin}>
             Добавить
           </button>
-          <ul className="admin__manager-list">
+        </div>
+
+        <ul className="admin__manager-list">
           {managers.map((m) => (
             <li key={m.id} className="admin__manager-list-item">
               <span>
                 {m.first_name} | {m.email}
               </span>
-              {(user && (Number(m.id) != Number(user.id))) ?  (<button
-                onClick={() => handleDismissAdmin(m.email)}
-                className="admin__dismiss-button"
-              >
-                <img src="/bin.svg" alt="Удалить" />
-              </button>):(<></>)}
+              {user && Number(m.id) != Number(user.id) ? (
+                <button
+                  onClick={() => handleDismissAdmin(m.email)}
+                  className="admin__dismiss-button"
+                >
+                  <img src="/bin.svg" alt="Удалить" />
+                </button>
+              ) : (
+                <></>
+              )}
             </li>
           ))}
         </ul>
-        </div>
-    </div>
-        
+      </div>
     </>
   );
 }
