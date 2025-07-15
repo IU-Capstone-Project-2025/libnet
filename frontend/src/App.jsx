@@ -20,6 +20,7 @@ import { useAuth } from './context/AuthContext';
 import Footer from './components/Footer';
 import AdminLibraries from './pages/AdminLibraries';
 import AdminLibrary from './pages/AdminLibrary';
+import AdminNewLibrary from './pages/AdminNewLibrary';
 
 export function PrivateRoute({ children, role='user'}) {
   const { user, loading } = useAuth();
@@ -115,6 +116,14 @@ export default function App() {
             element={
               <PrivateRoute role='admin'>
                 <AdminLibraries />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/new"
+            element={
+              <PrivateRoute role='admin'>
+                <AdminNewLibrary />
               </PrivateRoute>
             }
           />

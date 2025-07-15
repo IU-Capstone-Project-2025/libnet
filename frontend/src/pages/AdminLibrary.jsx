@@ -7,6 +7,7 @@ import './AdminLibrary.css';
 export default function AdminLibrary() {
   const { user } = useAuth();
   const token = localStorage.getItem('access_token');
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -135,7 +136,7 @@ export default function AdminLibrary() {
   return (
     <>
       <div className="admin__library-content">
-        <h1 className="user__heading">Управление менеджерами</h1>
+        <h1 className="user__heading">Управление библиотекой</h1>
         <div className="admin__library-details">
           <input
             className="user__book-title manager__book-detail-input"
@@ -209,7 +210,9 @@ export default function AdminLibrary() {
         </div>
 
         {/* TODO: дни работы */}
-
+        <button className="admin__book-button" onClick={() => navigate('/admin/')}>
+                Назад
+              </button>
         <button className="admin__book-button" onClick={handleUpdate}>
           Сохранить
         </button>

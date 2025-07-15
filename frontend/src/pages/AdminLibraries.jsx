@@ -39,8 +39,7 @@ export default function AdminLibraries() {
   return (
     <>
       <h1 className="user__heading">Управление библиотеками</h1>
-      {/* TODO: поиск
-      TODO: создание */}
+      <button className='admin__book-button' onClick={() => navigate('/admin/new')}>Добавить библиотеку</button>
       <div className="admin__libraries-content">
         <div className="admin__libraries-list">
           {libraries.map((l) => (
