@@ -4,7 +4,7 @@ from sqlmodel import Session, select, and_
 from app.database import get_session
 from app.auth import hash_password, verify_password, create_access_token
 from app import models
-import re, random, os, aiosmtplib
+import re, random, os, aiosmtplib, secrets
 from datetime import datetime, timedelta
 from app.auth import get_current_user
 from email.message import EmailMessage
@@ -16,7 +16,7 @@ router = APIRouter()
 load_dotenv()
 
 def generate_verification_code():
-    return f"{random.randint(100000, 999999)}"
+    return f"{secrets.randbelow(900000) + 100000}"
 
 async def send_verification_code_email(to_email: str, code: str):
     msg = EmailMessage()
@@ -74,7 +74,7 @@ async def register(request: Request, user: models.LibUserCreate, db: Session = D
 
 # Verify code
 @router.post("/verify/{user_id}")
-@limiter.limit("1/minute")
+@limiter.limit("10/minute")
 async def verify(request: Request, user_id: int, code: str, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     print(code, user.email_verification_code)
@@ -85,7 +85,6 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
             user.email_verification_code = verification_code
             user.code_expires_at = expires_at
 
-            db.add(user)
             db.commit()
             db.refresh(user)
 
@@ -96,7 +95,6 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
                 }
 
         user.is_verified = True
-        db.add(user)
         db.commit()
         db.refresh(user)
         return user
