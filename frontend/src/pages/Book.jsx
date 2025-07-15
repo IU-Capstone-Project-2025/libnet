@@ -23,6 +23,7 @@ export default function BookDetails() {
   const [genre, setGenre] = useState(null);
   const [year, setYear] = useState(null);
   const [rating, setRating] = useState(null);
+  const [publisher, setPublisher] = useState(null);
   const [libraries, setLibraries] = useState([]);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function BookDetails() {
         setGenre(data.genre);
         setYear(data.year);
         setRating(data.rating);
+        setPublisher(data.publisher);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -279,6 +281,10 @@ export default function BookDetails() {
               <p className="user__book-detail">
                 {' '}
                 <strong>Рейтинг:</strong> {rating || 'Нет информации'}
+              </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>Издательство:</strong> {publisher || 'Нет информации'}
               </p>
               <select
                 className="user__book-select"
