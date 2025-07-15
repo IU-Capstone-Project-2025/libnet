@@ -53,6 +53,7 @@ class LibUserRead(SQLModel):
     city: str
     role: UserRole
     library_id: Optional[int]
+    is_verified: bool
 
 class LibUserUpdate(SQLModel):
     first_name: Optional[str] = None
