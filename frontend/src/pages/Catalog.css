@@ -133,6 +133,8 @@
 
 .user__search-slider {
   margin: 5px 30px;
+  position: relative;
+  z-index: 1;
 }
 
 .user__search-slider .rc-slider-rail {
