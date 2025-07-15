@@ -206,8 +206,18 @@
 .manager__catalog-create-book-button {
   border-radius: 20px 0 20px 0;
   width: 20%;
-  padding: 5px;
+  padding: 10px 5px;
+  border: 4px solid var(--main-manager-color);
+  background-color: white;
 }
+
+.manager__catalog-create-book-button:hover {
+  font-weight: var(--weight-bold);
+}
+.manager__catalog-create-book-button:active {
+  background-color: var(--main-manager-color);
+}
+
 
 @media (width < 1024px) {
   .user__catalog-books-list {

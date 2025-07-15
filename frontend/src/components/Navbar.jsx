@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthPopupWrapper from './AuthPopupWrapper';
 import './Navbar.css';
@@ -9,6 +9,7 @@ export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [selected, setSelected] = useState('');
 
@@ -54,13 +55,13 @@ export default function Navbar() {
             />
           </div>
           <div className="manager__navbar">
-            <Link to="/manager/" className="manager__navbar-link">
+            <Link to="/manager/" className={`manager__navbar-link ${location.pathname === '/manager/' ? 'active' : ''}`}>
               Каталог
             </Link>
-            <Link to="/manager/orders" className="manager__navbar-link">
+            <Link to="/manager/orders" className={`manager__navbar-link ${location.pathname === '/manager/orders' ? 'active' : ''}`}>
               Заказы
             </Link>
-            <Link to="/manager/library" className="manager__navbar-link">
+            <Link to="/manager/library" className={`manager__navbar-link ${location.pathname === '/manager/library' ? 'active' : ''}`}>
               Библиотека
             </Link>
           </div>
@@ -73,6 +74,7 @@ export default function Navbar() {
               Пользовательское
             </option>
             <option value="/">Каталог</option>
+            <option value="/libraries">Библиотеки</option>
             <option value="/orders">Заказы</option>
             <option value="/favorites">Избранное</option>
           </select>
@@ -168,19 +170,19 @@ export default function Navbar() {
             />
           </div>
           <div className="user__navbar">
-            <Link to="/" className="user__navbar-link">
+            <Link to="/" className={`user__navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
               Каталог
             </Link>
-            <Link to="/libraries" className="user__navbar-link">
+            <Link to="/libraries" className={`user__navbar-link ${location.pathname === '/libraries' ? 'active' : ''}`}>
               Библиотеки
             </Link>
-            <Link to="/orders" className="user__navbar-link">
+            <Link to="/orders" className={`user__navbar-link ${location.pathname === '/orders' ? 'active' : ''}`}>
               Заказы
             </Link>
-            <Link to="/faq" className="user__navbar-link">
+            <Link to="/faq" className={`user__navbar-link ${location.pathname === '/faq' ? 'active' : ''}`}>
               FAQ
             </Link>
-            <Link to="/favorites" className="user__navbar-link">
+            <Link to="/favorites" className={`user__navbar-link ${location.pathname === '/favorites' ? 'active' : ''}`}>
               Избранное
             </Link>
           </div>
@@ -270,7 +272,7 @@ export default function Navbar() {
             />
           </div>
           <div className="admin__navbar">
-            <Link to="/admin/" className="user__navbar-link">
+            <Link to="/admin/" className={`user__navbar-link ${location.pathname === '/admin/' ? 'active' : ''}`}>
               Библиотеки
             </Link>
           </div>
@@ -348,13 +350,13 @@ export default function Navbar() {
             />
           </div>
           <div className="user__navbar">
-            <Link to="/" className="user__navbar-link">
+            <Link to="/" className={`user__navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
               Каталог
             </Link>
-            <Link to="/libraries" className="user__navbar-link">
+            <Link to="/libraries" className={`user__navbar-link ${location.pathname === '/libraries' ? 'active' : ''}`}>
               Библиотеки
             </Link>
-            <Link to="/faq" className="user__navbar-link">
+            <Link to="/faq" className={`user__navbar-link ${location.pathname === '/faq' ? 'active' : ''}`}>
               FAQ
             </Link>
           </div>
