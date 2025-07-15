@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
@@ -111,7 +111,7 @@ def update_booking_status(request: Request, booking_id: int, booking_update: mod
 
 # Search for booking
 @router.get("/search")
-def search_books(booking_id: int, user_phone: str, email: str, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+def search_bookings(booking_id: int = Query(default=None), user_phone: str = Query(default=None), email: str = Query(default=None), db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     if current_user.role != "manager":
         raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
 
