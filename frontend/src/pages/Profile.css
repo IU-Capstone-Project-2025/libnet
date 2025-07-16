@@ -9,6 +9,24 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+.user__verify-button {
+  width: 100%;
+  padding: 10px;
+  border: 4px solid var(--red-color);
+  background-color: white;
+  font-size: var(--font-size-subregular);
+  border-radius: 20px 0 20px 0;;
+}
+
+.user__verify-button:hover {
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+.user__verify-button:active {
+  font-weight: var(--weight-bold);
+  background-color: var(--red-color);
+}
+
 .user__profile-city {
   display: flex;
   justify-content: center;
@@ -42,9 +60,8 @@
 
 .user__profile-input {
   width: 100%;
-  height: 55px;
   border: solid black 1px;
-  padding: 0 20px;
+  padding: 10px 20px;
   opacity: 65%;
   font-family: 'Montserrat', sans-serif;
   font-size: var(--font-size-subregular);
@@ -74,7 +91,7 @@
 
 .user__profile-button {
   width: 50%;
-  height: 55px;
+  padding: 10px;
   border: solid var(--main-user-color) 4px;
   border-radius: 20px 0 20px 0;
   font-size: var(--font-size-subregular);
@@ -111,14 +128,27 @@
     justify-content: start;
     padding: 40px 30px;
   }
+
+
 }
 
 @media (width < 479px) {
   .user__profile-buttons {
     flex-direction: column;
+    gap: 5px;
   }
 
   .user__profile-button {
     width: 100%;
+    border-radius: 0;
   }
+
+  .user__profile-button:first-child {
+    border-radius: 20px 0 0 0;
+  }
+
+  .user__profile-button:last-child {
+    border-radius: 0 0 20px 0;
+  }
+
 }
