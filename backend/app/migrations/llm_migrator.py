@@ -48,7 +48,7 @@ NO explanations, NO text, NO greetings.
 Example output: {{"author_name": "author", "title": "title", "cover_url": "image_url"}}
 If they are in russian, translate them to english and make this mapping/output.
 """
-    client = Client(host="http://host.docker.internal:11434")
+    client = Client(host="http://host.docker.internal:11435")
     response = client.chat(
         model="mistral",
         messages=[{"role": "user", "content": prompt}]
