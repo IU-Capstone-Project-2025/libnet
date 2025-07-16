@@ -5,7 +5,7 @@
   align-items: center;
   gap: 40px;
   min-height: 100vh;
-  padding: 40px 200px;
+  padding: 20px 90px;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -28,9 +28,16 @@
 .user__profile-inputs {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 20px;
   width: 100%;
   font-weight: 400;
+}
+
+.user__profile-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
 }
 
 .user__profile-input {
@@ -54,7 +61,7 @@
   border-radius: 20px 0 0 0;
 }
 
-.user__profile-input:nth-child(4) {
+.user__profile-input:last-child {
   border-radius: 0 0 20px 0;
 }
 
@@ -63,7 +70,6 @@
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  margin-top: 20px;
 }
 
 .user__profile-button {

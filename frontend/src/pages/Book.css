@@ -68,7 +68,13 @@
   text-align: start;
   border: solid var(--red-color) 4px;
   padding: 10px;
-  border-radius: 20px 0 20px 0;
+  border-radius: 20px 0 0 0;
+}
+
+.user__unathenticated-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .user__book-right-section {

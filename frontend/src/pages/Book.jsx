@@ -253,6 +253,7 @@ export default function BookDetails() {
               </div>
             ) : (
               <>
+              <div className="user__unathenticated-buttons">
               <p className="user__book-pleaselogin">
                   Пройдите верификацию e-mail в профиле, чтобы забронировать или добавить книгу в избранное
                 </p>
@@ -268,6 +269,8 @@ export default function BookDetails() {
                 >
                   Назад
                 </button>
+              </div>
+
               </>
             )}
           </div>

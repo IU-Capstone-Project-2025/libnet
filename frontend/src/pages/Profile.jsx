@@ -25,19 +25,19 @@ export default function Profile() {
   const [code, setCode] = useState('');
 
   async function handleUpdate() {
-      try {
-        await update_user({
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone: phone,
-          city: city,
-          library_id: library,
-        });
-        setMsg("Данные успешно обновлены");
-      } catch (err) {
-        setError(err.message);
-      }
+    try {
+      await update_user({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        city: city,
+        library_id: library,
+      });
+      setMsg('Данные успешно обновлены');
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   async function handlePassword() {
@@ -45,7 +45,8 @@ export default function Profile() {
       try {
         const res = await fetch(`/api/users/${user.id}/update-password`, {
           method: 'PATCH',
-          headers: {'Content-Type': 'application/json',
+          headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
@@ -54,33 +55,30 @@ export default function Profile() {
           }),
         });
         if (res.ok) {
-          setMsg("Пароль успешно изменен");
+          setMsg('Пароль успешно изменен');
           setPasswordChange(false);
         }
       } catch (err) {
         setError(err.message);
       }
     } else {
-      setError("Некорректные данные");
+      setError('Некорректные данные');
     }
   }
 
-
-
-  async function handleVerify(){
-    if (!codeSent){
+  async function handleVerify() {
+    if (!codeSent) {
       await sendCode();
       setCodeSent(true);
-    }
-    else{
+    } else {
       // const enteredVerificationCode = prompt('Please enter your verification code from email ^-^');
       // console.log(enteredVerificationCode);
       try {
-        await verify({code: code});
+        await verify({ code: code });
         setVerification(false);
       } catch (err) {
         setVerification(false);
-        setError("Verification failed: " + err.message);
+        setError('Verification failed: ' + err.message);
       }
     }
   }
@@ -106,139 +104,154 @@ export default function Profile() {
   return (
     <>
       <div className="user__profile-content">
-        
-
         <div className="user__profile-inputs">
-          
           {verification ? (
-          <div>
-            
-            {codeSent && 
+            <div>
+              {codeSent && (
+                <>
+                  <h2>Код подтверждения был отправлен вам на почту</h2>
+                  <input
+                    className="user__profile-input"
+                    placeholder="Код подтверждения"
+                    autoComplete="off"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                  />
+                </>
+              )}
+              <div className="user__profile-buttons">
+                <button className="user__profile-button" onClick={handleVerify}>
+                  {!codeSent ? 'Отправить код' : 'Подтвердить'}
+                </button>
+                <button
+                  className="user__profile-button user__profile-button--red"
+                  onClick={() => setVerification(false)}
+                >
+                  Отмена
+                </button>
+              </div>
+            </div>
+          ) : passwordChange ? (
             <>
-              <h2>Код подтверждения был отправлен вам на почту</h2>
               <input
                 className="user__profile-input"
-                placeholder="Код подтверждения"
+                type="password"
+                placeholder="Старый пароль"
                 autoComplete="off"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              /> 
-            </>
-            }
-            <div className="user__profile-buttons">
-            <button className="user__profile-button" onClick={handleVerify}>{!codeSent ? "Отправить код" : "Подтвердить"}</button>
-            <button
-              className="user__profile-button user__profile-button--red"
-              onClick={() => setVerification(false)}
-            >
-              Отмена
-            </button>
-            </div>
-          </div>
-        ) : passwordChange ? (
-          <>
-            <input
-              className="user__profile-input"
-              type="password"
-              placeholder="Старый пароль"
-              autoComplete="off"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-            <input
-              className="user__profile-input"
-              type="password"
-              placeholder="Новый пароль"
-              autoComplete="off"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="user__profile-buttons">
-              <button className="user__profile-button" onClick={handlePassword}>
-                Сохранить
-              </button>
-              <button
-                className="user__profile-button user__profile-button--red"
-                onClick={() => setPasswordChange(false)}
-              >
-                Отмена
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-          <div className="user__profile-city">
-          <label className="user__profile-city-label" for="user__profile-city">
-            Выберите город:
-          </label>
-          <select
-            className="user__profile-city-select"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          >
-            <option value="" disabled>
-              {'Город'}
-            </option>
-            {Array.isArray(cities) &&
-              cities.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-          </select>
-        </div>
-            <input
-              className="user__profile-input"
-              placeholder="Имя"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-              className="user__profile-input"
-              placeholder="Фамилия"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <input
-              className="user__profile-input"
-              type="tel"
-              placeholder="Телефон"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <input
-              className="user__profile-input"
-              type="email"
-              placeholder="E-Mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <div className="user__profile-buttons">
-              <button className="user__profile-button" onClick={() => setPasswordChange(true)}>
-                Изменить пароль
-              </button>
-              <button className="user__profile-button" onClick={handleUpdate}>
-                Сохранить
-              </button>
-              <button
-                className="user__profile-button user__profile-button--red"
-                onClick={logout}
-              >
-                Выйти из аккаунта
-              </button>
-              {!user.verification && (
-                <button className="user__profile-button" onClick={() => setVerification(true)}>
-                  Подтвердить аккаунт
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+              <input
+                className="user__profile-input"
+                type="password"
+                placeholder="Новый пароль"
+                autoComplete="off"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className="user__profile-buttons">
+                <button
+                  className="user__profile-button"
+                  onClick={handlePassword}
+                >
+                  Сохранить
                 </button>
-              )}
-            </div>
-          </>
-        )}
+                <button
+                  className="user__profile-button user__profile-button--red"
+                  onClick={() => setPasswordChange(false)}
+                >
+                  Отмена
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="user__profile-city">
+                <label
+                  className="user__profile-city-label"
+                  for="user__profile-city"
+                >
+                  Выберите город:
+                </label>
+                <select
+                  className="user__profile-city-select"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                >
+                  <option value="" disabled>
+                    {'Город'}
+                  </option>
+                  {Array.isArray(cities) &&
+                    cities.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="user__profile-inputs-container">
+                <input
+                  className="user__profile-input"
+                  placeholder="Имя"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <input
+                  className="user__profile-input"
+                  placeholder="Фамилия"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                <input
+                  className="user__profile-input"
+                  type="tel"
+                  placeholder="Телефон"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <input
+                  className="user__profile-input"
+                  type="email"
+                  placeholder="E-Mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="user__profile-buttons">
+                <button
+                  className="user__profile-button"
+                  onClick={() => setPasswordChange(true)}
+                >
+                  Изменить пароль
+                </button>
+                <button className="user__profile-button" onClick={handleUpdate}>
+                  Сохранить
+                </button>
+                <button
+                  className="user__profile-button user__profile-button--red"
+                  onClick={logout}
+                >
+                  Выйти из аккаунта
+                </button>
+                {!user.verification && (
+                  <button
+                    className="user__profile-button"
+                    onClick={() => setVerification(true)}
+                  >
+                    Подтвердить аккаунт
+                  </button>
+                )}
+              </div>
+            </>
+          )}
 
-        {msg != null ? (
-          <p>{msg}</p>) : error != null ? (
-          <p className="red-error">Ошибка: {error}</p>
-          ) : (<></>)}
+          {msg != null ? (
+            <p>{msg}</p>
+          ) : error != null ? (
+            <p className="red-error">Ошибка: {error}</p>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>
