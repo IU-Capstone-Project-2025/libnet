@@ -26,6 +26,12 @@ def get_libraries(db: Session = Depends(get_session)):
     libraries = db.exec(select(models.Library)).all()
     return libraries
 
+# Get libraries by city name
+@router.get("/city/{city}", response_model=list[models.Library])
+def get_libraries_by_city(city: str, db: Session = Depends(get_session)):
+    libraries = db.exec(select(models.Library).where(models.Library.city == city)).all()
+    return libraries
+
 # Get cities of all Libraries
 @router.get("/cities", response_model=list[str])
 def get_library_cities(db: Session = Depends(get_session)):
