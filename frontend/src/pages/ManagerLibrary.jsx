@@ -199,9 +199,11 @@ export default function ManagerLibrary() {
                 </div>
               </div>
             </div>
+            <div className="user__book-buttons">
             <button className="manager__book-button" onClick={handleUpdate}>
               Сохранить
             </button>
+            </div>
           </div>
           <div className="user__book-left-section"></div>
         </div>
