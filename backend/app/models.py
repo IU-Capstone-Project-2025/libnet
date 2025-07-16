@@ -144,9 +144,9 @@ class LibraryBook(SQLModel, table=True):
 
 class Booking(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="libuser.id")
-    book_id: int = Field(foreign_key="book.id")
-    library_id: int = Field(foreign_key="library.id")
+    user_id: int = Field(foreign_key="libuser.id", index=True)
+    book_id: int = Field(foreign_key="book.id", index=True)
+    library_id: int = Field(foreign_key="library.id", index=True)
     date_from: date
     date_to: Optional[date] = None
     status: BookingStatus = Field(default=BookingStatus.PENDING)
