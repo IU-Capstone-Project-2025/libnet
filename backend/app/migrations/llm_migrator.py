@@ -50,7 +50,8 @@ If they are in russian, translate them to english and make this mapping/output.
 """
     response = ollama.chat(
         model="mistral",
-        messages=[{"role": "user", "content": prompt}]
+        messages=[{"role": "user", "content": prompt}],
+        base_url="http://host.docker.internal:11434"
     )
     content = response["message"]["content"]
 
