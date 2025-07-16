@@ -124,13 +124,25 @@ def insert_books(file_path: str, library_email: str):
         field_map = ask_ollama_for_field_map(csv_header, list(target_fields))
     elif file_type == "json":
         data_rows = read_json(file_path)
-        field_map = {k: k for k in target_fields if k != "id"}
+        if len(data_rows) > 0:
+            json_keys = list(data_rows[0].keys())
+        else:
+            json_keys = []
+        field_map = ask_ollama_for_field_map(json_keys, list(target_fields))
     elif file_type == "excel":
         data_rows = read_excel(file_path)
-        field_map = {k: k for k in target_fields if k != "id"}
+        if len(data_rows) > 0:
+            excel_keys = list(data_rows[0].keys())
+        else:
+            excel_keys = []
+        field_map = ask_ollama_for_field_map(excel_keys, list(target_fields))
     elif file_type == "sqlite":
         data_rows = read_sqlite(file_path, query="SELECT * FROM books")
-        field_map = {k: k for k in target_fields if k != "id"}
+        if len(data_rows) > 0:
+            sqlite_keys = list(data_rows[0].keys())
+        else:
+            sqlite_keys = []
+        field_map = ask_ollama_for_field_map(sqlite_keys, list(target_fields))
     else:
         raise ValueError(f"Unsupported file type: {file_type}")
     
