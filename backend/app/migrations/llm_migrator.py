@@ -44,8 +44,9 @@ Given a CSV file with columns: {csv_header}
 And a target DB model with fields: {target_fields}  
 
 ONLY output a valid Python dictionary literal mapping CSV columns to model fields.  
-NO explanations, NO text, NO greetings.  
-Example output: {{"author_name": "author", "title": "title"}}
+NO explanations, NO text, NO greetings.
+Example output: {{"author_name": "author", "title": "title", "cover_url": "image_url"}}
+If they are in russian, translate them to english and make this mapping/output.
 """
     response = ollama.chat(
         model="mistral",
