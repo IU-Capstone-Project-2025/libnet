@@ -80,13 +80,15 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")
     bookings = db.exec(
-        select(models.Booking)
-        .options(
-            selectinload(models.Booking.user),
-            selectinload(models.Booking.book),
-            selectinload(models.Booking.library),
-        ).where(library_id == models.Booking.library_id)
-    ).all()
+    select(models.Booking)
+    .where(models.Booking.library_id == library_id)
+    .options(
+        selectinload(models.Booking.user),
+        selectinload(models.Booking.book),
+        selectinload(models.Booking.library),
+    )
+    .order_by(models.Booking.date_from)
+).all()
     return bookings
 
 # Get list of managers in a Library
