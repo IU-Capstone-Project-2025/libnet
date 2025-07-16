@@ -5,7 +5,6 @@ from app import models
 from datetime import timedelta, date, datetime
 from app.auth import get_current_user
 from app.limiter import limiter
-from sqlalchemy import desc
 from sqlalchemy.orm import selectinload
 
 router = APIRouter()
@@ -49,6 +48,7 @@ def get_bookings(db: Session = Depends(get_session)):
             selectinload(models.Booking.book),
             selectinload(models.Booking.library),
         )
+        .order_by(models.Booking.date_to)
     ).all()
     return bookings
 
@@ -132,7 +132,7 @@ def search_bookings(booking_id: int = Query(default=None), user_phone: str = Que
     if email:
         query = query.where(models.Booking.user.email == email)
 
-    query = query.order_by(desc(models.Booking.date_to))
+    query = query.order_by(models.Booking.date_from)
 
     books = db.exec(query).all()
     return books
