@@ -1,5 +1,5 @@
 import csv
-import ollama
+from ollama import Client
 import ast
 from typing import Dict, Any, List
 from sqlmodel import Session
@@ -48,10 +48,10 @@ NO explanations, NO text, NO greetings.
 Example output: {{"author_name": "author", "title": "title", "cover_url": "image_url"}}
 If they are in russian, translate them to english and make this mapping/output.
 """
-    response = ollama.chat(
+    client = Client(host="http://host.docker.internal:11434")
+    response = client.chat(
         model="mistral",
-        messages=[{"role": "user", "content": prompt}],
-        base_url="http://host.docker.internal:11434"
+        messages=[{"role": "user", "content": prompt}]
     )
     content = response["message"]["content"]
 
