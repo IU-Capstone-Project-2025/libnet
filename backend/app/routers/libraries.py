@@ -4,6 +4,7 @@ from app.database import get_session
 from app import models
 from app.auth import get_current_user
 from app.limiter import limiter
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 
@@ -23,6 +24,12 @@ def create_library(request: Request, library: models.LibraryCreate, db: Session=
 def get_libraries(db: Session = Depends(get_session)):
     
     libraries = db.exec(select(models.Library)).all()
+    return libraries
+
+# Get libraries by city name
+@router.get("/city/{city}", response_model=list[models.Library])
+def get_libraries_by_city(city: str, db: Session = Depends(get_session)):
+    libraries = db.exec(select(models.Library).where(models.Library.city == city)).all()
     return libraries
 
 # Get cities of all Libraries
@@ -76,7 +83,15 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")
-    return library.bookings
+    bookings = db.exec(
+        select(models.Booking)
+        .options(
+            selectinload(models.Booking.user),
+            selectinload(models.Booking.book),
+            selectinload(models.Booking.library),
+        ).where(library_id == models.Booking.library_id)
+    ).all()
+    return bookings
 
 # Get list of managers in a Library
 @router.get("/{library_id}/managers", response_model=list[models.LibUser])

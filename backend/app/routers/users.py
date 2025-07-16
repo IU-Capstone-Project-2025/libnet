@@ -67,8 +67,6 @@ async def register(request: Request, user: models.LibUserCreate, db: Session = D
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    if user.email != "loltotallytest@girl.yes" and "_test_reg@test.lol" not in user.email:
-        await send_verification_code_email(user.email, verification_code)
 
     return new_user
 
