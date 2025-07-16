@@ -335,7 +335,7 @@
   .manager__heading {
     padding: 10px 0;
   }
-  
+
   .manager__catalog-books-list {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 15px;
@@ -426,6 +426,19 @@
   .manager__sidebar-content .react-select__menu {
     z-index: 99999 !important;
   }
+
+  .manager__search-bar:first-child {
+    border-radius: 20px 0 0 0;
+  }
+
+  .manager__search-bar:last-child {
+    border-radius: 0 0 20px 0;
+  }
+
+  .manager__search-bar:nth-child(2) {
+    border-radius: 0;
+  }
+  
 }
 
 @media (width < 479px) {
