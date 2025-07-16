@@ -67,8 +67,11 @@ export default function Catalog() {
 
   useEffect(() => {
     fetchCities();
-    fetchLibraries();
   }, []);
+
+  useEffect(() => {
+    fetchLibraries(selectedCity);
+  }, [selectedCity]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -142,9 +145,13 @@ export default function Catalog() {
     }
   }
 
-  async function fetchLibraries() {
+  async function fetchLibraries(city = '') {
     try {
-      const res = await fetch('/api/libraries/');
+      let url = '/api/libraries/';
+      if (city) {
+        url += `?city=${encodeURIComponent(city)}`;
+      }
+      const res = await fetch(url);
       if (!res.ok) throw new Error('Ошибка загрузки библиотек');
       const data = await res.json();
       setLibraries(data);

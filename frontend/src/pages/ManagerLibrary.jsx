@@ -111,35 +111,35 @@ export default function ManagerLibrary() {
               <input
                 className="user__book-title manager__book-detail-input"
                 placeholder="Название библиотеки"
-                value={title || 'Название библиотеки'}
+                value={title || ''}
                 onChange={(e) => setTitle(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="Номер телефона"
-                value={phone || 'Номер телефона'}
+                value={phone || ''}
                 onChange={(e) => setPhone(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="E-mail"
-                value={email || 'E-mail'}
+                value={email || ''}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="Адрес"
-                value={address || 'Адрес'}
+                value={address || ''}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <input
               className="user__book-description manager__book-detail-input"
               placeholder="Описание"
-              value={description || 'Описание отсутствует.'}
+              value={description || ''}
               onChange={(e) => setDescription(e.target.value)}
             />
             <div className="manager__book-details">
@@ -147,7 +147,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="ЧЧ:ММ"
-                value={open || 'ЧЧ:ММ'}
+                value={open || ''}
                 onChange={(e) => setOpen(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -155,7 +155,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="ЧЧ:ММ"
-                value={close || 'ЧЧ:ММ'}
+                value={close || ''}
                 onChange={(e) => setClose(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -163,7 +163,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="n"
-                value={waiting || 'n'}
+                value={waiting || ''}
                 onChange={(e) => setWaiting(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -171,7 +171,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="n"
-                value={rent || 'n'}
+                value={rent || ''}
                 onChange={(e) => setRent(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -179,7 +179,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="Город"
-                value={city || 'Нет информации.'}
+                value={city || ''}
                 onChange={(e) => setCity(e.target.value)}
               />
 
@@ -199,9 +199,11 @@ export default function ManagerLibrary() {
                 </div>
               </div>
             </div>
+            <div className="user__book-buttons">
             <button className="manager__book-button" onClick={handleUpdate}>
               Сохранить
             </button>
+            </div>
           </div>
           <div className="user__book-left-section"></div>
         </div>

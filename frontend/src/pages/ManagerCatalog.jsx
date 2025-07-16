@@ -179,7 +179,7 @@ export default function ManagerCatalog() {
               options={allAuthors}
               value={selectedAuthors}
               onChange={setSelectedAuthors}
-              placeholder="Выберите авторов..."
+              placeholder="Выберите авторов"
               className="manager__react-select"
               menuPortalTarget={document.body}
               styles={{
@@ -193,7 +193,7 @@ export default function ManagerCatalog() {
               options={allGenres}
               value={selectedGenres}
               onChange={setSelectedGenres}
-              placeholder="Выберите жанры..."
+              placeholder="Выберите жанры"
               className="manager__react-select"
               menuPortalTarget={document.body}
               styles={{
