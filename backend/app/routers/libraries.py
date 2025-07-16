@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
@@ -21,15 +21,11 @@ def create_library(request: Request, library: models.LibraryCreate, db: Session=
 
 # Get all Libraries
 @router.get("/", response_model=list[models.Library])
-def get_libraries(db: Session = Depends(get_session)):
-    
-    libraries = db.exec(select(models.Library)).all()
-    return libraries
-
-# Get libraries by city name
-@router.get("/city/{city}", response_model=list[models.Library])
-def get_libraries_by_city(city: str, db: Session = Depends(get_session)):
-    libraries = db.exec(select(models.Library).where(models.Library.city == city)).all()
+def get_libraries(db: Session = Depends(get_session), city: str = Query(default=None)):
+    if city is not None:
+        libraries = db.exec(select(models.Library).where(models.Library.city == city)).all()
+    else:
+        libraries = db.exec(select(models.Library)).all()
     return libraries
 
 # Get cities of all Libraries
