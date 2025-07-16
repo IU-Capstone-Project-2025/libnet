@@ -22,6 +22,25 @@ export default function ManagerLibrary() {
   const [waiting, setWaiting] = useState(null);
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
+  const [daysOpen, setDaysOpen] = useState([]); // Новое состояние
+
+  const allDays = [
+    { key: 'mon', label: 'Пн' },
+    { key: 'tue', label: 'Вт' },
+    { key: 'wed', label: 'Ср' },
+    { key: 'thu', label: 'Чт' },
+    { key: 'fri', label: 'Пт' },
+    { key: 'sat', label: 'Сб' },
+    { key: 'sun', label: 'Вс' },
+  ];
+
+  function toggleDay(dayKey) {
+    setDaysOpen(prev =>
+      prev.includes(dayKey)
+        ? prev.filter(d => d !== dayKey)
+        : [...prev, dayKey]
+    );
+  }
 
   useEffect(() => {
     async function fetchLibrary() {
@@ -41,8 +60,8 @@ export default function ManagerLibrary() {
         setWaiting(data.booking_duration);
         setRent(data.rent_duration);
         setCity(data.city);
+        setDaysOpen(data.days_open ? data.days_open.split(';') : []);
       } catch (err) {
-        console.log('here');
         setError(err.message);
       } finally {
         setLoading(false);
@@ -56,7 +75,10 @@ export default function ManagerLibrary() {
     try {
       const res = await fetch(`/api/libraries/${library.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           name: title,
           phone: phone,
@@ -68,6 +90,7 @@ export default function ManagerLibrary() {
           city: city,
           booking_duration: waiting,
           rent_duration: rent,
+          days_open: daysOpen.join(';'),
         }),
       });
       if (res.ok) {
@@ -88,35 +111,35 @@ export default function ManagerLibrary() {
               <input
                 className="user__book-title manager__book-detail-input"
                 placeholder="Название библиотеки"
-                value={title || 'Название библиотеки'}
+                value={title || ''}
                 onChange={(e) => setTitle(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="Номер телефона"
-                value={phone || 'Номер телефона'}
+                value={phone || ''}
                 onChange={(e) => setPhone(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="E-mail"
-                value={email || 'E-mail'}
+                value={email || ''}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ marginBottom: 20 + 'px' }}
               />
               <input
                 className="user__book-author manager__book-detail-input"
                 placeholder="Адрес"
-                value={address || 'Адрес'}
+                value={address || ''}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <input
               className="user__book-description manager__book-detail-input"
               placeholder="Описание"
-              value={description || 'Описание отсутствует.'}
+              value={description || ''}
               onChange={(e) => setDescription(e.target.value)}
             />
             <div className="manager__book-details">
@@ -124,7 +147,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="ЧЧ:ММ"
-                value={open || 'ЧЧ:ММ'}
+                value={open || ''}
                 onChange={(e) => setOpen(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -132,7 +155,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="ЧЧ:ММ"
-                value={close || 'ЧЧ:ММ'}
+                value={close || ''}
                 onChange={(e) => setClose(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -140,7 +163,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="n"
-                value={waiting || 'n'}
+                value={waiting || ''}
                 onChange={(e) => setWaiting(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -148,7 +171,7 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="n"
-                value={rent || 'n'}
+                value={rent || ''}
                 onChange={(e) => setRent(e.target.value)}
                 style={{ maxWidth: 100 + 'px' }}
               />
@@ -156,14 +179,31 @@ export default function ManagerLibrary() {
               <input
                 className="manager__book-detail-input"
                 placeholder="Город"
-                value={city || 'Нет информации.'}
+                value={city || ''}
                 onChange={(e) => setCity(e.target.value)}
               />
-              {/* TODO: дни работы */}
+
+              {/* Дни работы */}
+              <div className="manager__working-days-section">
+                <strong>Дни работы:</strong>
+                <div className="manager__working-days-container">
+                  {allDays.map(({ key, label }) => (
+                    <div
+                      key={key}
+                      className={`manager-day-button ${daysOpen.includes(key) ? 'active' : ''}`}
+                      onClick={() => toggleDay(key)}
+                    >
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+            <div className="user__book-buttons">
             <button className="manager__book-button" onClick={handleUpdate}>
               Сохранить
             </button>
+            </div>
           </div>
           <div className="user__book-left-section"></div>
         </div>

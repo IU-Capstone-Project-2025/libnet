@@ -1,25 +1,31 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app import models
 from app.auth import get_current_user
+from app.limiter import limiter
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 
 # Create a Library
 @router.post("/", response_model=models.Library)
-def create_library(library: models.Library, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    db.add(library)
+@limiter.limit("100/minute")
+def create_library(request: Request, library: models.LibraryCreate, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    new_library = models.Library(**library.model_dump())
+    db.add(new_library)
     db.commit()
-    db.refresh(library)
+    db.refresh(new_library)
 
-    return library
+    return new_library
 
 # Get all Libraries
 @router.get("/", response_model=list[models.Library])
-def get_libraries(db: Session = Depends(get_session)):
-    
-    libraries = db.exec(select(models.Library)).all()
+def get_libraries(db: Session = Depends(get_session), city: str = Query(default=None)):
+    if city is not None:
+        libraries = db.exec(select(models.Library).where(models.Library.city == city)).all()
+    else:
+        libraries = db.exec(select(models.Library)).all()
     return libraries
 
 # Get cities of all Libraries
@@ -73,11 +79,23 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")
-    return library.bookings
+    bookings = db.exec(
+    select(models.Booking)
+    .where(models.Booking.library_id == library_id)
+    .options(
+        selectinload(models.Booking.user),
+        selectinload(models.Booking.book),
+        selectinload(models.Booking.library),
+    )
+    .order_by(models.Booking.date_from)
+).all()
+    return bookings
 
 # Get list of managers in a Library
 @router.get("/{library_id}/managers", response_model=list[models.LibUser])
 def get_managers_in_library(library_id: int, db: Session=Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
     if not library:
         raise HTTPException(status_code=404, detail="Library does not exist")

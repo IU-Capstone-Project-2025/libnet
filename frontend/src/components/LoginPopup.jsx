@@ -42,6 +42,9 @@ export default function LoginPopup({ onClose, switchToRegister  }) {
           type="email"
           placeholder="E-Mail"
           value={email}
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
           onChange={e => setEmail(e.target.value)}
         />
         <input
@@ -49,6 +52,9 @@ export default function LoginPopup({ onClose, switchToRegister  }) {
           type="password"
           placeholder="Пароль"
           value={password}
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
           onChange={e => setPassword(e.target.value)}
         />
 

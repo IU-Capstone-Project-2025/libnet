@@ -23,6 +23,7 @@ export default function BookDetails() {
   const [genre, setGenre] = useState(null);
   const [year, setYear] = useState(null);
   const [rating, setRating] = useState(null);
+  const [publisher, setPublisher] = useState(null);
   const [libraries, setLibraries] = useState([]);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function BookDetails() {
         setGenre(data.genre);
         setYear(data.year);
         setRating(data.rating);
+        setPublisher(data.publisher);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -60,7 +62,6 @@ export default function BookDetails() {
         const res = await fetch(`/api/books/libraries/${book.id}`);
         const data = await res.json();
         setLibraries(data);
-        
       } catch (err) {
         setError(err.message);
       }
@@ -78,8 +79,6 @@ export default function BookDetails() {
           return;
         }
       }
-      
-      
     }
     setLibs();
   }, [libraries]);
@@ -90,11 +89,11 @@ export default function BookDetails() {
     async function checkFavorite() {
       try {
         const res = await fetch(`/api/users/likes/${user.id}/${id}`, {
-          headers: {Authorization: `Bearer ${token}`,}
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status == '204') {
-            setFavorite(false);
-            // console.log('nety');
+          setFavorite(false);
+          // console.log('nety');
         } else {
           setFavorite(true);
           // console.log('yest?>!');
@@ -107,7 +106,8 @@ export default function BookDetails() {
   }, [user]);
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
-  if (error) return <p className="user__book-content red-error" >Ошибка: {error}</p>;
+  if (error)
+    return <p className="user__book-content red-error">Ошибка: {error}</p>;
   if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   async function handleBooking() {
@@ -123,9 +123,10 @@ export default function BookDetails() {
 
       const res = await fetch('/api/bookings/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-         },
+        },
         body: JSON.stringify({
           user_id: user.id,
           book_id: book.id,
@@ -139,7 +140,7 @@ export default function BookDetails() {
         console.log(res.statusText);
         throw new Error('Booking failed');
       } else {
-        // TODO: errors
+        navigate('/orders');
       }
     } catch (err) {
       setError(err.message);
@@ -151,10 +152,13 @@ export default function BookDetails() {
       try {
         const res = await fetch('/api/users/like', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`,},
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
@@ -170,10 +174,13 @@ export default function BookDetails() {
       try {
         const res = await fetch(`/api/users/like/${user.id}/${id}`, {
           method: 'DELETE',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             user_id: user.id,
-            book_id: id,
+            book_id: Number(id),
           }),
         });
 
@@ -191,11 +198,13 @@ export default function BookDetails() {
   async function updateBook(libname) {
     for (var i = 0; i < libraries.length; i++) {
       if (libraries[i].name == libname) {
-        console.log(libraries[i].id)
-        const res = await fetch(`/api/libraries/isbn/${libraries[i].id}/${book.isbn}`)
+        console.log(libraries[i].id);
+        const res = await fetch(
+          `/api/libraries/isbn/${libraries[i].id}/${book.isbn}`
+        );
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
-        navigate(`/books/${data.id}`)
+        navigate(`/books/${data.id}`);
       }
     }
     setSelectedPlace(libname);
@@ -214,20 +223,56 @@ export default function BookDetails() {
               } //"https://via.placeholder.com/200x300?text=Book+Cover"}
               alt={`${title} cover`}
             />
-            
-              { user ? (
-                <div className="user__book-buttons">
-                  <button className="user__book-button" onClick={handleBooking}>
-                    Забронировать
-                  </button>
-                  <button className="user__book-button" onClick={handleFavorite}>
-                    {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-                  </button>
-                </div>
-                ) : (<div className="user__book-buttons"><p className="user__book-pleaselogin">Войдите, чтобы забронировать или добавить книгу в избранное</p></div>)
-              }
-              
-            
+
+            {(user && user.verification) ? (
+              <div className="user__book-buttons">
+                <button className="user__book-button" onClick={handleBooking}>
+                  Забронировать
+                </button>
+                <button className="user__book-button" onClick={handleFavorite}>
+                  {favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+                </button>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate(-1)}
+                >
+                  Назад
+                </button>
+              </div>
+            ) : (!user) ? (
+              <div className="user__book-buttons">
+                <p className="user__book-pleaselogin">
+                  Войдите, чтобы забронировать или добавить книгу в избранное
+                </p>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate(-1)}
+                >
+                  Назад
+                </button>
+              </div>
+            ) : (
+              <>
+              <div className="user__unathenticated-buttons">
+              <p className="user__book-pleaselogin">
+                  Пройдите верификацию e-mail в профиле, чтобы забронировать или добавить книгу в избранное
+                </p>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate('/profile')}
+                >
+                  Профиль
+                </button>
+                <button
+                  className="user__book-button user__book-button--red"
+                  onClick={() => navigate(-1)}
+                >
+                  Назад
+                </button>
+              </div>
+
+              </>
+            )}
           </div>
           <div className="user__book-right-section">
             <div className="user__book-title-container">
@@ -240,18 +285,15 @@ export default function BookDetails() {
             <div className="user__book-details">
               <p className="user__book-detail">
                 {' '}
-                <strong>Количество страниц:</strong>{' '}
-                {pages || 'Нет информации'}
+                <strong>Количество страниц:</strong> {pages || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
-                <strong>Жанры:</strong>{' '}
-                {genre || 'Нет информации'}
+                <strong>Жанры:</strong> {genre || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
-                <strong>ISBN:</strong>{' '}
-                {isbn || 'Нет информации'}
+                <strong>ISBN:</strong> {isbn || 'Нет информации'}
               </p>
               <p className="user__book-detail">
                 {' '}
@@ -261,16 +303,21 @@ export default function BookDetails() {
                 {' '}
                 <strong>Рейтинг:</strong> {rating || 'Нет информации'}
               </p>
+              <p className="user__book-detail">
+                {' '}
+                <strong>Издательство:</strong> {publisher || 'Нет информации'}
+              </p>
               <select
                 className="user__book-select"
                 value={selectedPlace}
-                onChange={e => updateBook(e.target.value)}
+                onChange={(e) => updateBook(e.target.value)}
               >
-                {Array.isArray(libraries) && libraries.map(lib => (
-                  <option key={lib.id} value={lib.name}>
-                    {lib.name}
-                  </option>
-                ))}
+                {Array.isArray(libraries) &&
+                  libraries.map((lib) => (
+                    <option key={lib.id} value={lib.name}>
+                      {lib.name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>

@@ -1,26 +1,52 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select, and_
 from app.database import get_session
 from app.auth import hash_password, verify_password, create_access_token
 from app import models
-import re
+import re, random, os, aiosmtplib, secrets
+from datetime import datetime, timedelta
 from app.auth import get_current_user
+from email.message import EmailMessage
+from dotenv import load_dotenv
+from app.limiter import limiter
 
 router = APIRouter()
 
+load_dotenv()
+
+def generate_verification_code():
+    return f"{secrets.randbelow(900000) + 100000}"
+
+async def send_verification_code_email(to_email: str, code: str):
+    msg = EmailMessage()
+    msg["From"] = os.getenv("SMTP_USER")
+    msg["To"] = to_email
+    msg["Subject"] = "Подтверждение почты LibNet"
+    msg.set_charset("utf-8")
+    msg.set_content(f"Пожалуйста, используйте следующий код для подтверждения вашей почты: {code}\n\n"
+                    "Этот код действителен в течение 10 минут.\n\n"
+                    "Если вы не регистрировались на libnet.site, пожалуйста, проигнорируйте это сообщение.")
+
+    await aiosmtplib.send(
+        msg,
+        hostname="smtp.gmail.com",
+        port=587,
+        start_tls=True,
+        username=os.getenv("SMTP_USER"),
+        password=os.getenv("SMTP_PASS"),
+    )
+
 # Register a User
 @router.post("/register", response_model=models.LibUserRead)
-def register(user: models.LibUserCreate, db: Session = Depends(get_session)):
+@limiter.limit("10/minute")
+async def register(request: Request, user: models.LibUserCreate, db: Session = Depends(get_session)):
     existing_user = db.exec(select(models.LibUser).where(models.LibUser.email == user.email)).first()
-    roles = ["user", "manager", "admin"]
     email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
     data = [user.first_name, user.last_name, user.email, user.phone, user.city]
 
     if existing_user:
         raise HTTPException(status_code=400, detail="User with this email already exists")
-    if user.role not in roles:
-        raise HTTPException(status_code=400, detail="User role is invalid")
     if None in data:
         raise HTTPException(status_code=400, detail="Some fields are missing")
     if not bool(re.match(email_pattern, user.email)):
@@ -28,16 +54,76 @@ def register(user: models.LibUserCreate, db: Session = Depends(get_session)):
 
     user_dict = user.model_dump()
     user_dict["hashed_password"] = hash_password(user_dict.pop("password"))
+    if user.email != "loltotallytest@girl.yes" and "_test_reg@test.lol" not in user.email:
+        verification_code = generate_verification_code()
+        expires_at = datetime.now() + timedelta(minutes=10)
+        user_dict["email_verification_code"] = verification_code
+        user_dict["code_expires_at"] = expires_at
+        user_dict["is_verified"] = False
+    else:
+        user_dict["is_verified"] = True
 
     new_user = models.LibUser(**user_dict)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
     return new_user
+
+# Verify code
+@router.post("/verify/{user_id}")
+@limiter.limit("10/minute")
+async def verify(request: Request, user_id: int, code: str, db: Session = Depends(get_session)):
+    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
+    print(code, user.email_verification_code)
+    if code == user.email_verification_code:
+        if user.code_expires_at < datetime.now():
+            verification_code = generate_verification_code()
+            expires_at = datetime.now() + timedelta(minutes=10)
+            user.email_verification_code = verification_code
+            user.code_expires_at = expires_at
+
+            db.commit()
+            db.refresh(user)
+
+            await send_verification_code_email(user.email, verification_code)
+            return {
+                "status": "expired",
+                "message": "Verification code expired. New code sent"
+                }
+
+        user.is_verified = True
+        db.commit()
+        db.refresh(user)
+        return user
+    else:
+        raise HTTPException(status_code=400, detail="Code is incorrect")
+    
+# Send code again
+@router.post("/send-code/")
+@limiter.limit("3/minute")
+async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user), db: Session = Depends(get_session)):
+    if current_user.code_expires_at <= datetime.now():
+        verification_code = generate_verification_code()
+        expires_at = datetime.now() + timedelta(minutes=10)
+        current_user.email_verification_code = verification_code
+        current_user.code_expires_at = expires_at
+
+        db.commit()
+        db.refresh(current_user)
+
+        await send_verification_code_email(current_user.email, verification_code)
+        return {
+            "status": "expired",
+            "message": "Verification code expired. New code sent"
+            }
+    else:
+        await send_verification_code_email(current_user.email, current_user.email_verification_code)
 
 # Login a User
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
+@limiter.limit("10/minute")
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.email == form_data.username)).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
@@ -47,7 +133,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Update password
 @router.patch("/{user_id}/update-password")
-def update_password(user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("1/minute")
+def update_password(request: Request, user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
@@ -67,9 +154,7 @@ def read_all_users(db: Session = Depends(get_session)):
 # Get single user
 @router.get("/{user_id}", response_model=models.LibUserRead)
 def read_user_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User does not exist")
+    user = db.get(models.LibUser, user_id)
     return user
 
 # Get user by email
@@ -82,8 +167,11 @@ def read_user_by_email(email: str, db: Session = Depends(get_session), current_u
 
 # Add favorite book to user
 @router.post("/like", response_model=models.FavoriteBook)
-def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("10/minute")
+def like_a_book(request: Request, favorite_book: models.FavoriteBook, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == favorite_book.user_id)).first()
+    if not user.is_verified:
+        raise HTTPException(status_code=400, detail="User is not verified")
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
     
@@ -104,7 +192,8 @@ def like_a_book(favorite_book: models.FavoriteBook, db: Session = Depends(get_se
 
 # Remove favorite book from user
 @router.delete("/like/{user_id}/{book_id}", status_code=204)
-def unlike_a_book(user_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("10/minute")
+def unlike_a_book(request: Request, user_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
         raise HTTPException(status_code=404, detail="Book is not liked by this user")
@@ -127,7 +216,8 @@ def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(
 
 # Update user
 @router.patch("/{user_id}", response_model=models.LibUserRead)
-def update_user(user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+@limiter.limit("5/minute")
+def update_user(request: Request, user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")

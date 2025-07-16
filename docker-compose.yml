@@ -1,29 +1,4 @@
 services:
-  nginx:
-    container_name: nginx
-    build: 
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - backend
-      - frontend
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/certs:/etc/nginx/certs
-      - ./frontend/dist:/usr/share/nginx/html
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://83.222.17.10:3100/loki/api/v1/push"
-        loki-retries: "5"
-        loki-batch-size: "400"
-        loki-batch-wait: "1s"
-        loki-external-labels: "job=nginx,service=proxy"
-    restart: always
-
   postgres:
     image: postgres:14
     container_name: postgres
@@ -61,6 +36,8 @@ services:
       - WAIT_HOSTS_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=5
       - FORWARDED_ALLOW_IPS=*
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
     expose:
       - "8000"
     logging:
@@ -73,27 +50,19 @@ services:
         loki-external-labels: "job=backend,service=api"
 
   frontend:
-    image: node:20-alpine
-    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: frontend
     environment:
       NODE_OPTIONS: "--openssl-legacy-provider"
     ports:
-      - "4173:4173"
+      - "80:80"
+      - "443:443"
     depends_on:
       - backend
-    volumes:
-      - ./frontend/dist:/app/dist
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-retries: "5"
-        loki-batch-size: "400"
-        loki-batch-wait: "1s"
-        loki-external-labels: "job=frontend,service=web"
+    restart: always
+
 
   loki:
     image: grafana/loki:latest
@@ -115,10 +84,13 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    ports:
-      - "3000:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=https://libnet.site/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    ports:
+      - "3000:3000"
 
 volumes:
   postgres_data:

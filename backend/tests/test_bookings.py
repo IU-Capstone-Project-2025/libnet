@@ -2,11 +2,12 @@ import pytest, pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlmodel import create_engine, Session, SQLModel
 import os, sys
+os.environ["TESTING"] = "1"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app.main import app
 from sqlmodel.pool import StaticPool
 from app.database import init_engine, get_session
-from datetime import datetime
+from app import models
 
 @pytest.fixture(name="session")
 def session_fixture():
@@ -46,6 +47,10 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     assert user_resp.status_code in (200, 201), user_resp.text
     created.append("user")
 
+    user = session.get(models.LibUser, user_resp.json()['id'])
+    user.role = "manager"
+    session.commit()
+
     login_payload = {
         "username": "loltotallytest@girl.yes",
         "password": "string"
@@ -55,24 +60,23 @@ async def test_crud_booking(client: AsyncClient, session: Session):
 
     headers = {"Authorization": f"Bearer {access_token}"}
 
-    if (await client.get("/libraries/1")).status_code == 404:
-        lib_payload = {
-            "id": 1,
-            "name": "string",
-            "city": "string",
-            "phone": "string",
-            "email": "string",
-            "address": "string",
-            "description": "string",
-            "open_at": "string",
-            "close_at": "string",
-            "days_open": "string",
-            "booking_duration": 7,
-            "rent_duration": 14
-        }
-        lib_resp = await client.post("/libraries/", json=lib_payload, headers=headers)
-        assert lib_resp.status_code in (200, 201), lib_resp.text
-        created.append("library")
+    lib_payload = {
+        "name": "string",
+        "city": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "description": "string",
+        "open_at": "string",
+        "close_at": "string",
+        "days_open": "string",
+        "booking_duration": 7,
+        "rent_duration": 14
+    }
+    lib_resp = await client.post("/libraries/", json=lib_payload, headers=headers)
+    assert lib_resp.status_code in (200, 201), lib_resp.text
+    created.append("library")
+    library_id = lib_resp.json()["id"]
 
     
     user_id = (await client.get("/users/email/loltotallytest@girl.yes", headers=headers)).json()["id"]
@@ -83,7 +87,7 @@ async def test_crud_booking(client: AsyncClient, session: Session):
             "title": "Book",
             "author": "Author",
             "isbn": "123",
-            "library_id": 1,
+            "library_id": library_id,
             "description": "Test",
             "year": 2023,
             "image_url": "",
@@ -97,7 +101,7 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     payload = {
         "user_id": user_id,
         "book_id": 1,
-        "library_id": 1,
+        "library_id": library_id,
         "date_from": "2025-07-02",
         "date_to": "2025-07-02",
         "status": "pending"
@@ -108,7 +112,7 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     booking = response.json()
     assert booking["user_id"] == user_id
     assert booking["book_id"] == 1
-    assert booking["library_id"] == 1
+    assert booking["library_id"] == library_id
 
     get_resp = await client.get(f"/bookings/{booking['id']}", headers=headers)
     assert get_resp.status_code == 200
@@ -124,11 +128,3 @@ async def test_crud_booking(client: AsyncClient, session: Session):
     delete = await client.delete(f"/bookings/{booking['id']}", headers=headers)
     assert delete.status_code == 204
 
-    if "book" in created:
-        await client.delete("/books/1", headers=headers)
-        assert (await client.get("/books/1", headers=headers)).status_code == 404
-    if "library" in created:
-        await client.delete("/libraries/1", headers=headers)
-        assert (await client.get("/libraries/1", headers=headers)).status_code == 404
-    if "user" in created:
-        await client.delete(f"/users/{user_id}", headers=headers)
