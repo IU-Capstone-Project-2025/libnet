@@ -26,6 +26,25 @@ export default function AdminLibrary() {
   const [waiting, setWaiting] = useState(null);
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
+  const [daysOpen, setDaysOpen] = useState([]); // Новое состояние
+
+  const allDays = [
+    { key: 'mon', label: 'Пн' },
+    { key: 'tue', label: 'Вт' },
+    { key: 'wed', label: 'Ср' },
+    { key: 'thu', label: 'Чт' },
+    { key: 'fri', label: 'Пт' },
+    { key: 'sat', label: 'Сб' },
+    { key: 'sun', label: 'Вс' },
+  ];
+
+  function toggleDay(dayKey) {
+    setDaysOpen((prev) =>
+      prev.includes(dayKey)
+        ? prev.filter((d) => d !== dayKey)
+        : [...prev, dayKey]
+    );
+  }
 
   async function fetchManagers() {
     if (user == null) return;
@@ -62,6 +81,7 @@ export default function AdminLibrary() {
         setWaiting(data.booking_duration);
         setRent(data.rent_duration);
         setCity(data.city);
+        setDaysOpen(data.days_open ? data.days_open.split(';') : []);
       } catch (err) {
         console.log('here');
         setError(err.message);
@@ -93,6 +113,7 @@ export default function AdminLibrary() {
           city: city,
           booking_duration: waiting,
           rent_duration: rent,
+          days_open: daysOpen.join(';'),
         }),
       });
       if (res.ok) {
@@ -170,35 +191,31 @@ export default function AdminLibrary() {
           />
           <strong>Время открытия:</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__time-input"
             placeholder="ЧЧ:ММ"
             value={open || 'ЧЧ:ММ'}
             onChange={(e) => setOpen(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Время закрытия:</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__time-input"
             placeholder="ЧЧ:ММ"
             value={close || 'ЧЧ:ММ'}
             onChange={(e) => setClose(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Срок хранения заказов (дней):</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__duration-input"
             placeholder="n"
             value={waiting || 'n'}
             onChange={(e) => setWaiting(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Период аренды книги (дней):</strong>
           <input
-            className="manager__book-detail-input"
+            className="manager__book-detail-input admin__duration-input"
             placeholder="n"
             value={rent || 'n'}
             onChange={(e) => setRent(e.target.value)}
-            style={{ maxWidth: 100 + 'px' }}
           />
           <strong>Город:</strong>
           <input
@@ -207,15 +224,38 @@ export default function AdminLibrary() {
             value={city || 'Нет информации.'}
             onChange={(e) => setCity(e.target.value)}
           />
+          {/* Дни работы */}
+          <div className="admin__working-days-section">
+            <strong>Дни работы:</strong>
+            <div className="admin__working-days-container">
+              {allDays.map(({ key, label }) => (
+                <div
+                  key={key}
+                  className={`day-button ${
+                    daysOpen.includes(key) ? 'active' : ''
+                  }`}
+                  onClick={() => toggleDay(key)}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* TODO: дни работы */}
-        <button className="admin__book-button" onClick={() => navigate('/admin/')}>
-                Назад
-              </button>
-        <button className="admin__book-button" onClick={handleUpdate}>
-          Сохранить
-        </button>
+        <div className="admin__library-buttons">
+          <button
+            className="admin__book-button"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              navigate('/admin/');
+            }}
+          >
+            Назад
+          </button>
+          <button className="admin__book-button" onClick={handleUpdate}>
+            Сохранить
+          </button>
+        </div>
         <h3 className="user__heading">Управление менеджерами</h3>
         <div className="admin__assign-inputs">
           <input

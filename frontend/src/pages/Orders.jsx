@@ -98,7 +98,6 @@ export default function Orders() {
       </p>
     );
 
-  // TODO: handle cancel
   async function handleCancel(booking_id) {
     console.log(booking_id);
     const res = await fetch(`/api/bookings/${booking_id}`, {
@@ -109,7 +108,11 @@ export default function Orders() {
       }),
     });
     if (res.ok) {
-      console.log('cancelled');
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === booking_id ? { ...b, status: 'cancelled' } : b
+        )
+      );
     }
   }
 

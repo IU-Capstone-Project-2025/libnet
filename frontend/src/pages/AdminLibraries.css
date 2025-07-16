@@ -1,16 +1,22 @@
 .admin__libraries-content {
   min-height: 100vh;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
+.small-button {
+  max-width: 300px;
+}
 .admin__libraries-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   border-radius: 20px;
   padding: 20px;
   font-size: var(--font-size-regular);
-  background-color: var(--grey-color);
+  border: 1px solid black;
 }
 
 .admin__libraries-list-item {
@@ -28,4 +34,99 @@
 .admin__libraries-list-item:active {
   border: 1px solid var(--grey-color);
   background-color: var(--main-admin-color);
+}
+
+/* Стили для управления администраторами */
+.admin__assign-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.admin__assign-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 20px 0 0 20px;
+  padding: 10px 20px;
+  font-size: var(--font-size-subregular);
+}
+
+.admin__assign-button {
+  width: 300px;
+  border: 1px solid black;
+  border-radius: 0 20px 20px 0;
+  padding: 10px 20px;
+  font-size: var(--font-size-subregular);
+  background-color: white;
+}
+
+.admin__assign-button:hover {
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+
+.admin__assign-button:active {
+  background-color: var(--grey-color);
+}
+
+.admin__manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 0;
+  font-size: var(--font-size-regular);
+  list-style: none;
+}
+
+.admin__manager-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 0;
+  padding: 10px 20px;
+}
+
+.admin__manager-list-item:first-child {
+  border-radius: 20px 0 0 0;
+}
+
+.admin__manager-list-item:last-child {
+  border-radius: 0 0 20px 0;
+}
+
+.admin__dismiss-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.admin__dismiss-button img {
+  width: 35px;
+  height: 35px;
+}
+
+.admin__dismiss-button:hover img {
+  filter: saturate(60%) invert(50%) sepia(80%) saturate(1500%)
+    hue-rotate(320deg) brightness(110%) contrast(90%);
+}
+
+.admin__dismiss-button:active {
+  filter: brightness(0) saturate(100%) invert(25%) sepia(100%) saturate(7500%)
+    hue-rotate(350deg) brightness(90%) contrast(100%);
+}
+
+@media (width < 768px) {
+  .admin__libraries-content {
+    padding: 0 20px;
+  }
 }

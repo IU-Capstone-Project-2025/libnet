@@ -68,7 +68,13 @@
   text-align: start;
   border: solid var(--red-color) 4px;
   padding: 10px;
-  border-radius: 20px 0 20px 0;
+  border-radius: 20px 0 0 0;
+}
+
+.user__unathenticated-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .user__book-right-section {
@@ -197,4 +203,65 @@
   .user__book-pleaselogin {
   font-size: 14px;
 }
+}
+
+
+.day-button {
+  padding: 6px 12px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+}
+
+/* Стили для менеджера */
+.manager-day-button {
+  padding: 8px 12px;
+  border: 2px solid var(--main-manager-color);
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  font-size: var(--font-size-subregular);
+  font-weight: var(--weight-regular);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.manager-day-button:hover {
+  background-color: var(--grey-color);
+  font-weight: var(--weight-bold);
+}
+
+.manager-day-button.active {
+  background-color: var(--main-manager-color);
+  color: black;
+  font-weight: var(--weight-bold);
+  border-color: var(--main-manager-color);
+}
+
+.manager-day-button.active:hover {
+  background-color: var(--main-manager-color);
+  opacity: 0.8;
+}
+
+/* Старые стили для совместимости */
+.day-button.active {
+  background-color: var(--main-manager-color);
+  color: white;
+  border-color: var(--main-manager-color);
+}
+
+/* Дополнительные стили для менеджера */
+.manager__working-days-section {
+  margin-top: 15px;
+}
+
+.manager__working-days-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
 }
