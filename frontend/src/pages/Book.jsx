@@ -140,7 +140,7 @@ export default function BookDetails() {
         console.log(res.statusText);
         throw new Error('Booking failed');
       } else {
-        // TODO: errors
+        navigate('/orders');
       }
     } catch (err) {
       setError(err.message);
