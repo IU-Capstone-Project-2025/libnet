@@ -97,6 +97,22 @@ def get_book_quantity(library_id: int, book_id: int, db: Session = Depends(get_s
         raise HTTPException(status_code=404, detail="Book does not exist in this library")
     return book.quantity
 
+# Change quantity of a book in a library
+@router.patch("/quantity/{library_id}/{book_id}", response_model=models.LibraryBook)
+def change_book_quantity(library_id: int, book_id: int, quantity: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Access forbidden: Managers only")
+    book = db.exec(select(models.LibraryBook)
+                   .where(and_(models.LibraryBook.library_id == library_id, models.LibraryBook.book_id == book_id))
+                   ).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book does not exist in this library")
+    book.quantity = quantity
+    db.add(book)
+    db.commit()
+    db.refresh(book)
+    return book
+
 # Get unique Books
 @router.get("/unique/", response_model=list[models.Book])
 def get_unique_books(db: Session = Depends(get_session)):
