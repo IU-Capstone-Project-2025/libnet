@@ -50,7 +50,7 @@ If they are in russian, translate them to english and make this mapping/output.
 """
     client = Client(host="http://host.docker.internal:11435")
     response = client.chat(
-        model="llama2-7b",
+        model="llama2",
         messages=[{"role": "user", "content": prompt}]
     )
     content = response["message"]["content"]
