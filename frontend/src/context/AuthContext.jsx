@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
           user_data.city,
           user_data.phone,
           user_data.libraryId,
-          user_data.is_verified
+          user_data.verification
         ));
         setLoading(false);
       }
@@ -183,7 +183,8 @@ export function AuthProvider({ children }) {
         user.role,
         payload.city,
         payload.phone,
-        user.libraryId
+        user.libraryId,
+        user.verification
       )
       setUser(new_user)
       localStorage.setItem(USER_DATA, JSON.stringify(new_user));
@@ -199,7 +200,6 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        // body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -210,7 +210,7 @@ export function AuthProvider({ children }) {
       console.log(res.status);
       console.log("Vse srabotalo");
       user.verification = true;
-      // await login(payload.email, payload.password);
+      localStorage.setItem(USER_DATA, JSON.stringify(user));
   }
 
   async function sendCode() {
