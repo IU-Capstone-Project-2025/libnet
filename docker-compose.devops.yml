@@ -25,6 +25,7 @@ services:
     build: ./backend
     ports:
       - "8080:8000"
+      - "11434:11434"
     volumes:
       - ./backend:/app
     extra_hosts:
