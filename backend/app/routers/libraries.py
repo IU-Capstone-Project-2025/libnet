@@ -85,7 +85,7 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
             selectinload(models.Booking.library),
         ).where(library_id == models.Booking.library_id)
     ).all()
-    return bookings[:10]
+    return bookings
 
 # Get list of managers in a Library
 @router.get("/{library_id}/managers", response_model=list[models.LibUser])

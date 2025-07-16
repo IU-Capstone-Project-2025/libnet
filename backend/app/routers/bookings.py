@@ -49,7 +49,7 @@ def get_bookings(db: Session = Depends(get_session)):
             selectinload(models.Booking.book),
             selectinload(models.Booking.library),
         )
-    ).all()[:10]
+    ).all()
     return bookings
 
 # Get single Booking
@@ -134,7 +134,7 @@ def search_bookings(booking_id: int = Query(default=None), user_phone: str = Que
 
     query = query.order_by(desc(models.Booking.date_to))
 
-    books = db.exec(query).all()[:10]
+    books = db.exec(query).all()
     return books
 
 
