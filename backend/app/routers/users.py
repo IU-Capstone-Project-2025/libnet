@@ -39,7 +39,7 @@ async def send_verification_code_email(to_email: str, code: str):
 
 # Register a User
 @router.post("/register", response_model=models.LibUserRead)
-@limiter.limit("1/minute")
+@limiter.limit("10/minute")
 async def register(request: Request, user: models.LibUserCreate, db: Session = Depends(get_session)):
     existing_user = db.exec(select(models.LibUser).where(models.LibUser.email == user.email)).first()
     email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
