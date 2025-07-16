@@ -166,6 +166,16 @@ export default function Profile() {
             </>
           ) : (
             <>
+              <div>
+                {!user.verification && (
+                  <button
+                    className="user__verify-button"
+                    onClick={() => setVerification(true)}
+                  >
+                    Подтвердить аккаунт
+                  </button>
+                )}
+              </div>
               <div className="user__profile-city">
                 <label
                   className="user__profile-city-label"
@@ -231,16 +241,8 @@ export default function Profile() {
                   className="user__profile-button user__profile-button--red"
                   onClick={logout}
                 >
-                  Выйти из аккаунта
+                  Выйти
                 </button>
-                {!user.verification && (
-                  <button
-                    className="user__profile-button"
-                    onClick={() => setVerification(true)}
-                  >
-                    Подтвердить аккаунт
-                  </button>
-                )}
               </div>
             </>
           )}
