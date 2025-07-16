@@ -6,6 +6,7 @@ from datetime import timedelta, date, datetime
 from app.auth import get_current_user
 from app.limiter import limiter
 from sqlalchemy import desc
+from sqlalchemy.orm import selectinload
 
 router = APIRouter()
 
@@ -41,7 +42,14 @@ def create_booking(request: Request, booking: models.Booking, db: Session = Depe
 # Get all Bookings
 @router.get("/", response_model=list[models.Booking])
 def get_bookings(db: Session = Depends(get_session)):
-    bookings = db.exec(select(models.Booking)).all()
+    bookings = db.exec(
+        select(models.Booking)
+        .options(
+            selectinload(models.Booking.user),
+            selectinload(models.Booking.book),
+            selectinload(models.Booking.library),
+        )
+    ).all()
     return bookings
 
 # Get single Booking
