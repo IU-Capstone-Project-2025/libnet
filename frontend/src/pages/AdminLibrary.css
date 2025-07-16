@@ -109,6 +109,10 @@
   border-radius: 0 0 20px 0;
 }
 
+.admin__manager-list-item:only-child {
+  border-radius: 20px 0 20px 0;
+}
+
 .admin__dismiss-button {
   display: flex;
   justify-content: center;
