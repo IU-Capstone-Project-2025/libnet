@@ -37,10 +37,10 @@
 
 .user__library-info-details h2 {
   margin: 0;
-  font-size: var(--font-size-regular);
-  font-weight: var(--weight-regular);
-  color: #333;
   border-radius: 10px;
+  color: #333;
+  font-weight: var(--weight-regular);
+  font-size: var(--font-size-regular);
 }
 
 .user__library-info-details h2 a {
@@ -84,8 +84,8 @@
 /* Стили для дней недели */
 .user__library-days {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
   margin-top: 5px;
 }
 
@@ -95,31 +95,31 @@
   border: 2px solid;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: var(--font-size-subregular);
   font-weight: var(--weight-bold);
+  font-size: var(--font-size-subregular);
   text-align: center;
+  transition: none;
   cursor: default;
   pointer-events: none;
-  transition: none;
 }
 
 .user__library-day-button.active {
-  background-color: var(--main-user-color);
   border-color: var(--main-user-color);
   color: black;
+  background-color: var(--main-user-color);
 }
 
 .user__library-day-button.inactive {
-  background-color: var(--red-color);
   border-color: var(--red-color);
   color: black;
+  background-color: var(--red-color);
 }
 
 @media (width < 768px) {
   .user__library-days {
     gap: 8px;
   }
-  
+
   .user__library-day-button {
     min-width: 35px;
     height: 35px;

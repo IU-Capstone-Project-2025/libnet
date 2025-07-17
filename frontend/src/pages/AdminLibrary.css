@@ -167,30 +167,30 @@
 }
 
 .day-button {
-  padding: 8px 12px;
   border: 2px solid var(--main-admin-color);
   border-radius: 5px;
-  background-color: white;
-  cursor: pointer;
-  font-size: var(--font-size-subregular);
+  padding: 8px 12px;
   font-weight: var(--weight-regular);
+  font-size: var(--font-size-subregular);
+  background-color: white;
   transition: all 0.2s ease;
+  cursor: pointer;
   user-select: none;
 }
 
 .day-button:hover {
-  background-color: var(--grey-color);
   font-weight: var(--weight-bold);
+  background-color: var(--grey-color);
 }
 
 .day-button.active {
-  background-color: var(--main-admin-color);
+  border-color: var(--main-admin-color);
   color: black;
   font-weight: var(--weight-bold);
-  border-color: var(--main-admin-color);
+  background-color: var(--main-admin-color);
 }
 
 .day-button.active:hover {
-  background-color: var(--main-admin-color);
   opacity: 0.8;
+  background-color: var(--main-admin-color);
 }

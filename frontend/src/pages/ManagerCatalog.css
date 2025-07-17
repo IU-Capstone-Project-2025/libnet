@@ -132,6 +132,8 @@
 }
 
 .manager__slider-container {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -143,8 +145,6 @@
   padding: 15px 15px;
   text-align: center;
   background-color: white;
-  position: relative;
-  z-index: 1;
 }
 
 .manager__search-label {
@@ -154,9 +154,9 @@
 }
 
 .manager__search-slider {
-  margin: 5px 30px;
   position: relative;
   z-index: 1;
+  margin: 5px 30px;
 }
 
 .manager__search-slider .rc-slider-rail {
@@ -308,11 +308,11 @@
 
 .manager__catalog-create-book-button {
   width: 20%;
+  margin-bottom: 10px;
   border: 4px solid var(--main-manager-color);
   border-radius: 20px 0 20px 0;
   padding: 10px 5px;
   background-color: white;
-  margin-bottom: 10px;
 }
 
 .manager__catalog-create-book-button:hover {
@@ -414,9 +414,9 @@
   }
 
   .manager__sidebar-content .react-select__container {
-    width: 100%;
     position: relative;
     z-index: 1000;
+    width: 100%;
   }
 
   .manager__sidebar-content .react-select__control {
@@ -438,7 +438,6 @@
   .manager__search-bar:nth-child(2) {
     border-radius: 0;
   }
-  
 }
 
 @media (width < 479px) {
@@ -464,18 +463,18 @@
 
 /* Стили для react-select компонента */
 .manager__sidebar-content .react-select__container {
-  width: 100%;
   position: relative;
   z-index: 1000;
+  width: 100%;
 }
 
 .manager__sidebar-content .react-select__control {
   width: 100%;
+  min-height: 50px;
   border: 1px solid black;
   border-radius: 0;
-  background-color: white;
-  min-height: 50px;
   font-size: var(--font-size-subregular);
+  background-color: white;
 }
 
 .manager__sidebar-content .react-select__control:hover {
@@ -488,11 +487,11 @@
 }
 
 .manager__sidebar-content .react-select__menu {
+  position: absolute !important;
+  z-index: 99999 !important;
   border: none;
   border-radius: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 99999 !important;
-  position: absolute !important;
 }
 
 .manager__sidebar-content .react-select__menu-list {
@@ -502,11 +501,11 @@
 }
 
 .manager__sidebar-content .react-select__option {
-  background-color: white;
-  color: black;
   border: none;
   padding: 10px 12px;
+  color: black;
   font-size: var(--font-size-subregular);
+  background-color: white;
 }
 
 .manager__sidebar-content .react-select__option:hover {
@@ -514,8 +513,8 @@
 }
 
 .manager__sidebar-content .react-select__option--is-selected {
-  background-color: var(--main-manager-color);
   color: black;
+  background-color: var(--main-manager-color);
 }
 
 .manager__sidebar-content .react-select__option--is-focused {
@@ -523,9 +522,9 @@
 }
 
 .manager__sidebar-content .react-select__multi-value {
-  background-color: var(--grey-color);
   border: 1px solid black;
   border-radius: 3px;
+  background-color: var(--grey-color);
 }
 
 .manager__sidebar-content .react-select__multi-value__label {
@@ -539,8 +538,8 @@
 }
 
 .manager__sidebar-content .react-select__multi-value__remove:hover {
-  background-color: #ff6b6b;
   color: white;
+  background-color: #ff6b6b;
 }
 
 .manager__sidebar-content .react-select__placeholder {

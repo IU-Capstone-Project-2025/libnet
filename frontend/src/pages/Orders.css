@@ -94,12 +94,12 @@
 }
 
 .manager__orders-search-form {
-  background-color: var(--grey-color);
   display: flex;
-  padding: 20px;
-  border-radius: 20px 20px 20px 20px;
   gap: 5px;
   margin-bottom: 20px;
+  border-radius: 20px 20px 20px 20px;
+  padding: 20px;
+  background-color: var(--grey-color);
 }
 
 @media (width < 1024px) {
@@ -108,15 +108,14 @@
   }
 }
 
-/* Стили для поисковой формы заказов */
 .manager__orders-search-form {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
+  border-radius: 20px;
   padding: 20px;
   background-color: var(--grey-color);
-  border-radius: 20px;
-  flex-wrap: wrap;
 }
 
 .manager__orders-search-form .manager__search-bar {
@@ -130,8 +129,8 @@
 }
 
 .manager__orders-search-form .manager__search-bar:focus {
-  outline: none;
   border-color: var(--main-manager-color);
+  outline: none;
 }
 
 @media (width < 768px) {
@@ -157,7 +156,7 @@
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .manager__orders-search-form .manager__search-bar {
     min-width: auto;
   }

@@ -21,7 +21,7 @@ export default function ManagerCatalog() {
   const [yearTo, setYearTo] = useState('');
 
   const [selectedLibrary, setSelectedLibrary] = useState('');
-  
+
   const [allGenres, setAllGenres] = useState([]);
   const [allAuthors, setAllAuthors] = useState([]);
 
@@ -43,24 +43,23 @@ export default function ManagerCatalog() {
 
   useEffect(() => {
     fetch('/api/books/genres/')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Genres data:', data);
-        const options = data.map(g => ({ value: g, label: g }));
+        const options = data.map((g) => ({ value: g, label: g }));
         setAllGenres(options);
       })
-      .catch(err => setError(err.message));
+      .catch((err) => setError(err.message));
 
     fetch('/api/books/authors/')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log('Authors data:', data);
-        const options = data.map(a => ({ value: a, label: a }));
+        const options = data.map((a) => ({ value: a, label: a }));
         setAllAuthors(options);
       })
-      .catch(err => setError(err.message));
+      .catch((err) => setError(err.message));
   }, []);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -126,10 +125,17 @@ export default function ManagerCatalog() {
 
   return (
     <div className="manager__catalog-content">
-      
       <h1 className="manager__heading">Каталог книг</h1>
-      <button className='manager__search-button manager__catalog-create-book-button' onClick={() => navigate('/manager/new')}>Добавить книгу</button>
-      <form onSubmit={(e) => e.preventDefault()} className="manager__search-form">
+      <button
+        className="manager__search-button manager__catalog-create-book-button"
+        onClick={() => navigate('/manager/new')}
+      >
+        Добавить книгу
+      </button>
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="manager__search-form"
+      >
         <div className="manager__search-bar-container">
           <input
             type="text"
@@ -184,7 +190,7 @@ export default function ManagerCatalog() {
               menuPortalTarget={document.body}
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 99999 }),
-                menu: (base) => ({ ...base, zIndex: 99999 })
+                menu: (base) => ({ ...base, zIndex: 99999 }),
               }}
             />
             <Select
@@ -198,7 +204,7 @@ export default function ManagerCatalog() {
               menuPortalTarget={document.body}
               styles={{
                 menuPortal: (base) => ({ ...base, zIndex: 99999 }),
-                menu: (base) => ({ ...base, zIndex: 99999 })
+                menu: (base) => ({ ...base, zIndex: 99999 }),
               }}
             />
             <div className="manager__slider-container">
@@ -234,7 +240,6 @@ export default function ManagerCatalog() {
               <option value="16">16+</option>
               <option value="18">18+</option>
             </select>
-
           </div>
         </form>
 
@@ -250,6 +255,7 @@ export default function ManagerCatalog() {
             >
               <img
                 className="manager__catalog-book-cover"
+                loading='lazy'
                 src={
                   b.image_url ||
                   'https://via.placeholder.com/150x220?text=Book+Cover'

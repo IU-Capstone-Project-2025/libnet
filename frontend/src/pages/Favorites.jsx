@@ -20,9 +20,9 @@ export default function Favorites() {
 
     async function fetchFavorites() {
       try {
-        const res = await fetch(`/api/users/likes/${user.id}`,
-          {headers: {Authorization: `Bearer ${token}`,}}
-        );
+        const res = await fetch(`/api/users/likes/${user.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         // console.log(data);
@@ -85,11 +85,7 @@ export default function Favorites() {
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
   if (error)
-    return (
-      <p className="user__book-content red-error">
-        Ошибка: {error}
-      </p>
-    );
+    return <p className="user__book-content red-error">Ошибка: {error}</p>;
 
   // Handle removing book from favorites
   async function handleRemoveFavorite(bookId) {
@@ -99,12 +95,12 @@ export default function Favorites() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      
+
       // Remove from local state
-      setFavorites(prev => prev.filter(id => id !== bookId));
-      
+      setFavorites((prev) => prev.filter((id) => id !== bookId));
+
       // Also remove from books state
-      setBooks(prev => {
+      setBooks((prev) => {
         const newBooks = { ...prev };
         delete newBooks[bookId];
         return newBooks;
@@ -134,7 +130,7 @@ export default function Favorites() {
 
             return (
               <div className="user__favorites-book-section" key={f}>
-                <div 
+                <div
                   className="user__favorites-book"
                   onClick={() => navigate(`/books/${book.id}`)}
                 >

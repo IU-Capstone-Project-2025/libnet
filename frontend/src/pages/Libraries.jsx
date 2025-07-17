@@ -27,11 +27,7 @@ export default function Libraries() {
 
   if (loading) return <p className="user__libraries-content">Загружаем…</p>;
   if (error)
-    return (
-      <p className="user__libraries-content red-error">
-        Ошибка: {error}
-      </p>
-    );
+    return <p className="user__libraries-content red-error">Ошибка: {error}</p>;
 
   return (
     <div className="user__libraries-content">

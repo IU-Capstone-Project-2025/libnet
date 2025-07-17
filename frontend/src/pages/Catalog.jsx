@@ -329,6 +329,7 @@ export default function Catalog() {
             >
               <img
                 className="user__catalog-book-cover"
+                loading="lazy"
                 src={
                   b.image_url ||
                   'https://via.placeholder.com/150x220?text=Book+Cover'
