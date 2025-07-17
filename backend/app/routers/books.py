@@ -144,8 +144,11 @@ def get_libraries_with_book(book_id: int, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
-    
-    libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.isbn == book.isbn)).all()
+    try:
+        isbn = int(book.isbn)
+        libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.isbn == book.isbn)).all()
+    except:
+        libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.title == book.title)).all()
     return libraries
 
 # Get single Book
