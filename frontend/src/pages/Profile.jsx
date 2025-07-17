@@ -110,13 +110,15 @@ export default function Profile() {
               {codeSent && (
                 <>
                   <h2>Код подтверждения был отправлен вам на почту</h2>
-                  <input
-                    className="user__profile-input"
-                    placeholder="Код подтверждения"
-                    autoComplete="off"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                  />
+                  <div>
+                    <input
+                      className="user__profile-verify-input"
+                      placeholder="Код подтверждения"
+                      autoComplete="off"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                    />
+                  </div>
                 </>
               )}
               <div className="user__profile-buttons">

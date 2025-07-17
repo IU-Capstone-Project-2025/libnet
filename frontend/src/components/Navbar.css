@@ -1,4 +1,5 @@
 .user__header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,15 +10,14 @@
   font-weight: var(--weight-regular);
   font-size: var(--font-size-regular);
   background-color: var(--main-user-color);
-  position: relative;
 }
 
 .user__navbar {
+  position: absolute;
+  left: 50%;
   display: flex;
   gap: 33px;
   font-weight: var(--weight-regular);
-  position: absolute;
-  left: 50%;
   transform: translateX(-50%);
 }
 
@@ -297,17 +297,17 @@
 
 /* Burger Button Styles */
 .burger-button {
+  z-index: 1001;
   display: none;
   flex-direction: column;
   justify-content: space-around;
   width: 30px;
   height: 30px;
-  background: transparent;
   border: none;
-  cursor: pointer;
   padding: 2px;
-  z-index: 1001;
+  background: transparent;
   transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 
 .burger-button:hover {
@@ -333,23 +333,23 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .burger-menu {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   height: 100%;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
+  font-size: var(--font-size-regular);
   transform: translateX(100%);
   animation: slideIn 0.3s ease forwards;
-  font-size: var(--font-size-regular);
 }
 
 @keyframes slideIn {
@@ -377,11 +377,11 @@
 }
 
 .burger-link {
+  border-bottom: 1px solid transparent;
   padding: 10px 0;
+  color: black;
   font-weight: var(--weight-regular);
   text-decoration: none;
-  color: black;
-  border-bottom: 1px solid transparent;
   transition: border-bottom 0.3s ease;
 }
 
@@ -391,16 +391,16 @@
 
 .burger-divider {
   height: 1px;
-  background-color: rgba(0, 0, 0, 0.2);
   margin: 10px 0;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .burger-account-button {
+  border-bottom: 1px solid transparent;
   padding: 10px 0;
   font-weight: var(--weight-bold);
-  cursor: pointer;
-  border-bottom: 1px solid transparent;
   transition: border-bottom 0.3s ease;
+  cursor: pointer;
 }
 
 .burger-account-button:hover {

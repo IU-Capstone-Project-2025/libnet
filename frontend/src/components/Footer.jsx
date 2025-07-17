@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import "./Navbar.css"
+import './Navbar.css';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="user__footer">
           <p className="copyright">libnet 2025 ©</p>
         </div>
-      ) : user && user.role === 'admin' ?(
+      ) : user && user.role === 'admin' ? (
         <div className="admin__footer">
           <p className="copyright">libnet 2025 ©</p>
         </div>
@@ -27,7 +27,5 @@ export default function Footer() {
         </div>
       )}
     </>
-
-    
   );
 }

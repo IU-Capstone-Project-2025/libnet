@@ -47,7 +47,10 @@ export default function Navbar() {
     <>
       {user && user.role === 'manager' ? (
         <div className="manager__header">
-          <div className="user__navbar-logo-container" onClick={() => navigate('/manager/')}>
+          <div
+            className="user__navbar-logo-container"
+            onClick={() => navigate('/manager/')}
+          >
             <img
               className="manager__navbar-logo"
               src="/manager-logo-2x.png"
@@ -55,13 +58,28 @@ export default function Navbar() {
             />
           </div>
           <div className="manager__navbar">
-            <Link to="/manager/" className={`manager__navbar-link ${location.pathname === '/manager/' ? 'active' : ''}`}>
+            <Link
+              to="/manager/"
+              className={`manager__navbar-link ${
+                location.pathname === '/manager/' ? 'active' : ''
+              }`}
+            >
               Каталог
             </Link>
-            <Link to="/manager/orders" className={`manager__navbar-link ${location.pathname === '/manager/orders' ? 'active' : ''}`}>
+            <Link
+              to="/manager/orders"
+              className={`manager__navbar-link ${
+                location.pathname === '/manager/orders' ? 'active' : ''
+              }`}
+            >
               Заказы
             </Link>
-            <Link to="/manager/library" className={`manager__navbar-link ${location.pathname === '/manager/library' ? 'active' : ''}`}>
+            <Link
+              to="/manager/library"
+              className={`manager__navbar-link ${
+                location.pathname === '/manager/library' ? 'active' : ''
+              }`}
+            >
               Библиотека
             </Link>
           </div>
@@ -95,9 +113,12 @@ export default function Navbar() {
               </span>
             )}
           </div>
-          
+
           {/* Burger button for manager */}
-          <button className="burger-button manager-burger" onClick={toggleBurger}>
+          <button
+            className="burger-button manager-burger"
+            onClick={toggleBurger}
+          >
             <span></span>
             <span></span>
             <span></span>
@@ -106,7 +127,10 @@ export default function Navbar() {
           {/* Burger menu for manager */}
           {isBurgerOpen && (
             <div className="burger-overlay" onClick={closeBurger}>
-              <div className="burger-menu manager-burger-menu" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="burger-menu manager-burger-menu"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="burger-content">
                   {user ? (
                     <span
@@ -130,13 +154,25 @@ export default function Navbar() {
                     </span>
                   )}
                   <div className="burger-divider"></div>
-                  <Link to="/manager/" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/manager/"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Каталог
                   </Link>
-                  <Link to="/manager/orders" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/manager/orders"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Заказы
                   </Link>
-                  <Link to="/manager/library" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/manager/library"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Библиотека
                   </Link>
                   <div className="burger-divider"></div>
@@ -144,10 +180,18 @@ export default function Navbar() {
                     <Link to="/" className="burger-link" onClick={closeBurger}>
                       Каталог (пользователь)
                     </Link>
-                    <Link to="/orders" className="burger-link" onClick={closeBurger}>
+                    <Link
+                      to="/orders"
+                      className="burger-link"
+                      onClick={closeBurger}
+                    >
                       Заказы (пользователь)
                     </Link>
-                    <Link to="/favorites" className="burger-link" onClick={closeBurger}>
+                    <Link
+                      to="/favorites"
+                      className="burger-link"
+                      onClick={closeBurger}
+                    >
                       Избранное (пользователь)
                     </Link>
                   </div>
@@ -162,7 +206,10 @@ export default function Navbar() {
         </div>
       ) : user && user.role === 'user' ? (
         <div className="user__header">
-          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
+          <div
+            className="user__navbar-logo-container"
+            onClick={() => navigate('/')}
+          >
             <img
               className="user__navbar-logo"
               src="/user-logo-2x.png"
@@ -170,19 +217,44 @@ export default function Navbar() {
             />
           </div>
           <div className="user__navbar">
-            <Link to="/" className={`user__navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
+            <Link
+              to="/"
+              className={`user__navbar-link ${
+                location.pathname === '/' ? 'active' : ''
+              }`}
+            >
               Каталог
             </Link>
-            <Link to="/libraries" className={`user__navbar-link ${location.pathname === '/libraries' ? 'active' : ''}`}>
+            <Link
+              to="/libraries"
+              className={`user__navbar-link ${
+                location.pathname === '/libraries' ? 'active' : ''
+              }`}
+            >
               Библиотеки
             </Link>
-            <Link to="/orders" className={`user__navbar-link ${location.pathname === '/orders' ? 'active' : ''}`}>
+            <Link
+              to="/orders"
+              className={`user__navbar-link ${
+                location.pathname === '/orders' ? 'active' : ''
+              }`}
+            >
               Заказы
             </Link>
-            <Link to="/faq" className={`user__navbar-link ${location.pathname === '/faq' ? 'active' : ''}`}>
+            <Link
+              to="/faq"
+              className={`user__navbar-link ${
+                location.pathname === '/faq' ? 'active' : ''
+              }`}
+            >
               FAQ
             </Link>
-            <Link to="/favorites" className={`user__navbar-link ${location.pathname === '/favorites' ? 'active' : ''}`}>
+            <Link
+              to="/favorites"
+              className={`user__navbar-link ${
+                location.pathname === '/favorites' ? 'active' : ''
+              }`}
+            >
               Избранное
             </Link>
           </div>
@@ -214,7 +286,10 @@ export default function Navbar() {
           {/* Burger menu for user */}
           {isBurgerOpen && (
             <div className="burger-overlay" onClick={closeBurger}>
-              <div className="burger-menu user-burger-menu" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="burger-menu user-burger-menu"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="burger-content">
                   {user ? (
                     <span
@@ -241,16 +316,28 @@ export default function Navbar() {
                   <Link to="/" className="burger-link" onClick={closeBurger}>
                     Каталог
                   </Link>
-                  <Link to="/libraries" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/libraries"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Библиотеки
                   </Link>
-                  <Link to="/orders" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/orders"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Заказы
                   </Link>
                   <Link to="/faq" className="burger-link" onClick={closeBurger}>
                     FAQ
                   </Link>
-                  <Link to="/favorites" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/favorites"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Избранное
                   </Link>
                 </div>
@@ -264,7 +351,10 @@ export default function Navbar() {
         </div>
       ) : user && user.role === 'admin' ? (
         <div className="admin__header">
-          <div className="user__navbar-logo-container" onClick={() => navigate('/admin/')}>
+          <div
+            className="user__navbar-logo-container"
+            onClick={() => navigate('/admin/')}
+          >
             <img
               className="admin__navbar-logo"
               src="/admin-logo-2x.png"
@@ -272,7 +362,12 @@ export default function Navbar() {
             />
           </div>
           <div className="admin__navbar">
-            <Link to="/admin/" className={`user__navbar-link ${location.pathname === '/admin/' ? 'active' : ''}`}>
+            <Link
+              to="/admin/"
+              className={`user__navbar-link ${
+                location.pathname === '/admin/' ? 'active' : ''
+              }`}
+            >
               Библиотеки
             </Link>
           </div>
@@ -304,7 +399,10 @@ export default function Navbar() {
           {/* Burger menu for admin */}
           {isBurgerOpen && (
             <div className="burger-overlay" onClick={closeBurger}>
-              <div className="burger-menu admin-burger-menu" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="burger-menu admin-burger-menu"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="burger-content">
                   {user ? (
                     <span
@@ -328,7 +426,11 @@ export default function Navbar() {
                     </span>
                   )}
                   <div className="burger-divider"></div>
-                  <Link to="/admin/" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/admin/"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Библиотеки
                   </Link>
                 </div>
@@ -342,7 +444,10 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="user__header">
-          <div className="user__navbar-logo-container" onClick={() => navigate('/')}>
+          <div
+            className="user__navbar-logo-container"
+            onClick={() => navigate('/')}
+          >
             <img
               className="user__navbar-logo"
               src="/user-logo-2x.png"
@@ -350,13 +455,28 @@ export default function Navbar() {
             />
           </div>
           <div className="user__navbar">
-            <Link to="/" className={`user__navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
+            <Link
+              to="/"
+              className={`user__navbar-link ${
+                location.pathname === '/' ? 'active' : ''
+              }`}
+            >
               Каталог
             </Link>
-            <Link to="/libraries" className={`user__navbar-link ${location.pathname === '/libraries' ? 'active' : ''}`}>
+            <Link
+              to="/libraries"
+              className={`user__navbar-link ${
+                location.pathname === '/libraries' ? 'active' : ''
+              }`}
+            >
               Библиотеки
             </Link>
-            <Link to="/faq" className={`user__navbar-link ${location.pathname === '/faq' ? 'active' : ''}`}>
+            <Link
+              to="/faq"
+              className={`user__navbar-link ${
+                location.pathname === '/faq' ? 'active' : ''
+              }`}
+            >
               FAQ
             </Link>
           </div>
@@ -388,7 +508,10 @@ export default function Navbar() {
           {/* Burger menu for user */}
           {isBurgerOpen && (
             <div className="burger-overlay" onClick={closeBurger}>
-              <div className="burger-menu user-burger-menu" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="burger-menu user-burger-menu"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="burger-content">
                   {user ? (
                     <span
@@ -415,7 +538,11 @@ export default function Navbar() {
                   <Link to="/" className="burger-link" onClick={closeBurger}>
                     Каталог
                   </Link>
-                  <Link to="/libraries" className="burger-link" onClick={closeBurger}>
+                  <Link
+                    to="/libraries"
+                    className="burger-link"
+                    onClick={closeBurger}
+                  >
                     Библиотеки
                   </Link>
                   <Link to="/faq" className="burger-link" onClick={closeBurger}>

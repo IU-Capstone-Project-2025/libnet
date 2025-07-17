@@ -23,7 +23,7 @@ export default function ManagerOrders() {
   const [searchParams, setSearchParams] = useState({
     booking_id: '',
     user_phone: '',
-    email: ''
+    email: '',
   });
   const [originalBookings, setOriginalBookings] = useState([]);
 
@@ -32,9 +32,9 @@ export default function ManagerOrders() {
       if (user == null) return;
       try {
         console.log('trying');
-        const res = await fetch(`/api/libraries/${user.libraryId}/bookings`,
-          {headers: {Authorization: `Bearer ${token}`,}}
-        );
+        const res = await fetch(`/api/libraries/${user.libraryId}/bookings`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
@@ -55,10 +55,10 @@ export default function ManagerOrders() {
 
     async function fetchBooks() {
       try {
-        // Получаем уникальные ID книг
-        const uniqueBookIds = [...new Set(bookings.map(booking => booking.book_id))];
-        
-        // Делаем запросы параллельно для уникальных книг
+        const uniqueBookIds = [
+          ...new Set(bookings.map((booking) => booking.book_id)),
+        ];
+
         const bookRequests = uniqueBookIds.map(async (bookId) => {
           const res = await fetch(`/api/books/${bookId}`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -68,13 +68,12 @@ export default function ManagerOrders() {
 
         const bookResults = await Promise.all(bookRequests);
         const booksMap = Object.fromEntries(bookResults);
-        
-        // Создаем маппинг booking.id -> book data
+
         const booksByBookingId = {};
-        bookings.forEach(booking => {
+        bookings.forEach((booking) => {
           booksByBookingId[booking.id] = booksMap[booking.book_id];
         });
-        
+
         setBooks(booksByBookingId);
       } catch (err) {
         setError(err.message);
@@ -83,13 +82,13 @@ export default function ManagerOrders() {
 
     async function fetchUsers() {
       try {
-        // Получаем уникальные ID пользователей
-        const uniqueUserIds = [...new Set(bookings.map(booking => booking.user_id))];
-        
-        // Делаем запросы параллельно для уникальных пользователей
+        const uniqueUserIds = [
+          ...new Set(bookings.map((booking) => booking.user_id)),
+        ];
+
         const userRequests = uniqueUserIds.map(async (userId) => {
           const res = await fetch(`/api/users/${userId}`, {
-            headers: {Authorization: `Bearer ${token}`}
+            headers: { Authorization: `Bearer ${token}` },
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = await res.json();
@@ -98,13 +97,12 @@ export default function ManagerOrders() {
 
         const userResults = await Promise.all(userRequests);
         const usersMap = Object.fromEntries(userResults);
-        
-        // Создаем маппинг booking.id -> user data
+
         const usersByBookingId = {};
-        bookings.forEach(booking => {
+        bookings.forEach((booking) => {
           usersByBookingId[booking.id] = usersMap[booking.user_id];
         });
-        
+
         setUsers(usersByBookingId);
       } catch (err) {
         setError(err.message);
@@ -121,8 +119,10 @@ export default function ManagerOrders() {
     async function fetchLibraries() {
       try {
         // Получаем уникальные ID библиотек
-        const uniqueLibraryIds = [...new Set(bookings.map(booking => booking.library_id))];
-        
+        const uniqueLibraryIds = [
+          ...new Set(bookings.map((booking) => booking.library_id)),
+        ];
+
         // Делаем запросы параллельно для уникальных библиотек
         const libraryRequests = uniqueLibraryIds.map(async (libraryId) => {
           const res = await fetch(`/api/libraries/${libraryId}`);
@@ -133,13 +133,13 @@ export default function ManagerOrders() {
 
         const libraryResults = await Promise.all(libraryRequests);
         const librariesMap = Object.fromEntries(libraryResults);
-        
+
         // Создаем маппинг booking.id -> library data
         const librariesByBookingId = {};
-        bookings.forEach(booking => {
+        bookings.forEach((booking) => {
           librariesByBookingId[booking.id] = librariesMap[booking.library_id];
         });
-        
+
         setLibraries(librariesByBookingId);
       } catch (err) {
         setError(err.message);
@@ -172,20 +172,25 @@ export default function ManagerOrders() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const { booking_id, user_phone, email } = searchParams;
-      
+
       // Если все параметры пустые, показываем все заказы
-      if (booking_id.trim() === '' && user_phone.trim() === '' && email.trim() === '') {
+      if (
+        booking_id.trim() === '' &&
+        user_phone.trim() === '' &&
+        email.trim() === ''
+      ) {
         setBookings(originalBookings);
         return;
       }
 
       // Локальный поиск по уже загруженным данным
-      const filteredBookings = originalBookings.filter(booking => {
+      const filteredBookings = originalBookings.filter((booking) => {
         let matches = true;
 
         // Поиск по номеру заказа
         if (booking_id.trim() !== '') {
-          matches = matches && booking.id.toString().includes(booking_id.trim());
+          matches =
+            matches && booking.id.toString().includes(booking_id.trim());
         }
 
         // Поиск по номеру телефона
@@ -202,7 +207,9 @@ export default function ManagerOrders() {
         if (email.trim() !== '') {
           const user = users[booking.id];
           if (user && user.email) {
-            matches = matches && user.email.toLowerCase().includes(email.trim().toLowerCase());
+            matches =
+              matches &&
+              user.email.toLowerCase().includes(email.trim().toLowerCase());
           } else {
             matches = false;
           }
@@ -215,7 +222,13 @@ export default function ManagerOrders() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [searchParams.booking_id, searchParams.user_phone, searchParams.email, originalBookings, users]);
+  }, [
+    searchParams.booking_id,
+    searchParams.user_phone,
+    searchParams.email,
+    originalBookings,
+    users,
+  ]);
 
   function handleSearchChange(e) {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
@@ -224,7 +237,10 @@ export default function ManagerOrders() {
   async function updateStatus(status, booking_id) {
     const res = await fetch(`/api/bookings/${booking_id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         status: status,
       }),
@@ -257,44 +273,42 @@ export default function ManagerOrders() {
 
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
-    return (
-      <p className="user__catalog-content red-error">
-        Ошибка: {error}
-      </p>
-    );
+    return <p className="user__catalog-content red-error">Ошибка: {error}</p>;
 
   return (
     <>
       <div className="user__orders-content">
         <h1 className="user__heading">Бронирования</h1>
-        
+
         {/* Поисковая форма */}
-        <form onSubmit={(e) => e.preventDefault()} className="manager__orders-search-form">
-            <input
-              type="text"
-              name="booking_id"
-              placeholder="Номер заказа"
-              value={searchParams.booking_id}
-              onChange={handleSearchChange}
-              className="manager__search-bar"
-            />
-            <input
-              type="text"
-              name="user_phone"
-              placeholder="Номер телефона"
-              value={searchParams.user_phone}
-              onChange={handleSearchChange}
-              className="manager__search-bar"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={searchParams.email}
-              onChange={handleSearchChange}
-              className="manager__search-bar"
-            />
-          
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="manager__orders-search-form"
+        >
+          <input
+            type="text"
+            name="booking_id"
+            placeholder="Номер заказа"
+            value={searchParams.booking_id}
+            onChange={handleSearchChange}
+            className="manager__search-bar"
+          />
+          <input
+            type="text"
+            name="user_phone"
+            placeholder="Номер телефона"
+            value={searchParams.user_phone}
+            onChange={handleSearchChange}
+            className="manager__search-bar"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={searchParams.email}
+            onChange={handleSearchChange}
+            className="manager__search-bar"
+          />
         </form>
 
         <div className="user__orders-content-container">
@@ -303,7 +317,7 @@ export default function ManagerOrders() {
               <div className="user__orders-book">
                 <img
                   className="user__orders-book-cover"
-                  loading='lazy'
+                  loading="lazy"
                   src={
                     books[b.id]?.image_url ||
                     'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
@@ -338,7 +352,9 @@ export default function ManagerOrders() {
                     {users[b.id] ? (
                       <>
                         <strong>Email:</strong>{' '}
-                        <a href={`mailto:${users[b.id].email}`}>{users[b.id].email}</a>
+                        <a href={`mailto:${users[b.id].email}`}>
+                          {users[b.id].email}
+                        </a>
                       </>
                     ) : (
                       <></>
@@ -348,7 +364,9 @@ export default function ManagerOrders() {
                     {users[b.id] ? (
                       <>
                         <strong>Телефон:</strong>{' '}
-                        <a href={`tel:${users[b.id].phone}`}>{users[b.id].phone}</a>
+                        <a href={`tel:${users[b.id].phone}`}>
+                          {users[b.id].phone}
+                        </a>
                       </>
                     ) : (
                       <></>
@@ -384,7 +402,7 @@ export default function ManagerOrders() {
                   <option key={'returned'} value={'returned'}>
                     Возвращена
                   </option>
-                  <option key={"cancelled"} value={"cancelled"}>
+                  <option key={'cancelled'} value={'cancelled'}>
                     Отменить
                   </option>
                 </select>

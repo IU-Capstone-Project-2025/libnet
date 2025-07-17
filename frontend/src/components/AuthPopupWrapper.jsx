@@ -6,12 +6,12 @@ export default function AuthPopupWrapper({ onClose }) {
   const [isRegister, setIsRegister] = useState(false);
 
   const handleSwitch = () => {
-    setIsRegister(prev => !prev);
+    setIsRegister((prev) => !prev);
   };
 
   useEffect(() => {
     document.body.classList.add('modal-open');
-    
+
     return () => {
       document.body.classList.remove('modal-open');
     };

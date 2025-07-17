@@ -22,16 +22,19 @@ import AdminLibraries from './pages/AdminLibraries';
 import AdminLibrary from './pages/AdminLibrary';
 import AdminNewLibrary from './pages/AdminNewLibrary';
 
-export function PrivateRoute({ children, role='user'}) {
+export function PrivateRoute({ children, role = 'user' }) {
   const { user, loading } = useAuth();
-  if (loading) return <div>Loading...</div>; 
-  if (!user){
-    return <Navigate to="/" replace />
+  if (loading) return <div>Loading...</div>;
+  if (!user) {
+    return <Navigate to="/" replace />;
   }
-  if (role != 'user' && (user.role == 'user' || (role != 'manager' && user.role == 'manager'))) return <Navigate to="/" replace />; 
+  if (
+    role != 'user' &&
+    (user.role == 'user' || (role != 'manager' && user.role == 'manager'))
+  )
+    return <Navigate to="/" replace />;
   return user ? children : <Navigate to="/" replace />;
 }
-
 
 export default function App() {
   return (
@@ -44,7 +47,7 @@ export default function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/libraries" element={<Libraries />} />
           <Route path="/libraries/:id" element={<LibraryInfo />} />
-          <Route path="/books/:id" element={<Book/>} />
+          <Route path="/books/:id" element={<Book />} />
           <Route
             path="/orders"
             element={
@@ -69,11 +72,11 @@ export default function App() {
               </PrivateRoute>
             }
           />
-          
+
           <Route
             path="/manager/"
             element={
-              <PrivateRoute role='manager'>
+              <PrivateRoute role="manager">
                 <ManagerCatalog />
               </PrivateRoute>
             }
@@ -81,7 +84,7 @@ export default function App() {
           <Route
             path="/manager/orders"
             element={
-              <PrivateRoute role='manager'>
+              <PrivateRoute role="manager">
                 <ManagerOrders />
               </PrivateRoute>
             }
@@ -89,7 +92,7 @@ export default function App() {
           <Route
             path="/manager/library"
             element={
-              <PrivateRoute role='manager'>
+              <PrivateRoute role="manager">
                 <ManagerLibrary />
               </PrivateRoute>
             }
@@ -97,7 +100,7 @@ export default function App() {
           <Route
             path="/manager/books/:id"
             element={
-              <PrivateRoute role='manager'>
+              <PrivateRoute role="manager">
                 <ManagerBook />
               </PrivateRoute>
             }
@@ -105,7 +108,7 @@ export default function App() {
           <Route
             path="/manager/new"
             element={
-              <PrivateRoute role='manager'>
+              <PrivateRoute role="manager">
                 <ManagerNewBook />
               </PrivateRoute>
             }
@@ -114,7 +117,7 @@ export default function App() {
           <Route
             path="/admin/"
             element={
-              <PrivateRoute role='admin'>
+              <PrivateRoute role="admin">
                 <AdminLibraries />
               </PrivateRoute>
             }
@@ -122,7 +125,7 @@ export default function App() {
           <Route
             path="/admin/new"
             element={
-              <PrivateRoute role='admin'>
+              <PrivateRoute role="admin">
                 <AdminNewLibrary />
               </PrivateRoute>
             }
@@ -130,7 +133,7 @@ export default function App() {
           <Route
             path="/admin/libraries/:id"
             element={
-              <PrivateRoute role='admin'>
+              <PrivateRoute role="admin">
                 <AdminLibrary />
               </PrivateRoute>
             }

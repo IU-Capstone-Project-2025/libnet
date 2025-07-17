@@ -58,10 +58,10 @@
 }
 
 .user__favorites-book-cover {
-  background-color: #ee6c61;
   width: 100px;
   height: 148px;
   border-radius: 10px 0 10px 0;
+  background-color: #ee6c61;
 }
 
 .user__favorites-book-details {
