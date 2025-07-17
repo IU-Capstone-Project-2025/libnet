@@ -161,7 +161,7 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
 def get_authors(db: Session = Depends(get_session)):
     books = db.exec(select(models.Book)).all()
     authors = set([book.author for book in books])
-    return authors
+    return sorted(authors)
 
 # Get genres of books
 @router.get("/genres/", response_model=list[str])
