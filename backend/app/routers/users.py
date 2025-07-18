@@ -39,7 +39,7 @@ async def send_verification_code_email(to_email: str, code: str):
 
 # Register a User
 @router.post("/register", response_model=models.LibUserRead)
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 async def register(request: Request, user: models.LibUserCreate, db: Session = Depends(get_session)):
     existing_user = db.exec(select(models.LibUser).where(models.LibUser.email == user.email)).first()
     email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
@@ -72,7 +72,7 @@ async def register(request: Request, user: models.LibUserCreate, db: Session = D
 
 # Verify code
 @router.post("/verify/{user_id}")
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 async def verify(request: Request, user_id: int, code: str, db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     print(code, user.email_verification_code)
@@ -101,7 +101,7 @@ async def verify(request: Request, user_id: int, code: str, db: Session = Depend
     
 # Send code again
 @router.post("/send-code/")
-@limiter.limit("3/minute")
+@limiter.limit("300/minute")
 async def send_code(request: Request, current_user: models.LibUser = Depends(get_current_user), db: Session = Depends(get_session)):
     if current_user.code_expires_at <= datetime.now():
         verification_code = generate_verification_code()
@@ -122,7 +122,7 @@ async def send_code(request: Request, current_user: models.LibUser = Depends(get
 
 # Login a User
 @router.post("/login")
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
     user = db.exec(select(models.LibUser).where(models.LibUser.email == form_data.username)).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -133,7 +133,7 @@ def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db
 
 # Update password
 @router.patch("/{user_id}/update-password")
-@limiter.limit("1/minute")
+@limiter.limit("100/minute")
 def update_password(request: Request, user_id: int, form_data: models.LibUserUpdatePassword, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
@@ -167,7 +167,7 @@ def read_user_by_email(email: str, db: Session = Depends(get_session), current_u
 
 # Add favorite book to user
 @router.post("/like", response_model=models.FavoriteBook)
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 def like_a_book(request: Request, favorite_book: models.FavoriteBook, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == favorite_book.user_id)).first()
     if not user.is_verified:
@@ -192,7 +192,7 @@ def like_a_book(request: Request, favorite_book: models.FavoriteBook, db: Sessio
 
 # Remove favorite book from user
 @router.delete("/like/{user_id}/{book_id}", status_code=204)
-@limiter.limit("10/minute")
+@limiter.limit("100/minute")
 def unlike_a_book(request: Request, user_id: int, book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     fav_book = db.exec(select(models.FavoriteBook).where(and_(models.FavoriteBook.user_id == user_id,models.FavoriteBook.book_id == book_id ))).first()
     if not fav_book:
@@ -216,7 +216,7 @@ def get_user_liked_book_by_id(user_id: int, book_id: int, db: Session = Depends(
 
 # Update user
 @router.patch("/{user_id}", response_model=models.LibUserRead)
-@limiter.limit("5/minute")
+@limiter.limit("50/minute")
 def update_user(request: Request, user_id: int, user_update: models.LibUserUpdate, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
     if not user:
