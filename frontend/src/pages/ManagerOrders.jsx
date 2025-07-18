@@ -31,14 +31,12 @@ export default function ManagerOrders() {
     async function fetchBookings() {
       if (user == null) return;
       try {
-        console.log('trying');
         const res = await fetch(`/api/libraries/${user.libraryId}/bookings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        console.log('bookings fetched:', data);
         setBookings(data);
         setOriginalBookings(data);
       } catch (err) {

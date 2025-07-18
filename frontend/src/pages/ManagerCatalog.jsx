@@ -45,7 +45,6 @@ export default function ManagerCatalog() {
     fetch('/api/books/genres/')
       .then((res) => res.json())
       .then((data) => {
-        console.log('Genres data:', data);
         const options = data.map((g) => ({ value: g, label: g }));
         setAllGenres(options);
       })
@@ -54,7 +53,6 @@ export default function ManagerCatalog() {
     fetch('/api/books/authors/')
       .then((res) => res.json())
       .then((data) => {
-        console.log('Authors data:', data);
         const options = data.map((a) => ({ value: a, label: a }));
         setAllAuthors(options);
       })
@@ -233,7 +231,6 @@ export default function ManagerCatalog() {
               className="user__search-filter"
             >
               <option value="">Все возрасты</option>
-              <option value="0">0+</option>
               <option value="3">3+</option>
               <option value="6">6+</option>
               <option value="12">12+</option>

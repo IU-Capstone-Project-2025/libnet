@@ -42,7 +42,6 @@ export default function AdminLibraries() {
       const data = await res.json();
       setManagers(data);
     } catch (err) {
-      console.log('here');
       setError(err.message);
     } finally {
       setLoading(false);

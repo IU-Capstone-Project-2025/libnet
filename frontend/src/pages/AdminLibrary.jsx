@@ -56,7 +56,6 @@ export default function AdminLibrary() {
       const data = await res.json();
       setManagers(data);
     } catch (err) {
-      console.log('here');
       setError(err.message);
     } finally {
       setLoading(false);
@@ -83,7 +82,6 @@ export default function AdminLibrary() {
         setCity(data.city);
         setDaysOpen(data.days_open ? data.days_open.split(';') : []);
       } catch (err) {
-        console.log('here');
         setError(err.message);
       } finally {
         setLoading(false);
@@ -117,10 +115,10 @@ export default function AdminLibrary() {
         }),
       });
       if (res.ok) {
-        console.log('updated');
+        // Library updated successfully
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при обновлении библиотеки');
     }
   }
 

@@ -19,7 +19,6 @@ export default function Orders() {
     async function fetchBookings() {
       if (user == null) return;
       try {
-        console.log('trying');
         const res = await fetch(`/api/bookings/users/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -35,7 +34,6 @@ export default function Orders() {
         } else {
           data = await res.json();
         }
-        console.log('bookings fetched:', data);
         setBookings(data);
       } catch (err) {
         setError(err.message);
@@ -95,7 +93,6 @@ export default function Orders() {
     return <p className="user__catalog-content red-error">Ошибка: {error}</p>;
 
   async function handleCancel(booking_id) {
-    console.log(booking_id);
     const res = await fetch(`/api/bookings/${booking_id}`, {
       method: 'PATCH',
       headers: {
