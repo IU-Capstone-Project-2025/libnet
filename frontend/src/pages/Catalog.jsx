@@ -49,7 +49,6 @@ export default function Catalog() {
     fetch('/api/books/genres/')
       .then((res) => res.json())
       .then((data) => {
-        console.log('Genres data:', data);
         const options = data.map((g) => ({ value: g, label: g }));
         setAllGenres(options);
       })
@@ -58,7 +57,6 @@ export default function Catalog() {
     fetch('/api/books/authors/')
       .then((res) => res.json())
       .then((data) => {
-        console.log('Authors data:', data);
         const options = data.map((a) => ({ value: a, label: a }));
         setAllAuthors(options);
       })

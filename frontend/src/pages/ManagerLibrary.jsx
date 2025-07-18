@@ -94,10 +94,10 @@ export default function ManagerLibrary() {
         }),
       });
       if (res.ok) {
-        console.log('updated');
+        // Library updated successfully
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при обновлении библиотеки');
     }
   }
 

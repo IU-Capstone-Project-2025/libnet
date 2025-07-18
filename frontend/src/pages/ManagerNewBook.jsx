@@ -24,7 +24,6 @@ export default function ManagerNewBook() {
   const [quantity, setQuantity] = useState(null);
 
   async function handleSave() {
-    console.log('handleSave CALLED');
     if (
       title &&
       author &&
@@ -63,7 +62,7 @@ export default function ManagerNewBook() {
           navigate('/manager/');
         }
       } catch (e) {
-        console.log(e);
+        setError('Произошла ошибка при создании книги');
       }
     } else {
       setError('Недостаточно данных');

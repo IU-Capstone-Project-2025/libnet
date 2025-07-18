@@ -52,7 +52,6 @@ export default function Favorites() {
           })
         );
         setBooks(Object.fromEntries(entries));
-        console.log(books);
       } catch (err) {
         setError(err.message);
       }

@@ -44,7 +44,6 @@ export default function ManagerBook() {
         setRating(data.rating);
         setPublisher(data.publisher);
       } catch (err) {
-        console.log('here');
         setError(err.message);
       } finally {
         setLoading(false);
@@ -76,10 +75,10 @@ export default function ManagerBook() {
         }),
       });
       if (res.ok) {
-        console.log('updated');
+        // Book updated successfully
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при обновлении книги');
     }
   }
 
@@ -93,11 +92,11 @@ export default function ManagerBook() {
         },
       });
       if (res.ok) {
-        console.log('deleted');
+        // Book deleted successfully
         navigate('/manager/');
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при удалении книги');
     }
   }
 

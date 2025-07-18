@@ -21,7 +21,6 @@ class User {
   }
 
   get displayName() {
-    console.log(this.email + this.role + this.city);
     return this.firstName && this.lastName
       ? this.firstName + ' ' + this.lastName
       : this.email;
@@ -68,7 +67,6 @@ export function AuthProvider({ children }) {
           }
 
           const data = await res.json();
-          console.log(data);
           const loadedUser = new User(
             data.id,
             data.email,
@@ -118,14 +116,12 @@ export function AuthProvider({ children }) {
     });
 
     if (!profileRes.ok) {
-      console.log(profileRes.json);
       setUser(new User(user_id, email, '', '', '', '', '', '', false));
       setLoading(false);
       throw new Error('Could not load user profile');
     }
 
     const data = await profileRes.json();
-    console.log(data);
     let a = new User(
       data.id,
       data.email,
@@ -137,7 +133,6 @@ export function AuthProvider({ children }) {
       data.library_id,
       data.is_verified
     );
-    console.log(data.library_id);
     setUser(a);
     setLoading(false);
     localStorage.setItem(USER_DATA, JSON.stringify(a));
@@ -194,7 +189,6 @@ export function AuthProvider({ children }) {
 
   async function verify(payload) {
     const token = localStorage.getItem(TOKEN_KEY);
-    console.log(payload.code);
     const res = await fetch(
       `/api/users/verify/` + user.id + `?code=` + payload.code,
       {
@@ -211,8 +205,6 @@ export function AuthProvider({ children }) {
       setLoading(false);
       throw new Error(detail ?? 'Verification failed');
     }
-    console.log(res.status);
-    console.log('Vse srabotalo');
     user.verification = true;
     localStorage.setItem(USER_DATA, JSON.stringify(user));
   }
@@ -232,7 +224,6 @@ export function AuthProvider({ children }) {
       setLoading(false);
       throw new Error(detail ?? 'Sending code failed');
     }
-    console.log('Otpravili ' + res.status);
   }
 
   function logout() {
