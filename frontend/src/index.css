@@ -74,6 +74,10 @@ button {
   font: inherit;
 }
 
+select {
+  color: black;
+}
+
 .red-error {
   color: red;
   font-size: var(--font-size-catalog-title);
