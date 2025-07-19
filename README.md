@@ -110,21 +110,24 @@ To access the Grafana monitoring dashboard:
     cd backend
     nano  .env  # Create environment file
     ```
-3. Edit `.env` file:
-
+3. Google SMTP Setup:
+   * Enable 2FA on your Google account
+   * Get a key for the application via Google
+   * Enter the key in SMTP_PASS, SMTP_USER as email
+  
+    
+4. Edit `.env` file:
+    
+    Create a database, make a secret key, create a database user.
     ```ini
-    DATABASE_URL=database-url
-    SECRET_KEY=your-secret-key
+    DATABASE_URL=database-url 
+    SECRET_KEY=your-secret-key 
     POSTGRES_USER=your_db_user
     POSTGRES_PASSWORD=your_db_password
     POSTGRES_DB=your_db_name
     SMTP_USER=your-email@gmail.com
     SMTP_PASS=your-google-app-password
     ```
-4. Google SMTP Setup:
-   * Enable 2FA on your Google account
-   * Get a key for the application via Google
-   * Enter the key in SMTP_PASS, SMTP_USER as email
 5. Launch services
 
     ```bash
