@@ -144,8 +144,11 @@ def get_libraries_with_book(book_id: int, db: Session = Depends(get_session)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
-    
-    libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.isbn == book.isbn)).all()
+    try:
+        isbn = int(book.isbn)
+        libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.isbn == book.isbn)).all()
+    except:
+        libraries = db.exec(select(models.Library).join(models.Book).where(models.Book.title == book.title)).all()
     return libraries
 
 # Get single Book
@@ -161,14 +164,20 @@ def get_book(book_id: int, db: Session = Depends(get_session)):
 def get_authors(db: Session = Depends(get_session)):
     books = db.exec(select(models.Book)).all()
     authors = set([book.author for book in books])
-    return authors
+    return sorted(authors)
 
 # Get genres of books
 @router.get("/genres/", response_model=list[str])
 def get_genres(db: Session = Depends(get_session)):
     books = db.exec(select(models.Book)).all()
-    genres = set([book.genre for book in books])
-    return genres
+    genres = set()
+
+    for book in books:
+        if book.genre:
+            for genre in book.genre.split(","):
+                genres.add(genre.strip())
+
+    return sorted(genres)
 
 # Update a Book
 @router.patch("/{book_id}", response_model=models.Book)

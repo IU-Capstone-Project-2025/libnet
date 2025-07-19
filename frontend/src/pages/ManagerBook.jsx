@@ -44,7 +44,6 @@ export default function ManagerBook() {
         setRating(data.rating);
         setPublisher(data.publisher);
       } catch (err) {
-        console.log('here');
         setError(err.message);
       } finally {
         setLoading(false);
@@ -58,9 +57,10 @@ export default function ManagerBook() {
     try {
       const res = await fetch(`/api/books/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-         },
+        },
         body: JSON.stringify({
           title: title,
           author: author,
@@ -75,10 +75,10 @@ export default function ManagerBook() {
         }),
       });
       if (res.ok) {
-        console.log('updated');
+        // Book updated successfully
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при обновлении книги');
     }
   }
 
@@ -86,26 +86,23 @@ export default function ManagerBook() {
     try {
       const res = await fetch(`/api/books/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json',
+        headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-         },
+        },
       });
       if (res.ok) {
-        console.log('deleted');
-        navigate("/manager/");
+        // Book deleted successfully
+        navigate('/manager/');
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при удалении книги');
     }
   }
 
   if (loading) return <p className="user__book-content">Загружаем…</p>;
   if (error)
-    return (
-      <p className="user__book-content red-error" >
-        Ошибка: {error}
-      </p>
-    );
+    return <p className="user__book-content red-error">Ошибка: {error}</p>;
   if (!book) return <p className="user__book-content">Книга не найдена.</p>;
 
   return (
@@ -122,7 +119,10 @@ export default function ManagerBook() {
               alt={`${title} cover`}
             />
             <div className="user__book-buttons">
-              <button className="manager__book-button" onClick={() => navigate('/manager/')}>
+              <button
+                className="manager__book-button"
+                onClick={() => navigate('/manager/')}
+              >
                 Назад
               </button>
               <button className="manager__book-button" onClick={handleDelete}>

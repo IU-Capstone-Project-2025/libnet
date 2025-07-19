@@ -35,9 +35,9 @@ export default function ManagerLibrary() {
   ];
 
   function toggleDay(dayKey) {
-    setDaysOpen(prev =>
+    setDaysOpen((prev) =>
       prev.includes(dayKey)
-        ? prev.filter(d => d !== dayKey)
+        ? prev.filter((d) => d !== dayKey)
         : [...prev, dayKey]
     );
   }
@@ -94,10 +94,10 @@ export default function ManagerLibrary() {
         }),
       });
       if (res.ok) {
-        console.log('updated');
+        // Library updated successfully
       }
     } catch (e) {
-      console.log(e);
+      setError('Произошла ошибка при обновлении библиотеки');
     }
   }
 
@@ -190,7 +190,9 @@ export default function ManagerLibrary() {
                   {allDays.map(({ key, label }) => (
                     <div
                       key={key}
-                      className={`manager-day-button ${daysOpen.includes(key) ? 'active' : ''}`}
+                      className={`manager-day-button ${
+                        daysOpen.includes(key) ? 'active' : ''
+                      }`}
                       onClick={() => toggleDay(key)}
                     >
                       {label}
@@ -200,9 +202,9 @@ export default function ManagerLibrary() {
               </div>
             </div>
             <div className="user__book-buttons">
-            <button className="manager__book-button" onClick={handleUpdate}>
-              Сохранить
-            </button>
+              <button className="manager__book-button" onClick={handleUpdate}>
+                Сохранить
+              </button>
             </div>
           </div>
           <div className="user__book-left-section"></div>

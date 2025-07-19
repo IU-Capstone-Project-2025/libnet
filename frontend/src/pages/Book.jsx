@@ -117,7 +117,6 @@ export default function BookDetails() {
       const lib = await fetch(`/api/libraries/${book.library_id}`);
       if (!lib.ok) throw new Error(`HTTP ${lib.status}`);
       const lib_data = await lib.json();
-      console.log(book, user);
       const date_to = new Date();
       date_to.setDate(date.getDate() + lib_data.booking_duration);
 
@@ -137,7 +136,6 @@ export default function BookDetails() {
       });
 
       if (!res.ok) {
-        console.log(res.statusText);
         throw new Error('Booking failed');
       } else {
         navigate('/orders');
@@ -198,7 +196,6 @@ export default function BookDetails() {
   async function updateBook(libname) {
     for (var i = 0; i < libraries.length; i++) {
       if (libraries[i].name == libname) {
-        console.log(libraries[i].id);
         const res = await fetch(
           `/api/libraries/isbn/${libraries[i].id}/${book.isbn}`
         );
@@ -224,7 +221,7 @@ export default function BookDetails() {
               alt={`${title} cover`}
             />
 
-            {(user && user.verification) ? (
+            {user && user.verification ? (
               <div className="user__book-buttons">
                 <button className="user__book-button" onClick={handleBooking}>
                   Забронировать
@@ -239,7 +236,7 @@ export default function BookDetails() {
                   Назад
                 </button>
               </div>
-            ) : (!user) ? (
+            ) : !user ? (
               <div className="user__book-buttons">
                 <p className="user__book-pleaselogin">
                   Войдите, чтобы забронировать или добавить книгу в избранное
@@ -253,24 +250,24 @@ export default function BookDetails() {
               </div>
             ) : (
               <>
-              <div className="user__unathenticated-buttons">
-              <p className="user__book-pleaselogin">
-                  Пройдите верификацию e-mail в профиле, чтобы забронировать или добавить книгу в избранное
-                </p>
-                <button
-                  className="user__book-button user__book-button--red"
-                  onClick={() => navigate('/profile')}
-                >
-                  Профиль
-                </button>
-                <button
-                  className="user__book-button user__book-button--red"
-                  onClick={() => navigate(-1)}
-                >
-                  Назад
-                </button>
-              </div>
-
+                <div className="user__unathenticated-buttons">
+                  <p className="user__book-pleaselogin">
+                    Пройдите верификацию e-mail в профиле, чтобы забронировать
+                    или добавить книгу в избранное
+                  </p>
+                  <button
+                    className="user__book-button user__book-button--red"
+                    onClick={() => navigate('/profile')}
+                  >
+                    Профиль
+                  </button>
+                  <button
+                    className="user__book-button user__book-button--red"
+                    onClick={() => navigate(-1)}
+                  >
+                    Назад
+                  </button>
+                </div>
               </>
             )}
           </div>

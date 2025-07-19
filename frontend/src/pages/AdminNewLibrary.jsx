@@ -85,7 +85,7 @@ export default function AdminNewLibrary() {
           navigate('/admin/');
         }
       } catch (e) {
-        console.log(e);
+        setError('Произошла ошибка при создании библиотеки');
       }
     }
   }

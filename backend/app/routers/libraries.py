@@ -87,7 +87,7 @@ def get_bookings_in_library(library_id: int, db: Session=Depends(get_session), c
         selectinload(models.Booking.book),
         selectinload(models.Booking.library),
     )
-    .order_by(models.Booking.date_from)
+    .order_by(models.Booking.date_to)
 ).all()
     return bookings
 

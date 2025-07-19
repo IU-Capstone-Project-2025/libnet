@@ -21,7 +21,6 @@ export default function AdminLibraries() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setLibraries(data);
-        // console.log(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -43,7 +42,6 @@ export default function AdminLibraries() {
       const data = await res.json();
       setManagers(data);
     } catch (err) {
-      console.log('here');
       setError(err.message);
     } finally {
       setLoading(false);
@@ -61,7 +59,7 @@ export default function AdminLibraries() {
       });
       if (!res.ok) throw new Error('Ошибка при назначении');
       setNewManagerEmail('');
-      await fetchAdmins(); // обновляем список
+      await fetchAdmins();
     } catch (e) {
       console.error(e);
     }

@@ -24,41 +24,50 @@ export default function ManagerNewBook() {
   const [quantity, setQuantity] = useState(null);
 
   async function handleSave() {
-    console.log("handleSave CALLED");
-    if (title && author && description && src && pages && isbn && genre && year && rating && publisher && quantity) {
-        try {
-            const res = await fetch(`/api/books/${quantity}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                title: title,
-                author: author,
-                description: description,
-                image_url: src,
-                pages_count: Number(pages),
-                isbn: isbn,
-                genre: genre,
-                year: Number(year),
-                rating: Number(rating),
-                publisher: publisher,
-                library_id: Number(user.libraryId),
-                }),
-            });
-            if (res.ok) {
-                navigate("/manager/");
-            }
-        } catch (e) {
-            console.log(e);
+    if (
+      title &&
+      author &&
+      description &&
+      src &&
+      pages &&
+      isbn &&
+      genre &&
+      year &&
+      rating &&
+      publisher &&
+      quantity
+    ) {
+      try {
+        const res = await fetch(`/api/books/${quantity}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: title,
+            author: author,
+            description: description,
+            image_url: src,
+            pages_count: Number(pages),
+            isbn: isbn,
+            genre: genre,
+            year: Number(year),
+            rating: Number(rating),
+            publisher: publisher,
+            library_id: Number(user.libraryId),
+          }),
+        });
+        if (res.ok) {
+          navigate('/manager/');
         }
+      } catch (e) {
+        setError('Произошла ошибка при создании книги');
+      }
     } else {
-        setError("Недостаточно данных");
+      setError('Недостаточно данных');
     }
-    
   }
-
-
 
   return (
     <>
@@ -74,7 +83,10 @@ export default function ManagerNewBook() {
               alt={`${title} cover`}
             />
             <div className="user__book-buttons">
-            <button className="manager__book-button" onClick={() => navigate('/manager/')}>
+              <button
+                className="manager__book-button"
+                onClick={() => navigate('/manager/')}
+              >
                 Назад
               </button>
               <button className="manager__book-button" onClick={handleSave}>
@@ -164,10 +176,10 @@ export default function ManagerNewBook() {
           </div>
         </div>
         {error ? (
-            <p className="user__book-content red-error">
-                Ошибка: {error}
-            </p>
-        ) : (<></>)}
+          <p className="user__book-content red-error">Ошибка: {error}</p>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
