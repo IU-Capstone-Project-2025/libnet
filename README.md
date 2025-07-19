@@ -27,6 +27,30 @@
   - FAQ knowledge base
   - Account management
 
+## Key Implemented Features
+
+### For Readers
+- 🔍 Unified book search across all partner libraries
+- 📅 Online reservation system with status tracking
+- ❤️ Favorites list for saved books
+- 📱 Responsive design for devices
+
+### For Library Staff
+- 📊 Manager dashboard for reservations
+- 📚 Book inventory management
+- 🏢 Multi-library support
+
+### Technical Highlights
+- ⚡ FastAPI backend with JWT authentication
+- 🎨 React frontend with Vite optimization
+- 📊 Grafana/Loki monitoring stack
+- 🔄 Automated database migration (Ollama)
+- 🛡️ Role-based access control
+
+### Impact
+- Fast book discovery for users
+- Centralized management for library networks
+
 ## 🔐 Demo Access
 
 ### User Account
