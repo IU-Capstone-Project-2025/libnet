@@ -273,6 +273,9 @@ export default function AdminLibrary() {
           >
             Назад
           </button>
+          <button className="admin__book-button" onClick={handleDelete}>
+            Удалить библиотеку
+        </button>
           <button className="admin__book-button" onClick={handleUpdate}>
             Сохранить
           </button>
@@ -310,10 +313,6 @@ export default function AdminLibrary() {
             </li>
           ))}
         </ul>
-         <h3 className="user__heading">Удаление библиотеки</h3>
-        <button className="admin__book-button" onClick={handleDelete}>
-            Удалить
-        </button>
       </div>
     </>
   );
