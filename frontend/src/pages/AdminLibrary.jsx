@@ -162,6 +162,19 @@ export default function AdminLibrary() {
     }
   }
 
+  async function handleDelete() {
+    try {
+      const res = await fetch(`/api/libraries/${Number(id)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(res.message);
+      navigate('/admin/');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
     <>
       <div className="admin__library-content">
@@ -297,6 +310,10 @@ export default function AdminLibrary() {
             </li>
           ))}
         </ul>
+         <h3 className="user__heading">Удаление библиотеки</h3>
+        <button className="admin__book-button" onClick={handleDelete}>
+            Удалить
+        </button>
       </div>
     </>
   );
