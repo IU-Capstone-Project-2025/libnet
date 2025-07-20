@@ -25,6 +25,9 @@ export default function ManagerBook() {
   const [year, setYear] = useState(null);
   const [rating, setRating] = useState(null);
   const [publisher, setPublisher] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+
+  const libraryId = user?.libraryId;
 
   useEffect(() => {
     async function fetchBook() {
@@ -43,6 +46,12 @@ export default function ManagerBook() {
         setYear(data.year);
         setRating(data.rating);
         setPublisher(data.publisher);
+
+        const qRes = await fetch(`/api/books/quantity/${libraryId}/${id}`);
+        if (qRes.ok) {
+          const qData = await qRes.json();
+          setQuantity(qData);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -51,7 +60,8 @@ export default function ManagerBook() {
     }
 
     fetchBook();
-  }, [id]);
+    
+  }, [id, libraryId]);
 
   async function handleUpdate() {
     try {
@@ -74,7 +84,18 @@ export default function ManagerBook() {
           publisher: publisher,
         }),
       });
-      if (res.ok) {
+
+      const qRes = await fetch(
+        `/api/books/quantity/${libraryId}/${id}?quantity=${quantity}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.ok && qRes.ok) {
         // Book updated successfully
       }
     } catch (e) {
@@ -92,7 +113,6 @@ export default function ManagerBook() {
         },
       });
       if (res.ok) {
-        // Book deleted successfully
         navigate('/manager/');
       }
     } catch (e) {
@@ -115,7 +135,7 @@ export default function ManagerBook() {
               src={
                 src ||
                 'https://dhmckee.com/wp-content/uploads/2018/11/defbookcover-min.jpg'
-              } //"https://via.placeholder.com/200x300?text=Book+Cover"}
+              }
               alt={`${title} cover`}
             />
             <div className="user__book-buttons">
@@ -203,6 +223,14 @@ export default function ManagerBook() {
                 placeholder="Издательство"
                 value={publisher || ''}
                 onChange={(e) => setPublisher(e.target.value)}
+              />
+              <strong>Количество книг:</strong>
+              <input
+                type="number"
+                className="manager__book-detail-input"
+                placeholder="Количество"
+                value={quantity || ''}
+                onChange={(e) => setQuantity(e.target.value)}
               />
             </div>
           </div>

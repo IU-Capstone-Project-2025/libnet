@@ -26,8 +26,7 @@ export default function AdminLibrary() {
   const [waiting, setWaiting] = useState(null);
   const [rent, setRent] = useState(null);
   const [city, setCity] = useState(null);
-  const [daysOpen, setDaysOpen] = useState([]); // Новое состояние
-
+  const [daysOpen, setDaysOpen] = useState([]);
   const allDays = [
     { key: 'mon', label: 'Пн' },
     { key: 'tue', label: 'Вт' },
@@ -45,6 +44,13 @@ export default function AdminLibrary() {
         : [...prev, dayKey]
     );
   }
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   async function fetchManagers() {
     if (user == null) return;
@@ -126,14 +132,18 @@ export default function AdminLibrary() {
 
   async function handleAssignManager() {
     if (!newManagerEmail) return;
+    if (newManagerEmail == user?.email) {
+      setError('Нельзя сделать администратора менеджером');
+      return;
+    }
     try {
       const res = await fetch(`/api/managers/assign/${newManagerEmail}/${id}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Ошибка при назначении');
+      if (!res.ok) setError('Ошибка при назначении');
       setNewManagerEmail('');
-      await fetchManagers(); // обновляем список
+      await fetchManagers();
     } catch (e) {
       console.error(e);
     }
@@ -146,7 +156,20 @@ export default function AdminLibrary() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Ошибка при удалении');
-      await fetchManagers(); // обновляем список
+      await fetchManagers();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function handleDelete() {
+    try {
+      const res = await fetch(`/api/libraries/${Number(id)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(res.message);
+      navigate('/admin/');
     } catch (e) {
       console.error(e);
     }
@@ -254,6 +277,7 @@ export default function AdminLibrary() {
             Сохранить
           </button>
         </div>
+        {error && <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>}
         <h3 className="user__heading">Управление менеджерами</h3>
         <div className="admin__assign-inputs">
           <input
@@ -286,6 +310,10 @@ export default function AdminLibrary() {
             </li>
           ))}
         </ul>
+         <h3 className="user__heading">Удаление библиотеки</h3>
+        <button className="admin__book-button" onClick={handleDelete}>
+            Удалить
+        </button>
       </div>
     </>
   );
