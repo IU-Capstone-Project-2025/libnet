@@ -111,6 +111,11 @@ def update_booking_status(request: Request, booking_id: int, booking_update: mod
                 booking.date_to = booking.date_from + timedelta(days=booking.library.rent_duration)
         elif booking.status == models.BookingStatus.CANCELLED:
             booking.date_to = None
+            library_book = db.get(models.LibraryBook, (booking.library_id, booking.book_id))
+            if not library_book:
+                raise HTTPException(status_code=404, detail="LibraryBook not found")
+            library_book.quantity += 1
+            db.commit()
 
     db.add(booking)
     db.commit()
