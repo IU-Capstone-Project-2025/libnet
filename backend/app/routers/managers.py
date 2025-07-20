@@ -28,6 +28,8 @@ def assign_manager(manager_email: str, library_id: int, db: Session = Depends(ge
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
     manager = db.exec(select(models.LibUser).where(models.LibUser.email == manager_email)).first()
+    if manager.role == "admin":
+        raise HTTPException(status_code=400, detail="Cannot assign an admin as a manager")
     if not manager:
         raise HTTPException(status_code=404, detail="User does not exist")
 

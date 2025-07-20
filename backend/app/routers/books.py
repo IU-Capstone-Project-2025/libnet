@@ -201,8 +201,15 @@ def update_book(request: Request, book_id: int, book_update: models.BookUpdate, 
 def delete_book(book_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     book = db.exec(select(models.Book).where(models.Book.id == book_id)).first()
     library_book = db.exec(select(models.LibraryBook).where(models.LibraryBook.book_id == book_id)).first()
+    favorite_book = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.book_id == book_id)).first()
+    if favorite_book:
+        db.delete(favorite_book)
+    if library_book:
+        db.delete(library_book)
+    bookings = db.exec(select(models.Booking).where(models.Booking.book_id == book_id)).all()
+    for booking in bookings:
+        db.delete(booking)
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
-    db.delete(library_book)
     db.delete(book)
     db.commit()

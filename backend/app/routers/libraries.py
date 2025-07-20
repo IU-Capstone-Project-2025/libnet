@@ -101,16 +101,6 @@ def get_managers_in_library(library_id: int, db: Session=Depends(get_session), c
         raise HTTPException(status_code=404, detail="Library does not exist")
     return library.managers
 
-# Delete a Library
-@router.delete("/{library_id}", status_code=204)
-def delete_library(library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
-    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
-    if not library:
-        raise HTTPException(status_code=404, detail="Library does not exist")
-    
-    db.delete(library)
-    db.commit()
-
 # Get a Book by ISBN
 @router.get("/isbn/{library_id}/{book_isbn}", response_model=models.Book)
 def get_book_by_isbn(library_id: int, book_isbn: str, db: Session = Depends(get_session)):
@@ -121,3 +111,30 @@ def get_book_by_isbn(library_id: int, book_isbn: str, db: Session = Depends(get_
     if not book:
         raise HTTPException(status_code=404, detail="Book does not exist")
     return book
+
+# Delete a Library
+@router.delete("/{library_id}", status_code=204)
+def delete_library(library_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
+    library = db.exec(select(models.Library).where(models.Library.id == library_id)).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="Library does not exist")
+    
+    bookings = db.exec(select(models.Booking).where(models.Booking.library_id == library_id)).all()
+    for booking in bookings:
+        db.delete(booking)
+
+    library_books = db.exec(select(models.LibraryBook).where(models.LibraryBook.library_id == library_id)).all()
+    for lb in library_books:
+        db.delete(lb)
+
+    books = db.exec(select(models.Book).where(models.Book.library_id == library_id)).all()
+    for book in books:
+        db.delete(book)
+
+    managers = db.exec(select(models.LibUser).where(models.LibUser.library_id == library_id)).all()
+    for manager in managers:
+        manager.library_id = None
+        manager.role = "user"
+    
+    db.delete(library)
+    db.commit()

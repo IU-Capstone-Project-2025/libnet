@@ -145,12 +145,6 @@ def update_password(request: Request, user_id: int, form_data: models.LibUserUpd
     db.commit()
     return {"message": "Password changed successfully"}
 
-# Get users
-@router.get("/", response_model=list[models.LibUser])
-def read_all_users(db: Session = Depends(get_session)):
-    users = db.exec(select(models.LibUser)).all()
-    return users
-
 # Get single user
 @router.get("/{user_id}", response_model=models.LibUserRead)
 def read_user_by_id(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
@@ -235,6 +229,12 @@ def update_user(request: Request, user_id: int, user_update: models.LibUserUpdat
 @router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
+    bookings = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
+    for booking in bookings:
+        db.delete(booking)
+    favorite_books = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.user_id == user_id)).all()
+    for favorite_book in favorite_books:
+        db.delete(favorite_book)
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")
     db.delete(user)
