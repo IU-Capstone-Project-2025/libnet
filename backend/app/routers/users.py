@@ -229,6 +229,12 @@ def update_user(request: Request, user_id: int, user_update: models.LibUserUpdat
 @router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: int, db: Session = Depends(get_session), current_user: models.LibUser = Depends(get_current_user)):
     user = db.exec(select(models.LibUser).where(models.LibUser.id == user_id)).first()
+    bookings = db.exec(select(models.Booking).where(models.Booking.user_id == user_id)).all()
+    for booking in bookings:
+        db.delete(booking)
+    favorite_books = db.exec(select(models.FavoriteBook).where(models.FavoriteBook.user_id == user_id)).all()
+    for favorite_book in favorite_books:
+        db.delete(favorite_book)
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")
     db.delete(user)
