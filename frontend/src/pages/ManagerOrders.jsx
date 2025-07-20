@@ -243,8 +243,22 @@ export default function ManagerOrders() {
         status: status,
       }),
     });
+
     const updatedBooking = await res.json();
+
     setBookings((prev) =>
+      prev.map((b) =>
+        b.id === booking_id
+          ? {
+              ...b,
+              status: updatedBooking.status,
+              date_to: updatedBooking.date_to,
+            }
+          : b
+      )
+    );
+
+    setOriginalBookings((prev) =>
       prev.map((b) =>
         b.id === booking_id
           ? {
@@ -268,6 +282,7 @@ export default function ManagerOrders() {
           : 'Отменён',
     }));
   }
+
 
   if (loading) return <p className="user__catalog-content"></p>;
   if (error)
