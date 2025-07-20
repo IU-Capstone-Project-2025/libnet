@@ -254,7 +254,8 @@
   border-bottom: none;
   object-fit: cover;
   background-color: #ee6c61;
-  aspect-ratio: 240 / 310;
+  aspect-ratio: 415 / 666;
+  background-position: center;
 }
 
 .manager__catalog-book-info {
