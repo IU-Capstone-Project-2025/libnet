@@ -128,7 +128,9 @@ To access the Grafana monitoring dashboard:
     SMTP_USER=your-email@gmail.com
     SMTP_PASS=your-google-app-password
     ```
-5. Launch services
+5. Remove lines 12-20 inclusive from `/libnet/frontend/nginx.conf` and change `libnet.site` to `localhost` in line 11.
+
+6. Launch services
 
     ```bash
     docker-compose up -d --build
