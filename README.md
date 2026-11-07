@@ -51,6 +51,26 @@
 - Fast book discovery for users
 - Centralized management for library networks
 
+## 📸 Screenshots
+
+### Reader
+
+| Catalog | Book page |
+|---|---|
+| ![Catalog](docs/screenshots/catalog.png) | ![Book page](docs/screenshots/book.png) |
+
+![Reader bookings](docs/screenshots/reader-bookings.png)
+
+### Library Manager
+
+![Manager bookings](docs/screenshots/manager-bookings.png)
+
+![Manager library settings](docs/screenshots/manager-library.png)
+
+### Admin
+
+![Admin library management](docs/screenshots/admin-libraries.png)
+
 ## 🔐 Demo Access
 
 ### User Account
